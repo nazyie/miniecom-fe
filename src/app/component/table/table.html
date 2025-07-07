@@ -1,0 +1,56 @@
+<div class="w-full flex flex-col items-center gap-4">
+  <!-- Table Wrapper with Horizontal Scroll -->
+  <div class="w-full overflow-x-auto">
+    <table class="table table-zebra table-fixed border border-base-300 w-full min-w-[600px]">
+      <thead class="bg-base-200">
+        <tr>
+          <th *ngFor="let col of columns">{{ col.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of data" class="hover:bg-base-300 cursor-pointer" (click)="onRowClick(row)">
+          <td *ngFor="let col of columns">
+            <ng-container [ngSwitch]="col.transformer">
+              <span *ngSwitchCase="'date'">{{ row[col.key] | date:'medium' }}</span>
+              <span *ngSwitchCase="'currency'">{{ row[col.key] | currency }}</span>
+              <span *ngSwitchDefault>{{ row[col.key] }}</span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No Data Message -->
+  <div *ngIf="data.length === 0" class="text-center text-sm text-gray-500 p-4">
+    No data available
+  </div>
+</div>
+
+<!-- Pagination Controls -->
+<div class="w-full mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 px-4">
+  <!-- Page Size Dropdown -->
+  <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+    <label for="pageSize" class="text-sm font-medium">Rows per page:</label>
+    <select id="pageSize" class="select select-bordered select-sm w-full sm:w-auto" [(ngModel)]="pageSize"
+      (change)="onPageSizeChange()">
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+    </select>
+  </div>
+
+  <!-- Page Navigation -->
+  <div class="flex flex-wrap items-center gap-2 justify-end">
+    <button class="btn btn-sm" [disabled]="page === 0" (click)="previousPage()">Previous</button>
+    <span class="text-sm">Page {{ page + 1 }} of {{ totalPages }}</span>
+    <button class="btn btn-sm" [disabled]="page + 1 >= totalPages" (click)="nextPage()">Next</button>
+  </div>
+</div>
+
+
+<!-- Footer -->
+<div class="pb-10 pt-5 text-center">
+  <!-- <p class="text-xs">Created and owned by Engku Nazri</p> -->
+</div>

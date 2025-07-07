@@ -1,0 +1,63 @@
+<dialog id="dynamic_form_modal" class="modal">
+  <div class="modal-box w-full max-w-lg">
+    <h3 class="font-bold text-lg mb-4">{{ formTitle }}</h3>
+
+    <form #shopForm="ngForm">
+      <div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Shop Name</legend>
+          <input type="text" name="name" [(ngModel)]="formData.name" class="input w-full"
+            placeholder="What is your shop name?" required/>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+          <legend class="fieldset-legend">Shop Management</legend>
+          <label class="label">
+            <input type="checkbox" name="openShop" [(ngModel)]="formData.openShop" class="checkbox" />
+            Enable Shop Open
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="space-y-4">
+        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+          <legend class="fieldset-legend">Order Management</legend>
+
+          <label class="label">
+            <input type="checkbox" name="enableOrderConfirm" [(ngModel)]="formData.enableOrderConfirm"
+              class="checkbox" />
+            Enable Order Confirm
+          </label>
+
+          <label class="label">
+            <input type="checkbox" name="enableOrderDeliver" [(ngModel)]="formData.enableOrderDeliver"
+              class="checkbox" />
+            Enable Order Deliver
+          </label>
+
+          <label class="label">
+            <input type="checkbox" name="enableOrderPayment" [(ngModel)]="formData.enableOrderPayment"
+              class="checkbox" />
+            Enable Order Payment
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="modal-action mt-6 flex justify-between items-center">
+        <!-- Left-aligned Delete button -->
+        <button class="btn btn-error" type="button" (click)="handleDelete()">Delete</button>
+
+        <!-- Right-aligned buttons -->
+        <div class="flex gap-2">
+          <button class="btn" type="button" (click)="close()">Cancel</button>
+          <button class="btn btn-primary" type="button" (click)="handleSubmit()">
+            {{ submitLabel }}
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</dialog>
