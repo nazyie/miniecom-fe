@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { PageResponse } from '../../common/pagination.model';
 import { FormsModule } from '@angular/forms';
 import { TableColumn } from '../../common/table_column.model';
-import { ShopDialog } from '../shop-dialog/shop-dialog';
+import { ShopDialog } from './shop-dialog/shop-dialog';
 
 @Component({
   selector: 'app-shop-page',

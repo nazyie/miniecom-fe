@@ -1,5 +1,5 @@
 <dialog id="dynamic_form_modal" class="modal">
-  <div class="modal-box w-full max-w-lg">
+  <div class="modal-box w-full max-w-5xl">
     <h3 class="font-bold text-lg mb-4">{{ formTitle }}</h3>
 
     <form #shopForm="ngForm">
@@ -47,12 +47,12 @@
 
       <div class="modal-action mt-6 flex justify-between items-center">
         <!-- Left-aligned Delete button -->
-        <button class="btn btn-error" type="button" (click)="handleDelete()">Delete</button>
+        <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="handleDelete()">Delete</button>
 
         <!-- Right-aligned buttons -->
         <div class="flex gap-2">
-          <button class="btn" type="button" (click)="close()">Cancel</button>
-          <button class="btn btn-primary" type="button" (click)="handleSubmit()">
+          <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">Cancel</button>
+          <button class="btn rounded-4xl py-2 btn-primary" type="button" (click)="handleSubmit()">
             {{ submitLabel }}
           </button>
         </div>

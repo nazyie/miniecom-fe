@@ -1,14 +1,25 @@
-<div class="w-[90%] mx-auto p-5">
+<div class="w-full mx-auto mt-2 px-2">
+  <div class="flex rounded-2xl bg-primary text-primary-content shadow-md">
+    <div class="flex-1 pt-1">
+      <button class="btn btn-ghost font-bold">Kedai Makmunah</button>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+
   <!-- Title -->
   <div class="py-6">
     <div class="mb-6">
-      <h1 class="text-center text-3xl font-bold text-base-content">Shop</h1>
+      <h1 class="text-center text-2xl font-bold text-secondary">Shop</h1>
     </div>
 
     <!-- Search Left | Button Right (closer) -->
     <div class="flex items-center gap-2 py-5">
       <!-- Search Field -->
-      <label class="input input-bordered flex items-center gap-2 flex-1 max-w-full">
+      <label class="input input-bordered rounded-4xl flex items-center gap-2 flex-1 max-w-full">
         <svg class="w-5 h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
             <circle cx="11" cy="11" r="8"></circle>
@@ -19,21 +30,20 @@
       </label>
 
       <!-- Add Shop Button (now closer to the search) -->
-      <button class="btn btn-neutral btn-md flex items-center gap-2 whitespace-nowrap" (click)="openAddShopModal()">
+      <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap"
+        (click)="openAddShopModal()">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
-        <span>Add Shop</span>
+        <span>Tambah Kedai</span>
       </button>
     </div>
 
-    <app-shop-dialog
-      (formSubmitted)="onFormSubmit($event)"></app-shop-dialog>
+    <app-shop-dialog (formSubmitted)="onFormSubmit($event)" />
 
-
-
-    <app-table [columns]="columns" [fetchDataFn]="fetchShops.bind(this)" (rowClicked)="openEditModal($event)"></app-table>
+    <app-table [columns]="columns" [fetchDataFn]="fetchShops.bind(this)"
+      (rowClicked)="openEditModal($event)" />
   </div>
 
-  <app-bottom-navigation-bar></app-bottom-navigation-bar>
+  <app-bottom-navigation-bar />
