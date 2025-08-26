@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Hero } from "./hero/hero";
-import { TrustedUser } from "./trusted-user/trusted-user";
-import { Feature } from "./feature/feature";
-import { Preview } from "./preview/preview";
+import { Hero } from '../hero/hero';
+import { TrustedUser } from '../trusted-user/trusted-user';
+import { Feature } from '../feature/feature';
+import { Preview } from '../preview/preview';
 
 @Component({
   selector: 'app-home-page',

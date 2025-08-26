@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { NewShop, Shop } from '../../service/shop.model';
-import { ShopService } from '../../service/shop-service';
-import { BottomNavigationBar } from '../../component/bottom-navigation-bar/bottom-navigation-bar';
-import { Table } from '../../component/table/table';
 import { Observable } from 'rxjs';
-import { PageResponse } from '../../common/pagination.model';
 import { FormsModule } from '@angular/forms';
-import { TableColumn } from '../../common/table_column.model';
-import { ShopDialog } from './shop-dialog/shop-dialog';
+import { ShopDialog } from '../shop-dialog/shop-dialog';
+import { BottomNavigationBar } from '../../../component/bottom-navigation-bar/bottom-navigation-bar';
+import { Table } from '../../../component/table/table';
+import { ShopService } from '../../services/shop-service';
+import { NewShop, Shop } from '../../model/shop.model';
+import { PageResponse } from '../../../common/pagination.model';
+import { TableColumn } from '../../../common/table_column.model';
 
 @Component({
   selector: 'app-shop-page',

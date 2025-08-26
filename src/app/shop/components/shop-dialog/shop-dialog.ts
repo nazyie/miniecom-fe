@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NewShop, Shop } from '../../../service/shop.model';
+import { NewShop, Shop } from '../../model/shop.model';
 
 @Component({
   selector: 'app-shop-dialog',

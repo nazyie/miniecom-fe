@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { ShopPage } from './page/shop-page/shop-page';
-import { HomePage } from './page/home-page/home-page';
+import { HomePage } from './home/components/home-page/home-page';
+import { ShopPage } from './shop/components/shop-page/shop-page';
 
 export const routes: Routes = [
   { path: 'kedai', component: ShopPage },
