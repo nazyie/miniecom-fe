@@ -1,14 +1,14 @@
 <form action="" class="" [formGroup]="form" (ngSubmit)="submitForm()">
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Email</legend>
-    <input type="text" class="input w-full rounded-3xl" placeholder="abu_ahchong_muthu@contoh.com" formControlName="email"/>
-    <!-- <p class="label">Optional</p> -->
+    <input type="text" class="input w-full rounded-3xl" formControlName="email"/>
+    @if(form.controls['email'].invalid && form.controls['email'].touched) { <p class="label text-error">Medan email diperlukan</p> }
   </fieldset>
 
   <fieldset class="fieldset">
     <legend class="fieldset-legend">Kata Laluan</legend>
-    <input type="password" class="input w-full rounded-3xl" placeholder="******" formControlName="password"/>
-    <!-- <p class="label">Optional</p> -->
+    <input type="password" class="input w-full rounded-3xl" formControlName="password"/>
+    @if(form.controls['password'].invalid && form.controls['password'].touched) { <p class="label text-error">Medan kata laluan diperlukan</p> }
   </fieldset>
 
   <div class="mt-3 mb-3">

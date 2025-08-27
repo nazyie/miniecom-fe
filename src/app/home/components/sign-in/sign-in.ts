@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { HomePageService } from '../../services/home-page-service';
+import { RequestLogin } from '../../model/home-page.model';
+import { SecurityService } from '../../../common/services/security-service';
+import { ToastService } from '../../../common/services/toast-service';
+import { ErrorResponse } from '../../../common/model/common-model';
+import { Router } from '@angular/router';
+import { ResponseText } from '../../../common/constant/response';
 
 @Component({
   selector: 'app-sign-in',
@@ -10,6 +17,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class SignIn implements OnInit{
   form: FormGroup = new FormGroup({});
 
+  constructor (private homePageService: HomePageService,
+    private securityService: SecurityService,
+    private toastService: ToastService,
+    private router: Router
+  ) {
+  }
+
   ngOnInit() {
     this.form = new FormBuilder().group({
       email: ['', [Validators.required]],
@@ -19,7 +33,22 @@ export class SignIn implements OnInit{
   }
 
   submitForm() {
-    console.log(this.form.value);
+    this.form.markAllAsTouched();
+
+    if (this.form.valid) {
+      const formRequest = this.form.value as RequestLogin;
+      this.homePageService.login(formRequest).subscribe({
+        next: (res)=>{
+          this.securityService.saveAccessAndRefreshToken(res)
+          this.toastService.success(ResponseText.SUCCESS_SIGN_IN);
+
+          this.router.navigate(['kedai']);
+        },
+        error: (err: ErrorResponse) => {
+          this.toastService.error(err.error.message);
+        }
+      });
+    }
   }
 
 }
