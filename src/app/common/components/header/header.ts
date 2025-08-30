@@ -1,19 +1,22 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SecurityService } from '../../services/security-service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
 export class Header {
+  securityService!: SecurityService;
 
   constructor(
     private router: Router,
-    private securityService: SecurityService
+    securityService: SecurityService
   ) {
+    this.securityService = securityService;
   }
 
   get isRootPath(): boolean {
@@ -23,7 +26,10 @@ export class Header {
   logout() {
     this.securityService.logout().subscribe({
       next: (res) => {
-        console.log('logout');
+        console.log('Logout');
+      },
+      complete: () => {
+        this.router.navigateByUrl('/', { replaceUrl: true })
       }
     })
   }

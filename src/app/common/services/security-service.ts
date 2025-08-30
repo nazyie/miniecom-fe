@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable, tap } from 'rxjs';
 import { RequestAccessToken, RequestLogout, ResponseAccessToken, ResponseLogin } from '../model/security-model';
 import { environment } from '../../../environments/environment';
 
@@ -15,12 +15,22 @@ export class SecurityService {
 
   private readonly apiRoute = environment.apiUrl + "/security";
 
+  // readonly accessToken$ = this.accessToken.asObservable();
+  // readonly refreshToken$ = this.accessToken.asObservable();
+
+  readonly isAuthenticated$ = combineLatest([
+    this.accessToken,
+    this.refreshToken
+  ]).pipe(
+    map(([access, refresh]) => !!access && !!refresh),
+    distinctUntilChanged()
+  );
+
   constructor(
     private httpClient: HttpClient,
   ) {
     this.loadToken();
   }
-
 
   hasAuthenticate(): boolean {
     if (this.refreshToken.getValue() === '')
@@ -33,7 +43,7 @@ export class SecurityService {
   }
 
   refreshAccessToken(): Observable<ResponseAccessToken> {
-    const payload : RequestAccessToken  = { refreshToken: this.refreshToken.getValue() }
+    const payload: RequestAccessToken = { refreshToken: this.refreshToken.getValue() }
 
     return this.httpClient.post<ResponseAccessToken>(this.apiRoute + '/refresh-token', payload).pipe(
       tap((res) => {
@@ -50,7 +60,7 @@ export class SecurityService {
 
 
   logout(): Observable<void> {
-    const payload : RequestLogout = {refreshToken: this.refreshToken.getValue()};
+    const payload: RequestLogout = { refreshToken: this.refreshToken.getValue() };
 
     return this.httpClient.post<void>(this.apiRoute + '/logout', payload).pipe(
       tap((res) => {
@@ -60,8 +70,8 @@ export class SecurityService {
   }
 
   private saveToken(accessToken: string): void;
-  private saveToken(accessToken: string, refreshToken: string) : void;
-  private saveToken(accessToken: string, refreshToken?: string) : void {
+  private saveToken(accessToken: string, refreshToken: string): void;
+  private saveToken(accessToken: string, refreshToken?: string): void {
     this.accessToken.next(accessToken)
 
     if (refreshToken)
@@ -70,7 +80,7 @@ export class SecurityService {
     this.saveTokenToLocalStorage();
   }
 
-  private saveTokenToLocalStorage() : void {
+  private saveTokenToLocalStorage(): void {
     localStorage.setItem('refreshToken', this.refreshToken.getValue());
     localStorage.setItem('accessToken', this.accessToken.getValue());
   }
