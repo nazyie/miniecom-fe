@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ResponseLogin } from '../model/security-model';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { RequestAccessToken, RequestLogout, ResponseAccessToken, ResponseLogin } from '../model/security-model';
 import { environment } from '../../../environments/environment';
-import { ToastService } from './toast-service';
-import { ResponseText } from '../constant/response';
-import { ErrorResponse } from '../model/common-model';
+
+import { RequestLogin } from '../../home/model/home-page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +13,12 @@ export class SecurityService {
   private refreshToken = new BehaviorSubject<string>('');
   private accessToken = new BehaviorSubject<string>('');
 
-  private apiRoute = environment.apiUrl + "/security/";
+  private readonly apiRoute = environment.apiUrl + "/security";
 
-  constructor(private httpClient: HttpClient,
-    private toastService: ToastService
+  constructor(
+    private httpClient: HttpClient,
   ) {
-    if (
-
-    )
+    this.loadToken();
   }
 
 
@@ -35,36 +32,53 @@ export class SecurityService {
     return true;
   }
 
-  refreshAccessToken() {
+  refreshAccessToken(): Observable<ResponseAccessToken> {
+    const payload : RequestAccessToken  = { refreshToken: this.refreshToken.getValue() }
+
+    return this.httpClient.post<ResponseAccessToken>(this.apiRoute + '/refresh-token', payload).pipe(
+      tap((res) => {
+        this.saveToken(res.accessToken)
+      })
+    );
   }
 
-  saveAccessAndRefreshToken(responseLogin: ResponseLogin) {
-    const { refreshToken, accessToken }  = responseLogin;
-
-    this.refreshToken.next(refreshToken);
-    this.accessToken.next(accessToken);
-    this.storeToken();
+  login(payload: RequestLogin): Observable<ResponseLogin> {
+    return this.httpClient.post<ResponseLogin>(this.apiRoute + '/login', payload).pipe(
+      tap((res: ResponseLogin) => this.saveToken(res.accessToken, res.refreshToken)),
+    )
   }
 
-  logout() {
-    this.httpClient.post<any>(this.apiRoute + '/logout/' + this.refreshToken.getValue(), null).subscribe({
-      next: ()=> {
-        this.toastService.info(ResponseText.SUCCESS_LOGOUT);
-        this.refreshToken.next('');
-        this.accessToken.next('');
-      },
-      error: (err: ErrorResponse)=> {
-        this.toastService.error(err.error.message);
-      },
-      complete: ()=> {
-        this.storeToken();
-      }
-    })
+
+  logout(): Observable<void> {
+    const payload : RequestLogout = {refreshToken: this.refreshToken.getValue()};
+
+    return this.httpClient.post<void>(this.apiRoute + '/logout', payload).pipe(
+      tap((res) => {
+        this.resetToken();
+      })
+    )
   }
 
-  private storeToken() {
+  private saveToken(accessToken: string): void;
+  private saveToken(accessToken: string, refreshToken: string) : void;
+  private saveToken(accessToken: string, refreshToken?: string) : void {
+    this.accessToken.next(accessToken)
+
+    if (refreshToken)
+      this.refreshToken.next(refreshToken);
+
+    this.saveTokenToLocalStorage();
+  }
+
+  private saveTokenToLocalStorage() : void {
     localStorage.setItem('refreshToken', this.refreshToken.getValue());
     localStorage.setItem('accessToken', this.accessToken.getValue());
+  }
+
+  private resetToken() {
+    this.refreshToken.next('');
+    this.accessToken.next('');
+    this.saveTokenToLocalStorage();
   }
 
   private loadToken() {
@@ -77,5 +91,4 @@ export class SecurityService {
     if (accessToken && accessToken != '')
       this.accessToken.next(accessToken);
   }
-
 }

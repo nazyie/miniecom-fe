@@ -10,7 +10,8 @@ import { SecurityService } from '../../services/security-service';
 })
 export class Header {
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private securityService: SecurityService
   ) {
   }
@@ -20,7 +21,11 @@ export class Header {
   }
 
   logout() {
-    this.securityService.logout();
+    this.securityService.logout().subscribe({
+      next: (res) => {
+        console.log('logout');
+      }
+    })
   }
 
 }

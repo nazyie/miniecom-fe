@@ -14,7 +14,6 @@ import { Header } from "../../../common/components/header/header";
   selector: 'app-shop-page',
   imports: [
     BottomNavigationBar,
-    Table,
     ShopDialog,
     FormsModule,
     Header

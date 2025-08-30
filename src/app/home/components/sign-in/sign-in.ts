@@ -17,7 +17,7 @@ import { ResponseText } from '../../../common/constant/response';
 export class SignIn implements OnInit{
   form: FormGroup = new FormGroup({});
 
-  constructor (private homePageService: HomePageService,
+  constructor (
     private securityService: SecurityService,
     private toastService: ToastService,
     private router: Router
@@ -37,11 +37,9 @@ export class SignIn implements OnInit{
 
     if (this.form.valid) {
       const formRequest = this.form.value as RequestLogin;
-      this.homePageService.login(formRequest).subscribe({
+      this.securityService.login(formRequest).subscribe({
         next: (res)=>{
-          this.securityService.saveAccessAndRefreshToken(res)
           this.toastService.success(ResponseText.SUCCESS_SIGN_IN);
-
           this.router.navigate(['kedai']);
         },
         error: (err: ErrorResponse) => {
