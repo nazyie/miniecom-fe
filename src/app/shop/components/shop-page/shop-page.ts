@@ -8,6 +8,7 @@ import { ShopService } from '../../services/shop-service';
 import { NewShop, Shop } from '../../model/shop.model';
 import { PageResponse } from '../../../common/pagination.model';
 import { TableColumn } from '../../../common/table_column.model';
+import { Header } from "../../../common/components/header/header";
 
 @Component({
   selector: 'app-shop-page',
@@ -15,8 +16,9 @@ import { TableColumn } from '../../../common/table_column.model';
     BottomNavigationBar,
     Table,
     ShopDialog,
-    FormsModule
-  ],
+    FormsModule,
+    Header
+],
   templateUrl: './shop-page.html',
   styleUrl: './shop-page.css'
 })

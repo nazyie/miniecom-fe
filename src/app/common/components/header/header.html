@@ -1,0 +1,25 @@
+<div>
+  @if (isRootPath) {
+  <div class="flex m-1 rounded-2xl p-1 bg-primary text-primary-content shadow-lg">
+    <div class="flex-1 pt-1">
+      <button class="btn btn-ghost text-xl">Mini Ecom</button>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/kedai">Kedai Saya</a></li>
+      </ul>
+    </div>
+  </div>
+  } @else {
+  <div class="flex rounded-2xl bg-primary text-primary-content shadow-md">
+    <div class="flex-1 pt-1">
+      <button class="btn btn-ghost font-bold">Kedai Makmunah</button>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/" (click)="logout()">Log Keluar</a></li>
+      </ul>
+    </div>
+  </div>
+  }
+</div>
