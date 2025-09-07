@@ -21,7 +21,7 @@ export class ShopService {
   }
 
   updateShop(shop: Shop): Observable<Shop> {
-    return this.http.patch<Shop>(this.apiUrl, shop);
+    return this.http.patch<Shop>(this.apiUrl + `/${shop.id}`, shop);
   }
 
   deleteShop(shopId: string): Observable<Shop> {

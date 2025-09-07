@@ -4,29 +4,32 @@
     <table class="table table-zebra table-fixed border border-base-300 w-full min-w-[600px]">
       <thead class="bg-base-200">
         <tr>
-          <th *ngFor="let col of columns">{{ col.name }}</th>
+          @for(col of columns; track col.name) {
+            <th>{{ col.name }}</th>
+          }
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of data" class="hover:bg-base-300 cursor-pointer" (click)="onRowClick(row)">
-          <td *ngFor="let col of columns">
-            <ng-container [ngSwitch]="col.transformer">
-              <span *ngSwitchCase="'date'">{{ row[col.key] | date:'medium' }}</span>
-              <span *ngSwitchCase="'currency'">{{ row[col.key] | currency }}</span>
-              <span *ngSwitchDefault>{{ row[col.key] }}</span>
-            </ng-container>
-          </td>
+        @for(row of data; track row.id) {
+        <tr class="hover:bg-base-300 cursor-pointer" (click)="onRowClick(row)">
+          @for (col of columns; track col.key) {
+            <td>
+              @switch (col.transformer) {
+                @case ('date') { <span>{{ row[col.key] | date }}</span> }
+                @default () { <span>{{ row[col.key] }}</span> }
+              }
+            </td>
+          }
         </tr>
+        }
+        @empty {
+          <div class="text-center text-sm text-gray-500 p-4">
+            Tiada Data. Mula cipta rekod sekarang!
+          </div>
+        }
       </tbody>
     </table>
   </div>
-
-  <!-- No Data Message -->
-   @if (data.length === 0) {
-      <div class="text-center text-sm text-gray-500 p-4">
-        Tiada Data. Mula cipta rekod sekarang!
-      </div>
-   }
 </div>
 
 <!-- Pagination Controls -->
@@ -45,8 +48,8 @@
 
   <!-- Page Navigation -->
   <div class="flex flex-wrap items-center gap-2 justify-end">
-    <button class="btn btn-sm rounded-4xl btn-primary" [disabled]="page === 0" (click)="previousPage()">Previous</button>
-    <span class="text-sm">{{ page + 1 }} | {{ totalPages }}</span>
-    <button class="btn btn-sm rounded-4xl btn-primary" [disabled]="page + 1 >= totalPages" (click)="nextPage()">Next</button>
+    <button class="btn btn-sm rounded-4xl btn-primary" [disabled]="page === 0" (click)="previousPage()">‹</button>
+    <span class="text-sm">{{ page + 1 }} | {{ totalPage }}</span>
+    <button class="btn btn-sm rounded-4xl btn-primary" [disabled]="page + 1 >= totalPage" (click)="nextPage()">›</button>
   </div>
 </div>

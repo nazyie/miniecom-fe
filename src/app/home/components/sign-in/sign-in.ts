@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { HomePageService } from '../../services/home-page-service';
 import { RequestLogin } from '../../model/home-page.model';
 import { SecurityService } from '../../../common/services/security-service';
 import { ToastService } from '../../../common/services/toast-service';

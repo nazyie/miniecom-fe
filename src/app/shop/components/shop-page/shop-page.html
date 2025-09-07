@@ -1,40 +1,36 @@
-<div class="w-full mx-auto mt-2 px-2">
-  <app-header />
+<app-admin-layout [title]="titlePage">
+  <!-- Search Left | Button Right (closer) -->
+  <div class="flex items-center gap-2 py-5">
+    <!-- Search Field -->
+    <label class="input input-bordered rounded-4xl flex items-center gap-2 flex-1 max-w-full">
+      <svg class="w-5 h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </g>
+      </svg>
+      <input type="search" placeholder="Search shops..." class="grow" aria-label="Search shop" />
+    </label>
 
-  <!-- Title -->
-  <div class="py-6">
-    <div class="mb-6">
-      <h1 class="text-center text-2xl font-bold text-secondary">Shop</h1>
-    </div>
-
-    <!-- Search Left | Button Right (closer) -->
-    <div class="flex items-center gap-2 py-5">
-      <!-- Search Field -->
-      <label class="input input-bordered rounded-4xl flex items-center gap-2 flex-1 max-w-full">
-        <svg class="w-5 h-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </g>
-        </svg>
-        <input type="search" placeholder="Search shops..." class="grow" aria-label="Search shop" />
-      </label>
-
-      <!-- Add Shop Button (now closer to the search) -->
-      <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap"
-        (click)="openAddShopModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span>Tambah Kedai</span>
-      </button>
-    </div>
-
-    <app-shop-dialog (formSubmitted)="onFormSubmit($event)" />
-
-    <!-- <app-table [columns]="columns" [fetchDataFn]="fetchShops.bind(this)"
-      (rowClicked)="openEditModal($event)" /> -->
+    <!-- Add Shop Button (now closer to the search) -->
+    <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap" (click)="openAddShopModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      <span>Tambah Kedai</span>
+    </button>
   </div>
 
-  <app-bottom-navigation-bar />
+  @if (modalIsOpen) {
+    <app-shop-dialog 
+      [formTitle]="modalFormTitle"
+      [submitLabel]="modalSubmitLabel"
+      [formMode]="modalFormMode"
+      [record]="modalRecord"
+      (formSubmitted)="onFormSubmit($event)" />
+  }
+
+  <app-table [columns]="columns" [fetchDataFn]="fetchShops.bind(this)"
+      (rowClicked)="openEditModal($event)" />
+</app-admin-layout>

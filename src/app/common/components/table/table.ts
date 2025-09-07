@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PageResponse } from '../../common/pagination.model';
 import { FormsModule } from '@angular/forms';
-import { TableColumn } from '../../common/table_column.model';
+import { TableColumn } from '../../table_column.model';
+import { PageResponse } from '../../pagination.model';
 
 @Component({
   selector: 'app-table',
@@ -15,7 +15,7 @@ import { TableColumn } from '../../common/table_column.model';
 export class Table {
   page = 0;
   pageSize = 5;
-  totalPages = 1;
+  totalPage = 1;
   data: any[] = [];
 
   @Input() columns: TableColumn[] = [];
@@ -33,8 +33,8 @@ export class Table {
 
   loadData() {
     this.fetchDataFn(this.page, this.pageSize).subscribe((res) => {
-      this.data = res.content;
-      this.totalPages = res.totalPages;
+      this.data = res.data;
+      this.totalPage = res.totalPage;
     });
   }
 
@@ -46,7 +46,7 @@ export class Table {
   }
 
   nextPage() {
-    if (this.page + 1 < this.totalPages) {
+    if (this.page + 1 < this.totalPage) {
       this.page++;
       this.loadData();
     }

@@ -1,61 +1,79 @@
 import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShopDialog } from '../shop-dialog/shop-dialog';
-import { BottomNavigationBar } from '../../../component/bottom-navigation-bar/bottom-navigation-bar';
-import { Table } from '../../../component/table/table';
 import { ShopService } from '../../services/shop-service';
-import { NewShop, Shop } from '../../model/shop.model';
+import { Shop } from '../../model/shop.model';
 import { PageResponse } from '../../../common/pagination.model';
 import { TableColumn } from '../../../common/table_column.model';
-import { Header } from "../../../common/components/header/header";
+import { AdminLayout } from "../../../common/components/admin-layout/admin-layout";
+import { Table } from '../../../common/components/table/table';
+import { ToastService } from '../../../common/services/toast-service';
+import { ResponseText } from '../../../common/constant/response';
 
 @Component({
   selector: 'app-shop-page',
   imports: [
-    BottomNavigationBar,
     ShopDialog,
     FormsModule,
-    Header
+    AdminLayout,
+    Table,
+    ReactiveFormsModule
 ],
   templateUrl: './shop-page.html',
   styleUrl: './shop-page.css'
 })
 export class ShopPage {
+  titlePage: string = 'Kedai';
   columns: TableColumn[] = [
-    { name: 'Shop Name', key: 'name' },
-    { name: 'Slug', key: 'slug' },
-    { name: 'Created At', key: 'createdAt', transformer: 'date' }
+    { name: 'Nama Kedai', key: 'name' }
   ];
 
-  constructor(private shopService: ShopService) { }
+  modalIsOpen: boolean = false;
+  modalFormTitle: string = '';
+  modalSubmitLabel: string = '';
+  modalFormMode: string = '';
+  modalRecord: Shop | undefined;
+
+  constructor(
+    private shopService: ShopService,
+    private toastService: ToastService
+  ) { }
 
   @ViewChild(ShopDialog) modal!: ShopDialog;
   @ViewChild(Table) table!: Table;
 
   openAddShopModal() {
-    this.modal.formTitle = 'Add Shop';
-    this.modal.submitLabel = 'Create';
-    this.modal.formData = NewShop;
-    this.modal.formMode = 'CREATE';
-    this.modal.open();
+    this.modalFormTitle = 'Cipta Kedai';
+    this.modalSubmitLabel = 'Cipta';
+    this.modalFormMode = 'CREATE';
+    this.modalIsOpen = true;
   }
 
   openEditModal(data: Shop) {
-    this.modal.formTitle = 'Update Shop';
-    this.modal.submitLabel = 'Update';
-    this.modal.formData = data;
-    this.modal.formMode = 'EDIT';
-    this.modal.open();
+    this.modalFormTitle = 'Kemaskini Kedai';
+    this.modalSubmitLabel = 'Kemaskini';
+    this.modalFormMode = 'UPDATE';
+    this.modalIsOpen = true;
+    this.modalRecord = data;
   }
 
-  onFormSubmit(data: any) {
-    switch (data.formMode) {
+  resetModal() {
+    this.modalIsOpen = false;
+    this.modalFormTitle = '';
+    this.modalSubmitLabel = '';
+    this.modalFormMode = '';
+    this.modalRecord = undefined;
+  }
+
+  onFormSubmit({ formMode, data }: {formMode: string, data: any}) {
+    switch (formMode) {
       case 'CREATE':
-        this.shopService.createShop(data.formData).subscribe({
+        this.shopService.createShop(data).subscribe({
           next: () => {
-            this.modal.close();
             this.table.loadData();
+            this.resetModal();
+            this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
           },
           error: (err) => {
             console.error('Error creating shop:', err);
@@ -64,10 +82,11 @@ export class ShopPage {
         break;
 
       case 'UPDATE':
-        this.shopService.updateShop(data.formData).subscribe({
+        this.shopService.updateShop(data).subscribe({
           next: () => {
-            this.modal.close();
             this.table.loadData();
+            this.resetModal();
+            this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
           },
           error: (err) => {
             console.error('Error creating shop:', err);
@@ -76,10 +95,11 @@ export class ShopPage {
         break;
 
       case 'DELETE':
-        this.shopService.deleteShop(data.id).subscribe({
+        this.shopService.deleteShop(data).subscribe({
           next: () => {
-            this.modal.close();
             this.table.loadData();
+            this.resetModal();
+            this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
           },
           error: (err) => {
             console.error('Error creating shop:', err);
@@ -87,8 +107,9 @@ export class ShopPage {
         });
         break;
 
+      default:
+        this.resetModal();
     }
-
   }
 
   fetchShops(page: number, size: number): Observable<PageResponse<Shop>> {

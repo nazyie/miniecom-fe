@@ -1,56 +1,92 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { NewShop, Shop } from '../../model/shop.model';
+import { Component, DestroyRef, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Shop } from '../../model/shop.model';
+import { ShopService } from '../../services/shop-service';
+
+export enum SHOP_STATUS {
+  ACTIVE,
+  DEACTIVE
+}
 
 @Component({
   selector: 'app-shop-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './shop-dialog.html',
   styleUrl: './shop-dialog.css'
 })
-export class ShopDialog {
-  @Input() formTitle = 'Form';
-  @Input() submitLabel = 'Submit';
-  @Input() initialData: Partial<Shop> = {};
-  @Input() formMode: string = 'CREATE';
+export class ShopDialog implements OnChanges, OnInit {
+  @Input() formTitle!: string;
+  @Input() submitLabel!: string;
+  @Input() formMode!: string;
+  @Input() record: Shop | undefined;
 
-  formData: Shop = {
-    ...NewShop
-  };
+  @Output() formSubmitted = new EventEmitter<{ formMode: string, data: any }>();
 
-  @Output() formSubmitted = new EventEmitter<any>();
+  form: FormGroup = new FormGroup({});
 
-  ngOnChanges() {
-    this.formData = { ...this.formData,
-      ...this.initialData
-     }
+  tickEnableOrderConfirm: boolean = false;
+  tickEnableOrderDeliver: boolean = false;
+
+  constructor(
+    private destroyRef: DestroyRef,
+    private fb: FormBuilder,
+    private shopService: ShopService
+  ) {
   }
 
-  open() {
-    const dialog = document.getElementById('dynamic_form_modal') as HTMLDialogElement;
-    dialog?.showModal();
+  ngOnInit(): void {
+    if (this.record) {
+      this.form = this.fb.group({
+        id: [this.record.id, [Validators.required]],
+        name: [this.record.name, [Validators.required]],
+        openShop: [this.record.openShop, []],
+        enableOrderConfirm: [this.record.enableOrderConfirm, []],
+        enableOrderDeliver: [this.record.enableOrderDeliver, []],
+        enableOrderPayment: [this.record.enableOrderPayment, []],
+      })
+
+    } else {
+      this.form = this.fb.group({
+        name: ['', [Validators.required]],
+        openShop: ['', []],
+        enableOrderConfirm: ['', []],
+        enableOrderDeliver: ['', []],
+        enableOrderPayment: ['', []],
+      })
+    }
+  }
+
+  ngOnChanges() {
+  }
+
+  submit() {
+    this.form.markAsTouched();
+
+    if (this.form.valid) {
+      const formRequest = this.form.value as Shop;
+
+      this.formSubmitted.emit({
+        formMode: this.formMode,
+        data: formRequest
+      });
+    } else {
+      console.log('Form not valid');
+    }
+  }
+
+  delete() {
+    this.formSubmitted.emit({
+      formMode: 'DELETE',
+      data: this.form.controls['id'].value
+    });
   }
 
   close() {
-    const dialog = document.getElementById('dynamic_form_modal') as HTMLDialogElement;
-    dialog?.close();
-  }
-
-  handleSubmit() {
     this.formSubmitted.emit({
-      formData: this.formData,
-      formMode: this.formMode
-    });
-    this.close();
-  }
-
-  handleDelete() {
-    this.formSubmitted.emit({
-      id: this.formData.id,
-      formMode: 'DELETE',
-    });
-    this.close();
+      formMode: 'cancel',
+      data: null
+    })
   }
 }

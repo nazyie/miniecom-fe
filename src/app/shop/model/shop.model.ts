@@ -18,19 +18,3 @@ export interface Shop {
   createdBy?: string;
   updatedBy?: string;
 };
-
-export const NewShop : Shop = {
-  id: '',
-  slug: '',
-  name: '',
-  openShop: false,
-  enableOrderConfirm: false,
-  enableOrderDeliver: false,
-  enableOrderPayment: false,
-  status: 'ACTIVE',
-  quotaLimit: -1,
-  createdAt: '',
-  updatedAt: '',
-  createdBy: '',
-  updatedBy: ''
-};

@@ -32,6 +32,14 @@ export class SecurityService {
     this.loadToken();
   }
 
+  getAccessToken(): string {
+    return this.accessToken.getValue();
+  }
+
+  getRefreshToken(): string {
+    return this.refreshToken.getValue();
+  }
+
   hasAuthenticate(): boolean {
     if (this.refreshToken.getValue() === '')
       return false;
