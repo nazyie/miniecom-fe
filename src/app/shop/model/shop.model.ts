@@ -18,3 +18,9 @@ export interface Shop {
   createdBy?: string;
   updatedBy?: string;
 };
+
+export interface ResponseShopDropdown {
+  id: string,
+  name: string,
+  openShop: boolean
+}

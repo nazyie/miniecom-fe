@@ -9,7 +9,7 @@
           <path d="m21 21-4.3-4.3"></path>
         </g>
       </svg>
-      <input type="search" placeholder="Search shops..." class="grow" aria-label="Search shop" />
+      <input type="search" placeholder="Search shops..." class="grow" aria-label="Search shop" [(ngModel)]="search" (ngModelChange)="search$.next($event)" />
     </label>
 
     <!-- Add Shop Button (now closer to the search) -->

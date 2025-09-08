@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, DestroyRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { debounce, debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShopDialog } from '../shop-dialog/shop-dialog';
 import { ShopService } from '../../services/shop-service';
@@ -23,10 +23,12 @@ import { ResponseText } from '../../../common/constant/response';
   templateUrl: './shop-page.html',
   styleUrl: './shop-page.css'
 })
-export class ShopPage {
+export class ShopPage implements OnInit {
   titlePage: string = 'Kedai';
   columns: TableColumn[] = [
-    { name: 'Nama Kedai', key: 'name' }
+    { name: 'Nama Kedai', key: 'name' },
+    { name: 'Dicipta Pada', key: 'createdAt', transformer: 'date' },
+    { name: 'Dikemaskini Pada', key: 'updatedAt', transformer: 'date' }
   ];
 
   modalIsOpen: boolean = false;
@@ -35,10 +37,24 @@ export class ShopPage {
   modalFormMode: string = '';
   modalRecord: Shop | undefined;
 
+  search: string = '';
+  search$ = new Subject<string>();
+
   constructor(
     private shopService: ShopService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private destroyRef: DestroyRef
   ) { }
+
+  ngOnInit(): void {
+    const searchChanges = this.search$
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe(() => this.table.loadData());
+
+    this.destroyRef.onDestroy(() => {
+      searchChanges.unsubscribe();
+    })
+  }
 
   @ViewChild(ShopDialog) modal!: ShopDialog;
   @ViewChild(Table) table!: Table;
@@ -113,6 +129,6 @@ export class ShopPage {
   }
 
   fetchShops(page: number, size: number): Observable<PageResponse<Shop>> {
-    return this.shopService.getShop(page, size);
+    return this.shopService.getShop(page, size, this.search);
   }
 }

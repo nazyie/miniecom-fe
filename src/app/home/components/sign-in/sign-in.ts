@@ -48,4 +48,6 @@ export class SignIn implements OnInit{
     }
   }
 
+  // TODO: implement the auto loading selecting the shop after login. Better UX
+
 }

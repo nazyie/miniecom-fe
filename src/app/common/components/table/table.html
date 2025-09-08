@@ -15,7 +15,7 @@
           @for (col of columns; track col.key) {
             <td>
               @switch (col.transformer) {
-                @case ('date') { <span>{{ row[col.key] | date }}</span> }
+                @case ('date') { <span>{{ row[col.key] | date: 'dd-MM-yyyy h:mm a' }}</span> }
                 @default () { <span>{{ row[col.key] }}</span> }
               }
             </td>

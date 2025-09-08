@@ -5,23 +5,45 @@
       <button class="btn btn-ghost text-xl">Mini Ecom</button>
     </div>
     @if (this.securityService.isAuthenticated$ | async) {
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li><a href="/kedai">Kedai Saya</a></li>
-        </ul>
-      </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/kedai">Kedai Saya</a></li>
+      </ul>
+    </div>
     }
   </div>
   } @else {
-  <div class="flex rounded-2xl bg-primary text-primary-content shadow-md">
-    <div class="flex-1 pt-1">
-      <button class="btn btn-ghost font-bold">Kedai Makmunah</button>
+  <div class="flex items-center justify-between rounded-2xl bg-primary text-primary-content shadow-md px-4">
+
+    <!-- Shop Dropdown -->
+    <div class="dropdown">
+      <label tabindex="0" class="btn btn-ghost font-bold m-1">
+        {{ shopNavigatorService.shopName }}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </label>
+      <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-black">
+        @if (listOfShop$ | async; as shops) {
+          @for (shop of shops; track shop.id) {
+            <li>
+              <a (click)="navigateSelectedShop(shop)">{{ shop.name }}</a>
+            </li>
+          }
+        } @else {
+          <li><span class="italic">Loading...</span></li>
+        }
+      </ul>
     </div>
-    <div class="flex-none">
+
+    <!-- Logout -->
+    <div>
       <ul class="menu menu-horizontal px-1">
         <li><a (click)="logout()">Log Keluar</a></li>
       </ul>
     </div>
   </div>
+
   }
 </div>

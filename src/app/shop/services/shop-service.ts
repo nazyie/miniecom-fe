@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PageResponse } from '../../common/pagination.model';
-import { Shop } from '../model/shop.model';
+import { ResponseShopDropdown, Shop } from '../model/shop.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,12 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
-  getShop(page = 0, size = 20): Observable<PageResponse<Shop>> {
-    return this.http.get<PageResponse<Shop>>(`${this.apiUrl}?page=${page}&size=${size}`);
+  getShop(page = 0, size = 20, search: string): Observable<PageResponse<Shop>> {
+    return this.http.get<PageResponse<Shop>>(`${this.apiUrl}?page=${page}&size=${size}&search=${search}`);
+  }
+
+  getAllShop() {
+    return this.http.get<ResponseShopDropdown[]>(`${this.apiUrl}/all`);
   }
 
   createShop(shop: Shop): Observable<Shop> {
