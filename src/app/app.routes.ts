@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomePage } from './home/components/home-page/home-page';
 import { ShopPage } from './shop/components/shop-page/shop-page';
 import { authGuard } from './common/guard/auth-guard';
+import { ProductPage } from './product/components/product-page/product-page';
 
 // to tranform to lazy load later
 export const routes: Routes = [
@@ -9,6 +10,6 @@ export const routes: Routes = [
   { path: 'kedai', component: ShopPage, canActivate: [authGuard] },
   { path: 'sales', component: HomePage },
   { path: 'order', component: HomePage },
-  { path: 'laman', component: HomePage },
+  { path: 'produk', component: ProductPage, canActivate: [authGuard] },
   { path: 'tetapan', component: HomePage },
 ];

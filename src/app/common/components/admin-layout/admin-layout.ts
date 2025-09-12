@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Header } from "../header/header";
-import { BottomNavigationBar } from "../../../component/bottom-navigation-bar/bottom-navigation-bar";
+import { BottomNavigationBar } from "../bottom-navigation-bar/bottom-navigation-bar";
 
 @Component({
   selector: 'app-admin-layout',

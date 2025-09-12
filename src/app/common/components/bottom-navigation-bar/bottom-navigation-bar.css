@@ -1,6 +1,6 @@
 .active {
   /* @apply text-primary opacity-100 font-semibold; */
   color: blue;
-  font-weight: bold;
+  /* font-weight: bold; */
   opacity: 100;
 }
