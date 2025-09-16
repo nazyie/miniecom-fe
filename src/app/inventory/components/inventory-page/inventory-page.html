@@ -14,13 +14,25 @@
 
         <!-- Add Shop Button (now closer to the search) -->
         <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap"
-            (click)="openAddProductModal()">
+            (click)="openAddModal()">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-            <span class="hidden sm:inline">Tambah Produk</span>
+            <span class="hidden sm:inline">Tambah Inventori</span>
         </button>
     </div>
+
+    @if (modalIsOpen) {
+        <app-inventory-dialog 
+            [formTitle]="modalFormTitle"
+            [submitLabel]="modalSubmitLabel"
+            [formMode]="modalFormMode"
+            [record]="modalRecord"
+            (formSubmitted)="onFormSubmit($event)"
+        />
+    }
+
+    <app-table [columns]="columns" [fetchDataFn]="fetchProduct.bind(this)" (rowClicked)="openEditModal($event)" />
 
 </app-admin-layout>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductPage } from './product-page';
+import { InventoryStockDialog } from './inventory-stock-dialog';
 
-describe('ProductPage', () => {
-  let component: ProductPage;
-  let fixture: ComponentFixture<ProductPage>;
+describe('InventoryStockDialog', () => {
+  let component: InventoryStockDialog;
+  let fixture: ComponentFixture<InventoryStockDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductPage]
+      imports: [InventoryStockDialog]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProductPage);
+    fixture = TestBed.createComponent(InventoryStockDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

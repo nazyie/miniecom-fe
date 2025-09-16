@@ -1,0 +1,80 @@
+<dialog open class="modal">
+  <div class="modal-box w-full max-w-5xl">
+    <h3 class="font-bold text-primary text-lg mb-4">{{ formTitle }}</h3>
+
+    <form [formGroup]="form">
+      <div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nama Produk</legend>
+          <input type="text" name="name" class="input w-full" formControlName="name"/>
+          <p class="text-sm text-error hidden" [class]="{ 'inline': !this.form.valid && this.form.controls['name'].touched }">Medan nama produk diperlukan</p>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Deskripsi Produk</legend>
+          <textarea class="textarea w-full" formControlName="itemDescription"></textarea>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="fieldset">
+          <label class="label">
+              <input type="checkbox" name="enableOrderDeliver" formControlName="showInventory"
+                  class="checkbox" />
+                  Benarkan Produk Dipaparkan
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="mt-2">
+        <h3 class="text-primary text-md font-bold">Inventori Varian</h3>
+        <div class="w-full flex justify-end">
+          <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap" (click)="openAddModal()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span class="hidden sm:inline">Tambah Varian</span>
+          </button>
+        </div>
+        <app-inventory-stock-table 
+          [inventoryId]="form.controls['id'].value"
+          (recordAction)="handleTableAction($event)"
+        />
+      </div>
+
+      @if (modalIsOpen) {
+        <app-inventory-stock-dialog 
+          [formTitle]="modalFormTitle"
+          [submitLabel]="modalSubmitLabel"
+          [formMode]="modalFormMode"
+          [record]="modalRecord"
+          (formSubmitted)="onFormSubmit($event)"
+        />
+      }
+
+      <div class="modal-action mt-6 flex justify-between items-center">
+        <!-- Left side (Delete if applicable, otherwise empty placeholder) -->
+        <div>
+          @if (formMode === 'UPDATE') {
+          <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="delete()">
+            Padam
+          </button>
+          }
+        </div>
+
+        <!-- Right side (Cancel + Submit always stay on right) -->
+        <div class="flex gap-2">
+          <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">
+            Batal
+          </button>
+          <button class="btn rounded-4xl py-2 btn-primary" type="submit" (click)="submit()">
+            {{ submitLabel }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</dialog>

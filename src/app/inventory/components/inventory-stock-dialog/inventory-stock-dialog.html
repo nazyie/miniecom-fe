@@ -1,0 +1,58 @@
+<dialog open class="modal">
+    <div class="modal-box w-full max-w-3xl">
+        <h3 class="font-bold text-primary text-lg mb-4">Inventori › {{ formTitle }}</h3>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Nama Varian</legend>
+                    <input type="text" name="name" class="input w-full" formControlName="variantName" />
+                </fieldset>
+            </div>
+
+            <div>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Kod Varian</legend>
+                    <input type="text" name="name" class="input w-full" formControlName="variantCode" />
+                </fieldset>
+            </div>
+
+
+            <div>
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Bilangan Stok</legend>
+                    <input type="number" class="input"
+                        #stockCounting formControlName="stockCount"/>
+                </fieldset>
+                <div class="mt-2">
+                    <label class="label">
+                        <input type="checkbox" name="enableOrderDeliver" formControlName="enableStockChecking"
+                            class="checkbox" />
+                            Benarkan pengiraan stok
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-action mt-6 flex justify-between items-center">
+                <!-- Left side (Delete if applicable, otherwise empty placeholder) -->
+                <div>
+                    @if (formMode === 'UPDATE') {
+                    <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="delete()">
+                        Padam
+                    </button>
+                    }
+                </div>
+
+                <!-- Right side (Cancel + Submit always stay on right) -->
+                <div class="flex gap-2">
+                    <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">
+                        Batal
+                    </button>
+                    <button class="btn rounded-4xl py-2 btn-primary" type="submit">
+                        {{ submitLabel }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</dialog>

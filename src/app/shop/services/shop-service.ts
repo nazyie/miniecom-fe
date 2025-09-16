@@ -3,33 +3,34 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PageResponse } from '../../common/pagination.model';
 import { ResponseShopDropdown, Shop } from '../model/shop.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopService {
-  private apiUrl = 'http://localhost:8080/api/shop';
+  private apiRoute = environment.apiUrl + '/shop'
 
   constructor(private http: HttpClient) { }
 
   getShop(page = 0, size = 20, search: string): Observable<PageResponse<Shop>> {
-    return this.http.get<PageResponse<Shop>>(`${this.apiUrl}?page=${page}&size=${size}&search=${search}`);
+    return this.http.get<PageResponse<Shop>>(`${this.apiRoute}?page=${page}&size=${size}&search=${search}`);
   }
 
   getAllShop() {
-    return this.http.get<ResponseShopDropdown[]>(`${this.apiUrl}/all`);
+    return this.http.get<ResponseShopDropdown[]>(`${this.apiRoute}/all`);
   }
 
   createShop(shop: Shop): Observable<Shop> {
-    return this.http.post<Shop>(this.apiUrl, shop);
+    return this.http.post<Shop>(this.apiRoute, shop);
   }
 
   updateShop(shop: Shop): Observable<Shop> {
-    return this.http.patch<Shop>(this.apiUrl + `/${shop.id}`, shop);
+    return this.http.patch<Shop>(this.apiRoute + `/${shop.id}`, shop);
   }
 
   deleteShop(shopId: string): Observable<Shop> {
-    return this.http.delete<Shop>(this.apiUrl + '/' + shopId);
+    return this.http.delete<Shop>(this.apiRoute + '/' + shopId);
   }
 
 }

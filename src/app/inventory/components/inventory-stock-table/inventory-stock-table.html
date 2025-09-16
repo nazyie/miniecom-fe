@@ -1,0 +1,71 @@
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-2">
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Bilangan Stok</th>
+        <th>Tetapan</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of result; track data.id) {
+      <tr>
+        <th>
+          <label>
+            {{ $index + 1 }}
+          </label>
+        </th>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle h-12 w-12">
+                <img src="https://img.daisyui.com/images/profile/demo/2@94.webp" alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{ data.variantName }}</div>
+              <div class="text-sm opacity-50">{{ data.variantCode }}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          @if (data.stockCount >= 0) {
+            {{ data.stockCount }}
+          } @else {
+            N/A
+          }
+        </td>
+        <td>
+          <div class="flex gap-2">
+            <button class="btn rounded-3xl" (click)="edit(data)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role="img"
+                aria-labelledby="title-pencil-outline">
+                <title id="title-pencil-outline">Edit</title>
+                <path d="M12 20h9" /> <!-- underline -->
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
+            </button>
+            <button class="btn rounded-3xl" (click)="deleteRecord(data.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role="img"
+                aria-labelledby="title-trash-outline">
+                <title id="title-trash-outline">Delete</title>
+                <path d="M3 6h18" /> <!-- top bar / lid -->
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+              </svg>
+
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      }
+    </tbody>
+  </table>
+</div>

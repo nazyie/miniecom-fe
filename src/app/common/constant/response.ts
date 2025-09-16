@@ -6,4 +6,7 @@ export class ResponseText {
   static RECORD_SUCCESS_UPDATE = "Rekod berjaya dikemaskini";
   static RECORD_SUCCESS_DELETE = "Rekod berjaya dipadam"
 
+  // inventory - stock
+  static ERR_REQUIRED_NAME = "Sila lengkapkan nama produk";
+
 }

@@ -16,19 +16,47 @@
             <td>
               @switch (col.transformer) {
                 @case ('date') { <span>{{ row[col.key] | date: 'dd-MM-yyyy h:mm a' }}</span> }
+                @case ('display') { 
+                  @if(row[col.key] == true) { 
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                      width="24" height="24" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round"
+                      role="img" aria-labelledby="title-eye">
+                        <title id="title-eye">Show</title>
+                        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </span> 
+                  } @else { 
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                      width="24" height="24" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round"
+                      role="img" aria-labelledby="title-eye-off">
+                        <title id="title-eye-off">Hide</title>
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a20.29 20.29 0 0 1 5.08-5.94"/>
+                        <path d="M9.88 9.88a3 3 0 0 0 4.24 4.24"/>
+                        <path d="M1 1l22 22"/>
+                      </svg>
+                    </span> 
+                  } 
+                }
                 @default () { <span>{{ row[col.key] }}</span> }
               }
             </td>
           }
         </tr>
         }
-        @empty {
-          <div class="text-center text-sm text-gray-500 p-4">
-            Tiada Data. Mula cipta rekod sekarang!
-          </div>
-        }
       </tbody>
     </table>
+    @if(data.length === 0) {
+      <div class="text-center text-sm text-gray-500 p-4 w-full">
+        Tiada Data. Mula cipta rekod sekarang!
+      </div>
+    }
   </div>
 </div>
 

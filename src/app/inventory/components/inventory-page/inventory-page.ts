@@ -1,32 +1,28 @@
-import { Component, DestroyRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { debounce, debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ShopDialog } from '../shop-dialog/shop-dialog';
-import { ShopService } from '../../services/shop-service';
-import { Shop } from '../../model/shop.model';
-import { PageResponse } from '../../../common/pagination.model';
+import { Component, DestroyRef, ViewChild } from '@angular/core';
 import { TableColumn } from '../../../common/table_column.model';
-import { AdminLayout } from "../../../common/components/admin-layout/admin-layout";
-import { Table } from '../../../common/components/table/table';
+import { Inventory } from '../../model/inventory-modal';
+import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { ToastService } from '../../../common/services/toast-service';
+import { ShopNavigatorService } from '../../../common/services/shop-navigator-service';
+import { InventoryService } from '../../services/inventory-service';
+import { PageResponse } from '../../../common/pagination.model';
+import { AdminLayout } from '../../../common/components/admin-layout/admin-layout';
+import { FormsModule } from '@angular/forms';
+import { Table } from "../../../common/components/table/table";
+import { InventoryDialog } from "../inventory-dialog/inventory-dialog";
 import { ResponseText } from '../../../common/constant/response';
 
 @Component({
-  selector: 'app-shop-page',
-  imports: [
-    ShopDialog,
-    FormsModule,
-    AdminLayout,
-    Table,
-    ReactiveFormsModule
-],
-  templateUrl: './shop-page.html',
-  styleUrl: './shop-page.css'
+  selector: 'app-inventory-page',
+  imports: [AdminLayout, FormsModule, Table, InventoryDialog],
+  templateUrl: './inventory-page.html',
+  styleUrl: './inventory-page.css'
 })
-export class ShopPage implements OnInit {
-  titlePage: string = 'Kedai';
+export class InventoryPage {
+  titlePage: string = 'Inventori';
   columns: TableColumn[] = [
-    { name: 'Nama Kedai', key: 'name' },
+    { name: 'Nama Inventori', key: 'name' },
+    { name: 'Produk Dipaparkan', key: 'showInventory', transformer: 'display' },
     { name: 'Dicipta Pada', key: 'createdAt', transformer: 'date' },
     { name: 'Dikemaskini Pada', key: 'updatedAt', transformer: 'date' }
   ];
@@ -35,39 +31,48 @@ export class ShopPage implements OnInit {
   modalFormTitle: string = '';
   modalSubmitLabel: string = '';
   modalFormMode: string = '';
-  modalRecord: Shop | undefined;
+  modalRecord: Inventory | undefined;
 
   search: string = '';
   search$ = new Subject<string>();
 
+  @ViewChild(InventoryDialog) modal!: InventoryDialog;
+  @ViewChild(Table) table!: Table;
+
   constructor(
-    private shopService: ShopService,
+    private destroyRef: DestroyRef,
     private toastService: ToastService,
-    private destroyRef: DestroyRef
-  ) { }
+    private shopNavigatorService: ShopNavigatorService,
+    private inventoryService: InventoryService
+  ) {
+  }
+
 
   ngOnInit(): void {
     const searchChanges = this.search$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe(() => this.table.loadData());
 
+    const showNavigatorChanges = this.shopNavigatorService.currentShop$.subscribe(item => {
+      this.table.loadData();
+    })
+
+
     this.destroyRef.onDestroy(() => {
       searchChanges.unsubscribe();
+      showNavigatorChanges.unsubscribe();
     })
   }
 
-  @ViewChild(ShopDialog) modal!: ShopDialog;
-  @ViewChild(Table) table!: Table;
-
   openAddModal() {
-    this.modalFormTitle = 'Cipta Kedai';
+    this.modalFormTitle = 'Cipta Inventori';
     this.modalSubmitLabel = 'Cipta';
     this.modalFormMode = 'CREATE';
     this.modalIsOpen = true;
   }
 
-  openEditModal(data: Shop) {
-    this.modalFormTitle = 'Kemaskini Kedai';
+  openEditModal(data: Inventory) {
+    this.modalFormTitle = 'Kemaskini Inventori';
     this.modalSubmitLabel = 'Kemaskini';
     this.modalFormMode = 'UPDATE';
     this.modalIsOpen = true;
@@ -82,10 +87,12 @@ export class ShopPage implements OnInit {
     this.modalRecord = undefined;
   }
 
-  onFormSubmit({ formMode, data }: {formMode: string, data: any}) {
+  onFormSubmit({ formMode, data }: { formMode: string, data: any }) {
+    const shopId = this.shopNavigatorService.shopId;
+
     switch (formMode) {
       case 'CREATE':
-        this.shopService.createShop(data).subscribe({
+        this.inventoryService.createInventory(shopId, data).subscribe({
           next: () => {
             this.table.loadData();
             this.resetModal();
@@ -98,7 +105,7 @@ export class ShopPage implements OnInit {
         break;
 
       case 'UPDATE':
-        this.shopService.updateShop(data).subscribe({
+        this.inventoryService.updateInventory(shopId, data).subscribe({
           next: () => {
             this.table.loadData();
             this.resetModal();
@@ -111,7 +118,7 @@ export class ShopPage implements OnInit {
         break;
 
       case 'DELETE':
-        this.shopService.deleteShop(data).subscribe({
+        this.inventoryService.deleteInventory(shopId, data).subscribe({
           next: () => {
             this.table.loadData();
             this.resetModal();
@@ -124,11 +131,12 @@ export class ShopPage implements OnInit {
         break;
 
       default:
+        this.table.loadData();
         this.resetModal();
     }
   }
 
-  fetchShops(page: number, size: number): Observable<PageResponse<Shop>> {
-    return this.shopService.getShop(page, size, this.search);
+  fetchProduct(page: number, size: number): Observable<PageResponse<Inventory>> {
+    return this.inventoryService.getInventory(page, size, this.shopNavigatorService.shopId, this.search);
   }
 }
