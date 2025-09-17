@@ -1,18 +1,18 @@
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
-import { InventoryStock } from '../../model/inventory-modal';
+import { CatalogueVariant } from '../../model/catalogue-modal';
 
 @Component({
-  selector: 'app-inventory-stock-dialog',
+  selector: 'app-catalogue-variant-dialog',
   imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './inventory-stock-dialog.html',
-  styleUrl: './inventory-stock-dialog.css'
+  templateUrl: './catalogue-variant-dialog.html',
+  styleUrl: './catalogue-variant-dialog.css'
 })
-export class InventoryStockDialog implements OnInit {
-  @Input() formTitle: string = 'Cipta Inventory Stok';
+export class CatalogueVariantDialog implements OnInit {
+  @Input() formTitle: string = 'Cipta Catalogue Stok';
   @Input() submitLabel: string = 'Cipta';
   @Input() formMode: string = 'CREATE';
-  @Input() record: InventoryStock | undefined;
+  @Input() record: CatalogueVariant | undefined;
 
   @Output() formSubmitted = new EventEmitter<{ formMode: string, data: any }>();
 
@@ -71,7 +71,7 @@ export class InventoryStockDialog implements OnInit {
     this.form.markAsTouched();
 
     if (this.form.valid) {
-      let formRequest = this.form.value as InventoryStock;
+      let formRequest = this.form.value as CatalogueVariant;
       if (this.form.controls['enableStockChecking'].value !== true) {
         formRequest.stockCount = -1;
       }

@@ -1,28 +1,28 @@
 import { Component, DestroyRef, ViewChild } from '@angular/core';
 import { TableColumn } from '../../../common/table_column.model';
-import { Inventory } from '../../model/inventory-modal';
+import { Catalogue } from '../../model/catalogue-modal';
 import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { ToastService } from '../../../common/services/toast-service';
 import { ShopNavigatorService } from '../../../common/services/shop-navigator-service';
-import { InventoryService } from '../../services/inventory-service';
+import { InventoryService } from '../../services/catalogue-service';
 import { PageResponse } from '../../../common/pagination.model';
 import { AdminLayout } from '../../../common/components/admin-layout/admin-layout';
 import { FormsModule } from '@angular/forms';
 import { Table } from "../../../common/components/table/table";
-import { InventoryDialog } from "../inventory-dialog/inventory-dialog";
 import { ResponseText } from '../../../common/constant/response';
+import { CatalogueDialog } from '../catalogue-dialog/catalogue-dialog';
 
 @Component({
-  selector: 'app-inventory-page',
-  imports: [AdminLayout, FormsModule, Table, InventoryDialog],
-  templateUrl: './inventory-page.html',
-  styleUrl: './inventory-page.css'
+  selector: 'app-catalogue-page',
+  imports: [AdminLayout, FormsModule, Table, CatalogueDialog],
+  templateUrl: './catalogue-page.html',
+  styleUrl: './catalogue-page.css'
 })
 export class InventoryPage {
   titlePage: string = 'Katalog';
   columns: TableColumn[] = [
     { name: 'Nama Katalog', key: 'name' },
-    { name: 'Paparan', key: 'showInventory', transformer: 'display' },
+    { name: 'Paparan', key: 'publish', transformer: 'display' },
     { name: 'Dicipta Pada', key: 'createdAt', transformer: 'date' },
     { name: 'Dikemaskini Pada', key: 'updatedAt', transformer: 'date' }
   ];
@@ -31,12 +31,12 @@ export class InventoryPage {
   modalFormTitle: string = '';
   modalSubmitLabel: string = '';
   modalFormMode: string = '';
-  modalRecord: Inventory | undefined;
+  modalRecord: Catalogue | undefined;
 
   search: string = '';
   search$ = new Subject<string>();
 
-  @ViewChild(InventoryDialog) modal!: InventoryDialog;
+  @ViewChild(CatalogueDialog) modal!: CatalogueDialog;
   @ViewChild(Table) table!: Table;
 
   constructor(
@@ -71,7 +71,7 @@ export class InventoryPage {
     this.modalIsOpen = true;
   }
 
-  openEditModal(data: Inventory) {
+  openEditModal(data: Catalogue) {
     this.modalFormTitle = 'Kemaskini Katalog';
     this.modalSubmitLabel = 'Kemaskini';
     this.modalFormMode = 'UPDATE';
@@ -136,7 +136,7 @@ export class InventoryPage {
     }
   }
 
-  fetchProduct(page: number, size: number): Observable<PageResponse<Inventory>> {
+  fetchProduct(page: number, size: number): Observable<PageResponse<Catalogue>> {
     return this.inventoryService.getInventory(page, size, this.shopNavigatorService.shopId, this.search);
   }
 }

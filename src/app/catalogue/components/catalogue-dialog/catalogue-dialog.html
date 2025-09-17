@@ -1,0 +1,191 @@
+<dialog open class="modal">
+  <div class="modal-box w-full max-w-5xl">
+    <h3 class="font-bold text-primary text-lg mb-4">{{ formTitle }}</h3>
+
+    <form [formGroup]="form">
+      <div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nama Produk</legend>
+          <input type="text" name="name" class="input w-full" formControlName="name"/>
+          <p class="text-sm text-error hidden" [class]="{ 'inline': !this.form.valid && this.form.controls['name'].touched }">Medan nama produk diperlukan</p>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Deskripsi Produk</legend>
+          <textarea class="textarea w-full" formControlName="itemDescription"></textarea>
+        </fieldset>
+      </div>
+
+      <div>
+        <fieldset class="fieldset">
+          <label class="label">
+              <input type="checkbox" name="enableOrderDeliver" formControlName="publish"
+                  class="checkbox" />
+                  Benarkan Produk Dipaparkan
+          </label>
+        </fieldset>
+      </div>
+
+      @if (shopType === 'Booking Sistem') {
+      <div formGroupName="facility">
+        <div>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Frekuensi Penggunaan Fasiliti</legend>
+            <select class="select w-full" formControlName="bookingFrequency">
+              <option value="" disabled selected>Pilih Jenis Frekuensi</option>
+              <option value="DAILY">Harian</option>
+              <option value="HOURLY">Sejam</option>
+              <option value="HALF_HOURLY">Setengah Jam</option>
+            </select>
+          </fieldset>
+        </div>
+
+        @switch (form.get('facility.bookingFrequency')?.value) {
+          @case ('DAILY') {
+          <div>
+            <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+              <legend class="fieldset-legend">Waktu Operasi</legend>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Waktu Masuk</legend>
+              <input type="time" formControlName="openingTime" class="input input-bordered w-full" />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Waktu Keluar</legend>
+              <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
+            </fieldset>
+
+            </fieldset>
+          </div>
+          }
+          @default () {
+            @if (this.form.get('facility.bookingFrequency')?.value) {
+              <div>
+                <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+                  <legend class="fieldset-legend">Waktu Operasi</legend>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend">Waktu Operasi Mula</legend>
+                  <input type="time" formControlName="openingTime" class="input input-bordered w-full" />
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend">Waktu Operasi Tutup</legend>
+                  <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
+                </fieldset>
+
+                @if (errorMessageForTimeValidation !== '') { <p class="text-error">{{ errorMessageForTimeValidation }}</p>}
+
+                </fieldset>
+              </div>
+            }
+          }
+        }
+
+        <!-- Nested configuration -->
+        <div>
+          <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+            <legend class="fieldset-legend">Hari Operasi</legend>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="sundaySlot"/>
+                Ahad
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="mondaySlot"/>
+                Isnin
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="tuesdaySlot"/>
+                Selasa
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="wednesdaySlot"/>
+                Rabu
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="thursdaySlot"/>
+                Khamis
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="fridaySlot"/>
+                Jumaat
+              </label>
+            </div>
+            <div>
+              <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="saturdaySlot"/>
+                Sabtu
+              </label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      }
+
+      @if (shopType === 'Miniecom') {
+        <div class="mt-2">
+          <h3 class="text-primary text-md font-bold">Katalog Varian</h3>
+          <div class="w-full flex justify-end">
+            <button class="btn btn-primary rounded-4xl flex items-center gap-2 whitespace-nowrap" (click)="openAddModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span class="hidden sm:inline">Tambah Varian</span>
+            </button>
+          </div>
+          <app-catalogue-variant-table 
+            [inventoryId]="form.controls['id'].value"
+            (recordAction)="handleTableAction($event)"
+          />
+        </div>
+
+        @if (modalIsOpen) {
+          <app-catalogue-variant-dialog 
+            [formTitle]="modalFormTitle"
+            [submitLabel]="modalSubmitLabel"
+            [formMode]="modalFormMode"
+            [record]="modalRecord"
+            (formSubmitted)="onFormSubmit($event)"
+          />
+        }
+      }
+
+
+      <div class="modal-action mt-6 flex justify-between items-center">
+        <!-- Left side (Delete if applicable, otherwise empty placeholder) -->
+        <div>
+          @if (formMode === 'UPDATE') {
+          <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="delete()">
+            Padam
+          </button>
+          }
+        </div>
+
+        <!-- Right side (Cancel + Submit always stay on right) -->
+        <div class="flex gap-2">
+          <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">
+            Batal
+          </button>
+          <button class="btn rounded-4xl py-2 btn-primary" type="submit" (click)="submit()">
+            {{ submitLabel }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</dialog>

@@ -55,6 +55,13 @@ export class ShopNavigatorService {
         return this.currentShop.openShop;
     }
 
+    get shopType() : string | null {
+        if (this.currentShop === null) {
+            return null;
+        }
+        return this.currentShop.shopType;
+    }
+
     saveToSessionStorage() {
         sessionStorage.setItem('shopSelector', JSON.stringify(this.currentShop));
     }

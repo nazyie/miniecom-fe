@@ -21,7 +21,9 @@ export interface Shop {
 };
 
 export interface ResponseShopDropdown {
-  id: string,
-  name: string,
-  openShop: boolean
+  id: string;
+  name: string;
+  openShop: boolean;
+  shopType: string;
+
 }

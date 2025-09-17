@@ -1,19 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InventoryService } from '../../services/inventory-service';
-import { InventoryStock } from '../../model/inventory-modal';
+import { InventoryService } from '../../services/catalogue-service';
+import { CatalogueVariant } from '../../model/catalogue-modal';
 
 @Component({
-  selector: 'app-inventory-stock-table',
+  selector: 'app-catalogue-variant-table',
   imports: [],
-  templateUrl: './inventory-stock-table.html',
-  styleUrl: './inventory-stock-table.css'
+  templateUrl: './catalogue-variant-table.html',
+  styleUrl: './catalogue-variant-table.css'
 })
 export class InventoryStockTable {
   @Input() inventoryId?: string;
 
   @Output() recordAction = new EventEmitter<{action: string, data: any}>();
 
-  result: InventoryStock [] = [];
+  result: CatalogueVariant [] = [];
 
   constructor(
     private inventoryService: InventoryService
@@ -29,7 +29,7 @@ export class InventoryStockTable {
     }
   }
 
-  edit(data: InventoryStock) {
+  edit(data: CatalogueVariant) {
     this.recordAction.emit({
       action: 'MODIFY',
       data: data,
