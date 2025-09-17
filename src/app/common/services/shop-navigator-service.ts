@@ -10,12 +10,21 @@ export class ShopNavigatorService {
     currentShop$ = new Subject<ResponseShopDropdown>();
 
     constructor() {
-        // TODO: implement the session storage information setup
+        const shopSelector = sessionStorage.getItem('shopSelector');
+
+        if (shopSelector) {
+            this.currentShop = JSON.parse(shopSelector);
+
+            if (this.currentShop) {
+                this.currentShop$.next(this.currentShop);
+            }
+        }
     }
 
     loadCurrentShop(selectedShop: ResponseShopDropdown) {
         this.currentShop = selectedShop;
         this.currentShop$.next(this.currentShop);
+        this.saveToSessionStorage();
     }
 
     get shopName() : string {
@@ -37,5 +46,16 @@ export class ShopNavigatorService {
             return null;
         }
         return this.currentShop;
+    }
+
+    get shopOpen() : boolean {
+        if (this.currentShop === null) {
+            return false;
+        }
+        return this.currentShop.openShop;
+    }
+
+    saveToSessionStorage() {
+        sessionStorage.setItem('shopSelector', JSON.stringify(this.currentShop));
     }
 }

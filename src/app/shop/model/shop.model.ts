@@ -2,6 +2,7 @@ export interface Shop {
   id: string;
   slug: string;
   name: string;
+  shopType: string;
 
   openShop: boolean;
   enableOrderConfirm: boolean;

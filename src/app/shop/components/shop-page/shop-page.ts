@@ -1,5 +1,5 @@
-import { Component, DestroyRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { debounce, debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
+import { Component, DestroyRef, OnInit,  ViewChild } from '@angular/core';
+import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShopDialog } from '../shop-dialog/shop-dialog';
 import { ShopService } from '../../services/shop-service';
@@ -27,6 +27,7 @@ export class ShopPage implements OnInit {
   titlePage: string = 'Kedai';
   columns: TableColumn[] = [
     { name: 'Nama Kedai', key: 'name' },
+    { name: 'Shop Type', key: 'shopType', transformer: 'title' },
     { name: 'Dicipta Pada', key: 'createdAt', transformer: 'date' },
     { name: 'Dikemaskini Pada', key: 'updatedAt', transformer: 'date' }
   ];

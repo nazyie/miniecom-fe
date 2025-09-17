@@ -19,10 +19,10 @@ import { ResponseText } from '../../../common/constant/response';
   styleUrl: './inventory-page.css'
 })
 export class InventoryPage {
-  titlePage: string = 'Inventori';
+  titlePage: string = 'Katalog';
   columns: TableColumn[] = [
-    { name: 'Nama Inventori', key: 'name' },
-    { name: 'Produk Dipaparkan', key: 'showInventory', transformer: 'display' },
+    { name: 'Nama Katalog', key: 'name' },
+    { name: 'Paparan', key: 'showInventory', transformer: 'display' },
     { name: 'Dicipta Pada', key: 'createdAt', transformer: 'date' },
     { name: 'Dikemaskini Pada', key: 'updatedAt', transformer: 'date' }
   ];
@@ -65,14 +65,14 @@ export class InventoryPage {
   }
 
   openAddModal() {
-    this.modalFormTitle = 'Cipta Inventori';
+    this.modalFormTitle = 'Cipta Katalog';
     this.modalSubmitLabel = 'Cipta';
     this.modalFormMode = 'CREATE';
     this.modalIsOpen = true;
   }
 
   openEditModal(data: Inventory) {
-    this.modalFormTitle = 'Kemaskini Inventori';
+    this.modalFormTitle = 'Kemaskini Katalog';
     this.modalSubmitLabel = 'Kemaskini';
     this.modalFormMode = 'UPDATE';
     this.modalIsOpen = true;

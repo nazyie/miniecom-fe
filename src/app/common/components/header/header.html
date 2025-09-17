@@ -18,6 +18,9 @@
     <!-- Shop Dropdown -->
     <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost font-bold m-1">
+        @if (shopNavigatorService.shopOpen) {
+          <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span> 
+        } 
         {{ shopNavigatorService.shopName }}
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
@@ -28,7 +31,14 @@
         @if (listOfShop$ | async; as shops) {
           @for (shop of shops; track shop.id) {
             <li>
-              <a (click)="navigateSelectedShop(shop)">{{ shop.name }}</a>
+              <a (click)="navigateSelectedShop(shop)"> 
+                @if (shop.openShop) {
+                  <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span> 
+                } @else {
+                  <span class="inline-block h-3 w-3 rounded-full bg-gray-400"></span> 
+                }
+                {{ shop.name }}
+              </a>
             </li>
           }
         } @else {

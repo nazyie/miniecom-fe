@@ -42,15 +42,19 @@ export class ShopDialog implements OnChanges, OnInit {
         id: [this.record.id, [Validators.required]],
         name: [this.record.name, [Validators.required]],
         openShop: [this.record.openShop, []],
+        shopType: [this.record.shopType, [Validators.required]],
         enableOrderConfirm: [this.record.enableOrderConfirm, []],
         enableOrderDeliver: [this.record.enableOrderDeliver, []],
         enableOrderPayment: [this.record.enableOrderPayment, []],
       })
 
+      this.form.controls['shopType'].disable();
+
     } else {
       this.form = this.fb.group({
         name: ['', [Validators.required]],
         openShop: ['', []],
+        shopType: ['', [Validators.required]],
         enableOrderConfirm: ['', []],
         enableOrderDeliver: ['', []],
         enableOrderPayment: ['', []],

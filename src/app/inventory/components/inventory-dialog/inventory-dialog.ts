@@ -189,7 +189,7 @@ export class InventoryDialog implements OnInit, AfterViewInit {
 
     this.inventoryService.createInventory(shopId, data).subscribe({
       next: (response: Inventory) => {
-        this.formTitle = 'Kemaskini Inventori';
+        this.formTitle = 'Kemaskini Katalog';
         this.submitLabel = 'Kemaskini';
         this.formMode = 'UPDATE';
         this.form.controls['id'].setValue(response.id);

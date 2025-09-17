@@ -1,0 +1,24 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'titleCase' })
+export class TitleCasePipe implements PipeTransform {
+    transform(value: string | null | undefined): string {
+    if (!value) return '';
+
+    // 1. Replace underscores with space, remove extra spaces
+    const str = value
+      .replace(/_/g, ' ')       // underscores → spaces
+      .replace(/\s+/g, ' ')     // multiple spaces → single
+      .trim();
+
+    // 2. Capitalize first letter of each word
+    return str
+      .split(' ')
+      .map(word => {
+        const lower = word.toLowerCase();
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+      })
+      .join(' ');
+  }
+
+}

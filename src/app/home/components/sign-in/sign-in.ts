@@ -6,6 +6,8 @@ import { ToastService } from '../../../common/services/toast-service';
 import { ErrorResponse } from '../../../common/model/common-model';
 import { Router } from '@angular/router';
 import { ResponseText } from '../../../common/constant/response';
+import { ShopNavigatorService } from '../../../common/services/shop-navigator-service';
+import { ShopService } from '../../../shop/services/shop-service';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,7 +21,9 @@ export class SignIn implements OnInit{
   constructor (
     private securityService: SecurityService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private shopNavigatorService: ShopNavigatorService,
+    private shopService: ShopService
   ) {
   }
 
@@ -37,8 +41,9 @@ export class SignIn implements OnInit{
     if (this.form.valid) {
       const formRequest = this.form.value as RequestLogin;
       this.securityService.login(formRequest).subscribe({
-        next: (res)=>{
+        next: (res) => {
           this.toastService.success(ResponseText.SUCCESS_SIGN_IN);
+          this.handleAutoShopSelection();
           this.router.navigate(['kedai']);
         },
         error: (err: ErrorResponse) => {
@@ -48,6 +53,19 @@ export class SignIn implements OnInit{
     }
   }
 
-  // TODO: implement the auto loading selecting the shop after login. Better UX
+  private handleAutoShopSelection() {
+    let items: any[] = [];
+
+    this.shopService.getAllShop().subscribe({
+      next: (result) => {
+        items = result;
+      },
+      complete: () => {
+        if (items.length > 0) {
+          this.shopNavigatorService.loadCurrentShop(items[0]);
+        }
+      }
+    })
+  }
 
 }
