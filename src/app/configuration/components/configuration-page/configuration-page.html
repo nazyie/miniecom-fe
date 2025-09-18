@@ -4,19 +4,19 @@
     <!-- CARD 1 -->
     <div class="relative w-full lg:w-1/2 ">
       <div
-        class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-r from-pink-600 via-purple-700 to-indigo-600 text-white p-6">
+        class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-500 text-white p-6">
         <div class="mt-4">
-          <p class="text-3xl font-bold mt-2">Starter Plan</p>
+          <p class="text-3xl font-bold mt-2">@if (card !== null) { {{ card.tier }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
         </div>
 
         <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div>
             <p class="opacity-70">Nama</p>
-            <p class="font-semibold text-2xl">John Doe</p>
+            <p class="font-semibold text-2xl">@if (card !== null) { {{ card.name }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
           </div>
           <div>
             <p class="opacity-70">Valid Sehingga</p>
-            <p class="font-semibold text-2xl">12/27</p>
+            <p class="font-semibold text-2xl">@if (card !== null) { {{ card.validUntil | date:'d/M/yy' }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
           </div>
         </div>
 
@@ -25,30 +25,60 @@
           <div>
             <div class="flex justify-between text-xs">
               <p>Limit Kedai</p>
-              <p>1 / 30</p>
+              <p>
+                @if (card !== null) { 
+                  @if (card.maxShop == -1) {
+                    Unlimited
+                  } @else {
+                    {{ card.shopUsage }} / {{ card.maxShop }} 
+                  }
+                } @else { 
+                  <span class="loading loading-spinner loading-sm"></span> 
+                }
+              </p>
             </div>
-            <progress class="progress progress-secondary w-full h-2" value="20" max="100"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.shopUsage }}" max="{{ card?.maxShop }}"></progress>
           </div>
           <div>
             <div class="flex justify-between text-xs">
               <p>Limit Transaksi</p>
-              <p>Unlimited</p>
+              <p>
+                @if (card !== null) { 
+                  @if (card.maxTransaction == -1) {
+                    Unlimited
+                  } @else {
+                    {{ card.transactionUsage }} / {{ card.maxTransaction }} 
+                  }
+                } @else { 
+                  <span class="loading loading-spinner loading-sm"></span> 
+                }
+              </p>
             </div>
-            <progress class="progress progress-neutral w-full h-2" value="0" max="100"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.transactionUsage }}" max="{{ card?.maxTransaction }}"></progress>
           </div>
           <div>
             <div class="flex justify-between text-xs">
               <p>Limit Catalogue</p>
-              <p>1 / 3</p>
+              <p>
+                @if (card !== null) { 
+                  @if (card.maxCatalogue == -1) {
+                    Unlimited
+                  } @else {
+                    {{ card.catalogueUsage }} / {{ card.maxCatalogue }} 
+                  }
+                } @else { 
+                  <span class="loading loading-spinner loading-sm"></span> 
+                }
+              </p>
             </div>
-            <progress class="progress progress-secondary w-full h-2" value="20" max="100"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.catalogueUsage }}" max="{{ card?.maxCatalogue }}"></progress>
           </div>
         </div>
 
         <!-- Footer features -->
         <div class="text-xs mt-4 flex flex-wrap gap-2 opacity-70">
-          <span class="line-through">Ads</span>
-          <span class="line-through">Payment Gateway</span>
+          @if (card?.isAdsEnabled) { <span class="">Ads</span> }
+          @if (card?.isPaymentGatewayEnabled) { <span class="">Payment Gateway</span> }
         </div>
 
         <!-- Shiny overlay effect -->
