@@ -278,30 +278,40 @@ export class CatalogueDialog implements OnInit, AfterViewInit {
 
   private validateCatalogueFrequencyByStartTimeAndEndTime(openingTime: string, closingTime: string, bookingFrequency: "HOURLY" | "HALF_HOURLY"): boolean {
 
-  const parseTime = (time: string): number => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
+    const parseTime = (time: string): number => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
 
-  const startMinutes = parseTime(openingTime);
-  const endMinutes = parseTime(closingTime);
+    const startMinutes = parseTime(openingTime);
+    const endMinutes = parseTime(closingTime);
 
-  if (endMinutes <= startMinutes) {
-    return false; // invalid range
+    if (endMinutes <= startMinutes) {
+      return false; // invalid range
+    }
+
+    const duration = endMinutes - startMinutes;
+
+    switch (bookingFrequency) {
+      case "HOURLY":
+        return duration % 60 === 0;
+
+      case "HALF_HOURLY":
+        return duration % 30 === 0;
+
+      default:
+        return false;
+    }
   }
 
-  const duration = endMinutes - startMinutes;
+  formatPrice() {
+    const control = this.form.get('facility.price');
+    let value = control?.value;
 
-  switch (bookingFrequency) {
-    case "HOURLY":
-      return duration % 60 === 0;
-
-    case "HALF_HOURLY":
-      return duration % 30 === 0;
-
-    default:
-      return false;
+    if (value != null && value !== '') {
+      control?.setValue(parseFloat(value).toFixed(2), { emitEvent: false });
+    }
   }
-}
+
 
 }

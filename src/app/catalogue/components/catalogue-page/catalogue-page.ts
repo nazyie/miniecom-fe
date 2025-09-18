@@ -39,12 +39,15 @@ export class InventoryPage {
   @ViewChild(CatalogueDialog) modal!: CatalogueDialog;
   @ViewChild(Table) table!: Table;
 
+  shopNavigatorService!: ShopNavigatorService;
+
   constructor(
     private destroyRef: DestroyRef,
     private toastService: ToastService,
-    private shopNavigatorService: ShopNavigatorService,
+    shopNavigatorService: ShopNavigatorService,
     private inventoryService: InventoryService
   ) {
+    this.shopNavigatorService = shopNavigatorService;
   }
 
 

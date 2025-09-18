@@ -1,59 +1,85 @@
 <div>
   @if (isRootPath) {
-  <div class="flex m-1 rounded-2xl p-1 bg-primary text-primary-content shadow-lg">
-    <div class="flex-1 pt-1">
-      <button class="btn btn-ghost text-xl">Mini Ecom</button>
+  <div class="fixed top-0 left-0 right-0 z-10 flex m-0 rounded-none p-2 bg-none">
+    <div class="text-primary-content flex shadow-sm bg-primary w-full rounded-2xl p-1">
+      <div class="flex-1 pt-1">
+        <button class="btn btn-ghost text-xl">Mini Ecom</button>
+      </div>
+
+      @if (this.securityService.isAuthenticated$ | async) {
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="/kedai">Kedai Saya</a></li>
+        </ul>
+      </div>
+      }
     </div>
-    @if (this.securityService.isAuthenticated$ | async) {
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
-        <li><a href="/kedai">Kedai Saya</a></li>
-      </ul>
-    </div>
-    }
   </div>
+
+  <!-- Add padding so content doesn't hide behind header -->
+  <div class="pt-11"></div>
   } @else {
-  <div class="flex items-center justify-between rounded-2xl bg-primary text-primary-content shadow-md px-4">
+  <div class="fixed top-0 left-0 right-0 z-10 flex m-0 rounded-none p-2 bg-none">
+    <div class="flex w-full items-center justify-between rounded-2xl bg-primary text-primary-content shadow-sm ">
 
-    <!-- Shop Dropdown -->
-    <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost font-bold m-1">
-        @if (shopNavigatorService.shopOpen) {
-          <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span> 
-        } 
-        {{ shopNavigatorService.shopName }}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </label>
-      <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-black">
-        @if (listOfShop$ | async; as shops) {
-          @for (shop of shops; track shop.id) {
-            <li>
-              <a (click)="navigateSelectedShop(shop)"> 
-                @if (shop.openShop) {
-                  <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span> 
-                } @else {
-                  <span class="inline-block h-3 w-3 rounded-full bg-gray-400"></span> 
-                }
-                {{ shop.name }}
-              </a>
-            </li>
+      <!-- Shop Dropdown -->
+      <div class="dropdown">
+        <label tabindex="0" class="btn btn-ghost font-bold m-1">
+          @if (shopNavigatorService.shopOpen) {
+          <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span>
           }
-        } @else {
+          {{ shopNavigatorService.shopName }}
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-black">
+          @if (listOfShop$ | async; as shops) {
+          @for (shop of shops; track shop.id) {
+          <li>
+            <a (click)="navigateSelectedShop(shop)">
+              @if (shop.openShop) {
+              <span class="inline-block h-3 w-3 rounded-full bg-green-400"></span>
+              } @else {
+              <span class="inline-block h-3 w-3 rounded-full bg-gray-400"></span>
+              }
+              {{ shop.name }}
+            </a>
+          </li>
+          }
+          @empty {
+            <li class="ghost"><span class="italic">Kedai Belum Dicipta</span></li>
+          }
+          } @else {
           <li><span class="italic">Loading...</span></li>
-        }
-      </ul>
-    </div>
+          }
+        </ul>
+      </div>
 
-    <!-- Logout -->
-    <div>
-      <ul class="menu menu-horizontal px-1">
-        <li><a (click)="logout()">Log Keluar</a></li>
-      </ul>
+      <!-- Logout -->
+      <div>
+        <ul class="menu menu-horizontal px-1">
+          <li>
+            <a (click)="logout()">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+            </svg>
+            <span class="hidden md:inline" >Log Keluar</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
+  <div class="pt-11"></div>
   }
+
 </div>

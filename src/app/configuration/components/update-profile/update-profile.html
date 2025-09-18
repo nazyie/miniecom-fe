@@ -1,0 +1,29 @@
+<details class="collapse collapse-arrow mt-3 bg-base-100 border-primary border">
+  <summary class="collapse-title font-semibold">Kemaskini Maklumat Profil</summary>
+  <div class="collapse-content text-sm">
+    <div>
+      <form action="" [formGroup]="form" (submit)="submit()">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nama</legend>
+          <input type="text" class="input w-full" formControlName="firstName" />
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Phone No</legend>
+          <input type="text" class="input w-full" formControlName="phoneNo" />
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Email</legend>
+          <input type="email" class="input w-full" formControlName="email" />
+        </fieldset>
+
+        <button class="mt-2 btn rounded-4xl w-full py-2 btn-primary" type="submit">
+          Kemaskini
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</details>

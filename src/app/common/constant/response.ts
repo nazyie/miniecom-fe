@@ -9,4 +9,7 @@ export class ResponseText {
   // inventory - stock
   static ERR_REQUIRED_NAME = "Sila lengkapkan nama produk";
 
+  // change password
+  static ERR_MISMATCH_PASSWORD = "Kata laluan tidak sepadan"
+
 }
