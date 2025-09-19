@@ -12,7 +12,7 @@ import { FacilityConfirmation } from '../facility-confirmation/facility-confirma
 })
 export class BookingPage {
   primaryColor: string = '#570df8';
-  currentStepper: number = 1;
+  currentStepper: number = 2;
 
   next() {
     ++this.currentStepper;
