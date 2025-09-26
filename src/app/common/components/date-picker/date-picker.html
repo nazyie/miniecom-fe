@@ -1,48 +1,42 @@
-<div class="w-full max-w-md mx-auto bg-white rounded-2xl shadow p-4">
+<div class="w-full p-4 bg-white rounded-2xl shadow-lg">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-4">
-    <button
-      (click)="changeMonth(-1)"
-      class="p-2 rounded-full hover:bg-gray-100"
-    >
-      ◀
-    </button>
-    <div class="font-semibold">
+  <div class="flex items-center justify-between mb-4">
+    <button (click)="prevMonth()" class="p-2 rounded hover:bg-gray-100">‹</button>
+    <h2 class="font-semibold text-lg">
       {{ currentYear }} - {{ currentMonth + 1 | number: '2.0' }}
-    </div>
-    <button
-      (click)="changeMonth(1)"
-      class="p-2 rounded-full hover:bg-gray-100"
-    >
-      ▶
-    </button>
+    </h2>
+    <button (click)="nextMonth()" class="p-2 rounded hover:bg-gray-100">›</button>
   </div>
 
-  <!-- Days header -->
-  <div class="grid grid-cols-7 text-center text-sm font-medium mb-2">
-    <div *ngFor="let day of ['Su','Mo','Tu','We','Th','Fr','Sa']">
-      {{ day }}
-    </div>
+  <!-- Days of Week -->
+  <div class="grid grid-cols-7 text-center text-xs sm:text-sm font-medium text-gray-500">
+    @for (d of ['Su','Mo','Tu','We','Th','Fr','Sa']; track d) {
+      <div>{{ d }}</div>
+    }
   </div>
 
-  <!-- Calendar grid -->
-  <div class="grid grid-rows-6 gap-1">
-    <div *ngFor="let week of weeks" class="grid grid-cols-7 gap-1">
-      <div
-        *ngFor="let day of week"
-        class="aspect-square flex flex-col items-center justify-center text-sm relative cursor-pointer rounded-lg transition"
-        [class.bg-gray-100]="!day"
-        [class.bg-gray-300]="day && isDisabled(day)"
-        [class.bg-blue-500]="day && (isStart(day) || isEnd(day))"
-        [class.bg-blue-200]="day && isInRange(day)"
-        [class.text-white]="day && (isStart(day) || isEnd(day))"
-        (click)="day && selectDate(day)"
-      >
-        <span *ngIf="day">{{ day.getDate() }}</span>
-        <small *ngIf="day && getLabel(day)" class="text-[10px]">
-          {{ getLabel(day) }}
-        </small>
-      </div>
-    </div>
+  <!-- Calendar -->
+  <div class="grid grid-cols-7 text-center mt-2 gap-1 sm:gap-y-2">
+    @for (week of weeks; track week) {
+      @for (day of week; track day.date) {
+        <div
+          (click)="selectDate(day.date, day.inCurrentMonth)"
+          class="relative flex items-center justify-center aspect-square rounded-full cursor-pointer transition duration-200 text-xs sm:text-sm md:text-base"
+          [class.bg-primary]="isSelected(day.date)"
+          [class.text-white]="isSelected(day.date)"
+          [class.bg-blue-100]="isInRange(day.date)"
+          [class.text-gray-400]="!day.inCurrentMonth"
+          [class.bg-red-300]="isDisabled(day.date)"
+        >
+          {{ day.date.split('-')[2] }}
+
+          @if (getLabel(day.date)) {
+            <span class="absolute bottom-0 text-[0.55rem] sm:text-[0.65rem] text-gray-600">
+              {{ getLabel(day.date) }}
+            </span>
+          }
+        </div>
+      }
+    }
   </div>
 </div>

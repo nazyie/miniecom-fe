@@ -1,58 +1,61 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-// import {
-//   trigger,
-//   transition,
-//   style,
-//   animate,
-// } from '@angular/animations';
-
-
-export type PickerMode = 'DATE' | 'RANGE';
-
-interface DateLabel {
-  date: Date;
-  label: string;
-}
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-date-picker',
   imports: [CommonModule],
   templateUrl: './date-picker.html',
   styleUrl: './date-picker.css',
-  // animations: [
-  //   trigger('calendarAnim', [
-  //     transition(':enter', [
-  //       style({ opacity: 0, transform: 'translateY(10px)' }),
-  //       animate(
-  //         '250ms ease-out',
-  //         style({ opacity: 1, transform: 'translateY(0)' })
-  //       ),
-  //     ]),
-  //     transition(':leave', [
-  //       animate(
-  //         '200ms ease-in',
-  //         style({ opacity: 0, transform: 'translateY(-10px)' })
-  //       ),
-  //     ]),
-  //   ]),
-  // ],
 })
-export class DatePicker implements OnInit {
-  @Input() format: 'DATE' | 'RANGE' = 'DATE';
-  @Input() disabledDates: Date[] = [];
-  @Input() labels: { [key: string]: string } = {};
-  @Output() selectedDates = new EventEmitter<Date[]>();
+export class DatePicker implements OnInit, OnChanges {
+  @Input() format: 'DATE' | 'RANGE' = 'RANGE';
+  @Input() disabledDates: string[] = [];
+  @Input() labels: Record<string, string> = {};
+
+  // @Input() disabledDates: string[] = [
+  //   '2025-09-20',
+  //   '2025-09-25',
+  //   '2025-10-02'
+  // ];
+  // @Input() labels: Record<string, string> = {
+  //   '2025-09-10': '1 Available',
+  // };
+
+  @Output() selectedDates = new EventEmitter<string[]>();
+
+  constructor(
+    private toastService: ToastService
+  ) { }
 
   today: Date = new Date();
   currentMonth: number = this.today.getMonth();
   currentYear: number = this.today.getFullYear();
+  disabledSet = new Set<string>();
 
-  selected: Date[] = [];
-  weeks: { date: Date; inCurrentMonth: boolean }[][] = [];
+  selected: string[] = [];
+  weeks: { date: string; inCurrentMonth: boolean }[][] = [];
+
+  rangeStart: string | null = null;
+  rangeEnd: string | null = null;
 
   ngOnInit() {
     this.generateCalendar(this.currentYear, this.currentMonth);
+    this.disabledSet = new Set(this.disabledDates);
+  }
+
+  ngOnChanges() {
+    this.disabledSet = new Set(this.disabledDates);
+    console.log(this.disabledSet);
+  }
+
+  /** Format Date -> YYYY-MM-DD */
+  private formatDate(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  getLabel(date: string): string | null {
+    return this.labels[date] ?? null;
   }
 
   generateCalendar(year: number, month: number) {
@@ -63,25 +66,28 @@ export class DatePicker implements OnInit {
     const daysInMonth = lastDay.getDate();
 
     const prevMonthLastDate = new Date(year, month, 0).getDate();
-    const days: { date: Date; inCurrentMonth: boolean }[] = [];
+    const days: { date: string; inCurrentMonth: boolean }[] = [];
 
     // Previous month filler
     for (let i = startDay - 1; i >= 0; i--) {
       days.push({
-        date: new Date(year, month - 1, prevMonthLastDate - i),
+        date: this.formatDate(new Date(year, month - 1, prevMonthLastDate - i)),
         inCurrentMonth: false,
       });
     }
 
     // Current month
     for (let i = 1; i <= daysInMonth; i++) {
-      days.push({ date: new Date(year, month, i), inCurrentMonth: true });
+      days.push({ date: this.formatDate(new Date(year, month, i)), inCurrentMonth: true });
     }
 
-    // Next month filler
+    // Next month filler (to make 6 weeks grid = 42 days)
     const nextDays = 42 - days.length;
     for (let i = 1; i <= nextDays; i++) {
-      days.push({ date: new Date(year, month + 1, i), inCurrentMonth: false });
+      days.push({
+        date: this.formatDate(new Date(year, month + 1, i)),
+        inCurrentMonth: false,
+      });
     }
 
     // Break into weeks
@@ -91,31 +97,23 @@ export class DatePicker implements OnInit {
     }
   }
 
-  isDisabled(date: Date): boolean {
-    return this.disabledDates.some(
-      (d) =>
-        d.getFullYear() === date.getFullYear() &&
-        d.getMonth() === date.getMonth() &&
-        d.getDate() === date.getDate()
-    );
+  isDisabled(date: string): boolean {
+    return this.disabledDates.includes(date);
   }
 
-  isSelected(date: Date): boolean {
-    return this.selected.some(
-      (d) =>
-        d.getFullYear() === date.getFullYear() &&
-        d.getMonth() === date.getMonth() &&
-        d.getDate() === date.getDate()
-    );
+  isSelected(date: string): boolean {
+    return this.selected.includes(date);
   }
 
-  selectDate(date: Date, inCurrentMonth: boolean) {
+  selectDate(date: string, inCurrentMonth: boolean) {
     if (this.isDisabled(date)) return;
+
+    const d = new Date(date);
 
     // Auto navigate if clicked on prev/next month day
     if (!inCurrentMonth) {
-      this.currentMonth = date.getMonth();
-      this.currentYear = date.getFullYear();
+      this.currentMonth = d.getMonth();
+      this.currentYear = d.getFullYear();
       this.generateCalendar(this.currentYear, this.currentMonth);
     }
 
@@ -133,14 +131,47 @@ export class DatePicker implements OnInit {
       }
     }
 
+    if (this.format === 'RANGE' && this.selected.length === 2) {
+      const [rangeStart, rangeEnd] = [ this.selected[0], this.selected[1]];
+
+      if (this.rangeContainsDisabled(rangeStart, rangeEnd)) {
+        this.selected = [];
+        this.toastService.error('Tidak dibenarkan untuk memilih tarikh yang telah di tempah');
+      }
+    }
+
     this.selectedDates.emit(this.selected);
   }
 
-  isInRange(date: Date): boolean {
+  private rangeContainsDisabled(start: any, end: any): boolean {
+    // Ensure [earlier, later]
+    const [s, e] = start < end ? [start, end] : [end, start];
+
+    let current = s;
+    while (current <= e) {
+      if (this.disabledSet.has(current)) {
+        return true;
+      }
+      current = this.addDays(current, 1); // safely add one day in string form
+    }
+    return false;
+  }
+
+  private addDays(dateStr: string, days: number): string {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const d = new Date(year, month - 1, day + days);
+    return [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, '0'),
+      String(d.getDate()).padStart(2, '0')
+    ].join('-');
+  }
+
+  isInRange(date: string): boolean {
     if (this.format !== 'RANGE' || this.selected.length < 2) return false;
     return (
-      date >= this.selected[0] &&
-      date <= this.selected[1] &&
+      new Date(date) >= new Date(this.selected[0]) &&
+      new Date(date) <= new Date(this.selected[1]) &&
       !this.isSelected(date)
     );
   }

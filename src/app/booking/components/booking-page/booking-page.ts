@@ -1,39 +1,40 @@
-import { Component, numberAttribute } from '@angular/core';
-import { NavigationBar } from "../navigation-bar/navigation-bar";
-import { FacilitySelection } from "../facility-selection/facility-selection";
-import { FacilityDateSelection } from '../facility-date-selection/facility-date-selection';
-import { FacilityConfirmation } from '../facility-confirmation/facility-confirmation';
+import { Component } from '@angular/core';
+import { SearchByFacility } from '../search-by-facility/search-by-facility';
+import { BookingService } from '../../service/booking-service';
+import { Title } from '@angular/platform-browser';
+import { ResponseShopDetail } from '../../model/booking-page.model';
+import { NotFound } from "../not-found/not-found";
 
 @Component({
   selector: 'app-booking-page',
-  imports: [NavigationBar, FacilitySelection, FacilityDateSelection, FacilityConfirmation],
+  imports: [SearchByFacility, NotFound],
   templateUrl: './booking-page.html',
   styleUrl: './booking-page.css'
 })
 export class BookingPage {
-  primaryColor: string = '#570df8';
-  currentStepper: number = 2;
+  shopDetail: ResponseShopDetail | null = null;
 
-  next() {
-    ++this.currentStepper;
+  constructor(
+    private bookingService: BookingService,
+    private title: Title
+  ) {
+    if (this.shopDetail == null) {
+      this.bookingService.getShopDetail().subscribe({
+        next: (response) => {
+          this.shopDetail = response;
+          title.setTitle(this.shopDetail.shopName);
+        },
+        error: () => {
+          title.setTitle('Booking Website');
+        }
+      });
+    }
   }
 
-  isValidToProceedNext() : boolean {
-    if (this.currentStepper == 3)
-      return false;
+  toggleOption: boolean = true;
 
-    return true;
-  }
-
-  prev() {
-    --this.currentStepper;
-  }
-
-  isValidToProceedPrev(): boolean {
-    if (this.currentStepper == 1)
-      return false;
-
-    return true;
+  handleToggleOption(toggleOption: boolean) {
+    this.toggleOption = toggleOption;
   }
 
 }
