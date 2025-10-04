@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { ToastService } from '../../services/toast-service';
+import { ResponseText } from '../../constant/response';
 
 @Component({
   selector: 'app-date-picker',
@@ -12,44 +13,30 @@ export class DatePicker implements OnInit, OnChanges {
   @Input() format: 'DATE' | 'RANGE' = 'RANGE';
   @Input() disabledDates: string[] = [];
   @Input() labels: Record<string, string> = {};
-
-  // @Input() disabledDates: string[] = [
-  //   '2025-09-20',
-  //   '2025-09-25',
-  //   '2025-10-02'
-  // ];
-  // @Input() labels: Record<string, string> = {
-  //   '2025-09-10': '1 Available',
-  // };
+  @Input() selected: string[] = [];
+  @Input() disabledWeekdays: string[] = [];
+  @Input() disablePastDates: boolean = false;
 
   @Output() selectedDates = new EventEmitter<string[]>();
+  @Output() monthChange = new EventEmitter<{ year: number; month: number }>();
 
-  constructor(
-    private toastService: ToastService
-  ) { }
+  constructor(private toastService: ToastService) {}
 
-  today: Date = new Date();
-  currentMonth: number = this.today.getMonth();
-  currentYear: number = this.today.getFullYear();
+  today = new Date();
+  currentMonth = this.today.getMonth(); // 0-based
+  currentYear = this.today.getFullYear();
   disabledSet = new Set<string>();
-
-  selected: string[] = [];
   weeks: { date: string; inCurrentMonth: boolean }[][] = [];
-
-  rangeStart: string | null = null;
-  rangeEnd: string | null = null;
 
   ngOnInit() {
     this.generateCalendar(this.currentYear, this.currentMonth);
-    this.disabledSet = new Set(this.disabledDates);
+    this.disabledSet = new Set(this.disabledDates.map(d => d));
   }
 
   ngOnChanges() {
-    this.disabledSet = new Set(this.disabledDates);
-    console.log(this.disabledSet);
+    this.disabledSet = new Set(this.disabledDates.map(d => d));
   }
 
-  /** Format Date -> YYYY-MM-DD */
   private formatDate(d: Date): string {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
@@ -58,17 +45,23 @@ export class DatePicker implements OnInit, OnChanges {
     return this.labels[date] ?? null;
   }
 
+  /** ✅ emits the current visible calendar month/year */
+  private emitMonthChange() {
+    this.monthChange.emit({
+      year: this.currentYear,
+      month: this.currentMonth + 1 // convert to 1-based for readability
+    });
+  }
+
   generateCalendar(year: number, month: number) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-
     const startDay = firstDay.getDay();
     const daysInMonth = lastDay.getDate();
-
     const prevMonthLastDate = new Date(year, month, 0).getDate();
     const days: { date: string; inCurrentMonth: boolean }[] = [];
 
-    // Previous month filler
+    // previous month filler
     for (let i = startDay - 1; i >= 0; i--) {
       days.push({
         date: this.formatDate(new Date(year, month - 1, prevMonthLastDate - i)),
@@ -76,12 +69,12 @@ export class DatePicker implements OnInit, OnChanges {
       });
     }
 
-    // Current month
+    // current month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({ date: this.formatDate(new Date(year, month, i)), inCurrentMonth: true });
     }
 
-    // Next month filler (to make 6 weeks grid = 42 days)
+    // next month filler (to make 6 weeks = 42 days)
     const nextDays = 42 - days.length;
     for (let i = 1; i <= nextDays; i++) {
       days.push({
@@ -90,15 +83,34 @@ export class DatePicker implements OnInit, OnChanges {
       });
     }
 
-    // Break into weeks
+    // break into weeks
     this.weeks = [];
     for (let i = 0; i < days.length; i += 7) {
       this.weeks.push(days.slice(i, i + 7));
     }
+
+    // 🔥 always emit current month/year after generation
+    this.emitMonthChange();
   }
 
   isDisabled(date: string): boolean {
-    return this.disabledDates.includes(date);
+    if (this.disabledSet.has(date)) return true;
+
+    const d = new Date(date);
+
+    if (this.disabledWeekdays.length > 0) {
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      if (this.disabledWeekdays.map(x => x.toLowerCase()).includes(dayName)) {
+        return true;
+      }
+    }
+
+    if (this.disablePastDates) {
+      const todayStr = this.formatDate(this.today);
+      if (date < todayStr) return true;
+    }
+
+    return false;
   }
 
   isSelected(date: string): boolean {
@@ -110,11 +122,12 @@ export class DatePicker implements OnInit, OnChanges {
 
     const d = new Date(date);
 
-    // Auto navigate if clicked on prev/next month day
+    // auto navigate if clicked on prev/next month day
     if (!inCurrentMonth) {
       this.currentMonth = d.getMonth();
       this.currentYear = d.getFullYear();
       this.generateCalendar(this.currentYear, this.currentMonth);
+      return; // prevent double selection on navigation
     }
 
     if (this.format === 'DATE') {
@@ -123,48 +136,40 @@ export class DatePicker implements OnInit, OnChanges {
       if (this.selected.length === 0 || this.selected.length === 2) {
         this.selected = [date];
       } else if (this.selected.length === 1) {
-        if (date < this.selected[0]) {
-          this.selected = [date, this.selected[0]];
-        } else {
-          this.selected.push(date);
+        if (date === this.selected[0]) {
+          this.toastService.error(ResponseText.ERR_DATE_SAME_DATE);
+          return;
         }
+        this.selected =
+          date < this.selected[0] ? [date, this.selected[0]] : [this.selected[0], date];
       }
     }
 
     if (this.format === 'RANGE' && this.selected.length === 2) {
-      const [rangeStart, rangeEnd] = [ this.selected[0], this.selected[1]];
-
+      const [rangeStart, rangeEnd] = this.selected;
       if (this.rangeContainsDisabled(rangeStart, rangeEnd)) {
         this.selected = [];
-        this.toastService.error('Tidak dibenarkan untuk memilih tarikh yang telah di tempah');
+        this.toastService.error(ResponseText.ERR_DATE_BLOCK);
       }
     }
 
     this.selectedDates.emit(this.selected);
   }
 
-  private rangeContainsDisabled(start: any, end: any): boolean {
-    // Ensure [earlier, later]
+  private rangeContainsDisabled(start: string, end: string): boolean {
     const [s, e] = start < end ? [start, end] : [end, start];
-
     let current = s;
     while (current <= e) {
-      if (this.disabledSet.has(current)) {
-        return true;
-      }
-      current = this.addDays(current, 1); // safely add one day in string form
+      if (this.disabledSet.has(current)) return true;
+      current = this.addDays(current, 1);
     }
     return false;
   }
 
   private addDays(dateStr: string, days: number): string {
-    const [year, month, day] = dateStr.split('-').map(Number);
-    const d = new Date(year, month - 1, day + days);
-    return [
-      d.getFullYear(),
-      String(d.getMonth() + 1).padStart(2, '0'),
-      String(d.getDate()).padStart(2, '0')
-    ].join('-');
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d + days);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
   isInRange(date: string): boolean {

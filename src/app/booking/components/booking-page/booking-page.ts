@@ -22,7 +22,7 @@ export class BookingPage {
       this.bookingService.getShopDetail().subscribe({
         next: (response) => {
           this.shopDetail = response;
-          title.setTitle(this.shopDetail.shopName);
+          title.setTitle(this.shopDetail.name);
         },
         error: () => {
           title.setTitle('Booking Website');

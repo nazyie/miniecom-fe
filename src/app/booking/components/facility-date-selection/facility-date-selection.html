@@ -1,8 +1,16 @@
 <div class="flex p-2 justify-center align-middle">
-  <!-- <div class="flex-1 max-w-xl">
-        <app-date-picker />
-    </div> -->
+  @if (isBookingFrequencyDateRange) {
+  <div class="flex-1 max-w-xl">
+    <app-date-picker 
+      [format]="'RANGE'" 
+      [disabledDates]="disabledDates" 
+      [selected]="selectedDate"
+      (selectedDates)="handleSelectedDate($event)"
+      (monthChange)="handleMonthChanges($event)"
+      />
+  </div>
 
+  } @else {
   <div class="flex-1 w-full text-center">
     <div class="text-center py-5 font-bold">
       <span
@@ -45,5 +53,5 @@
     </div>
 
   </div>
-
+  }
 </div>

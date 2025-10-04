@@ -16,8 +16,16 @@ export interface RequestBookedFacility {
     endDate: string;
 }
 
+export interface RequestBookingFacility {
+    sessionId: string,
+    name: string,
+    email: string,
+    address: string,
+    paymentMethod: string
+}
+
 export interface ResponseShopDetail {
-    shopName: string;
+    name: string;
 }
 
 export interface ResponseBookedFacility {
@@ -25,6 +33,10 @@ export interface ResponseBookedFacility {
     date: string;
     startTime: string;
     endTime: string;
+}
+
+export interface ResponseBookingFacility {
+    orderId: string;
 }
 
 export interface ResponseFacility {

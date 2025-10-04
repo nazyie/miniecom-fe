@@ -12,4 +12,7 @@ export class ResponseText {
   // change password
   static ERR_MISMATCH_PASSWORD = "Kata laluan tidak sepadan"
 
+  static ERR_DATE_SAME_DATE = "Tarikh sama tidak dibenarkan";
+  static ERR_DATE_BLOCK = "Slot tarikh telah ditempah";
+
 }

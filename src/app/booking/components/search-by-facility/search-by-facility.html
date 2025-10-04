@@ -1,21 +1,27 @@
 <div>
   <div class="fixed top-0 left-0 right-0 z-10 m-0 rounded-none p-2 bg-white">
     <div class="mb-3">
-      <app-navigation-bar [primaryColor]="primaryColor" />
+      <app-navigation-bar [shopDetail]="shopDetail" [primaryColor]="primaryColor" />
     </div>
 
-    <div class="flex text-sm text-primary font-semibold border rounded-xl border-primary mb-2">
-      <div class="flex-1 text-center rounded-xl p-2" [class.border]="toggleOption" [class.bg-primary]="toggleOption" [class.text-white]="toggleOption" [class.bg-white]="!toggleOption" [class.text-primary]="!toggleOption" (click)="setOption(true)">
-        Carian Melalui Fasiliti
-      </div>
+    <div class="flex justify-center">
+      <div class="inline-flex rounded-full bg-gray-100 p-1 mb-2">
+        <button class="px-4 py-2 text-xs font-medium rounded-full transition-colors duration-200"
+          [class.bg-primary]="toggleOption" [class.text-white]="toggleOption" [class.text-primary]="!toggleOption"
+          (click)="setOption(true)">
+          Carian Melalui Fasiliti
+        </button>
 
-      <div class="flex-1 text-center rounded-xl p-2" [class.border]="!toggleOption" [class.bg-primary]="!toggleOption" [class.text-white]="!toggleOption" [class.bg-white]="toggleOption" [class.text-primary]="toggleOption" (click)="setOption(false)">
-        Carian Melalui Tarikh
+        <button class="px-4 py-2 text-xs font-medium rounded-full transition-colors duration-200"
+          [class.bg-primary]="!toggleOption" [class.text-white]="!toggleOption" [class.text-primary]="toggleOption"
+          (click)="setOption(false)">
+          Carian Melalui Tarikh
+        </button>
       </div>
-
     </div>
 
-    <div class="mb-2">
+
+    <div class="mb-2 hidden md:inline">
       <ul class="steps w-full text-xs">
         <li class="step" [class]="{ 'step-primary': currentStepper >= 1 }">
           <span class="step-icon">
@@ -53,7 +59,10 @@
     </div>
   </div>
 
-  <div class="pt-50"></div>
+  <div class="pt-32"></div>
+  <div class="hidden md:inline ">
+    <div class="pt-13"></div>
+  </div>
 
   @switch (currentStepper) {
   @case (1) {
@@ -69,22 +78,30 @@
 
   <div class="pt-10"></div>
 
-  <div class="fixed bottom-0 left-0 right-0 bg-base-100 shadow-lg p-2 flex justify-between gap-2">
-    <button class="btn btn-outline btn-primary btn-sm flex-1" (click)="prev()" [disabled]="!isValidToProceedPrev()">
-      <!-- back icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
-        <path fill="currentColor" fill-rule="evenodd"
-          d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z" />
-      </svg>
-      <span class="hidden md:inline">Kembali</span>
-    </button>
-    <button class="btn btn-primary btn-sm flex-1" (click)="next()" [disabled]="!isValidToProceedNext()">
-      <!-- next icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
-        <path fill="currentColor" fill-rule="evenodd"
-          d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
-      </svg>
-      <span class="hidden md:inline">Seterusnya</span>
-    </button>
+  <div class="fixed bottom-0 left-0 right-0">
+  </div>
+  <div class="fixed bottom-0 left-0 right-0 bg-base-100 shadow-lg p-2 ">
+    <div class="py-2">
+      <p class="text-sm text-gray-400">{{ stepperTextNavigation }}</p>
+    </div>
+
+    <div class="flex justify-between gap-2">
+      <button class="btn btn-outline btn-primary btn-sm flex-1" (click)="prev()" [disabled]="!isValidToProceedPrev()">
+        <!-- back icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
+          <path fill="currentColor" fill-rule="evenodd"
+            d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z" />
+        </svg>
+        <span class="hidden md:inline">Kembali</span>
+      </button>
+      <button class="btn btn-primary btn-sm flex-1" (click)="next()" [disabled]="!isValidToProceedNext()">
+        <!-- next icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
+          <path fill="currentColor" fill-rule="evenodd"
+            d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+        </svg>
+        <span class="hidden md:inline">Seterusnya</span>
+      </button>
+    </div>
   </div>
 </div>

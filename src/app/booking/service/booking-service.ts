@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
+import { RequestBookedFacility, RequestBookingFacility, RequestTemporaryBooking, ResponseBookedFacility, ResponseBookingFacility, ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -24,6 +24,22 @@ export class BookingService {
 
   getFacility() : Observable<ResponseFacility[]> {
     return this.http.get<ResponseFacility[]>(`${this.apiRoute}/${this.slug}/facility/all`);
+  }
+
+  getBookedFacility(payload: RequestBookedFacility) : Observable<ResponseBookedFacility[]> {
+    return this.http.post<ResponseBookedFacility[]>(`${this.apiRoute}/${this.slug}/facility/booked`, payload);
+  }
+
+  createTemporaryBooking(payload: RequestTemporaryBooking) : Observable<void> {
+    return this.http.post<void>(`${this.apiRoute}/${this.slug}`, payload);
+  }
+
+  cancelTemporaryBooking(sessionId: string) : Observable<void> {
+    return this.http.delete<void>(`${this.apiRoute}/${this.slug}/${sessionId}`);
+  }
+
+  confirmBooking(payload: RequestBookingFacility) : Observable<ResponseBookingFacility> {
+    return this.http.post<ResponseBookingFacility>(`${this.apiRoute}/${this.slug}/confirm`, payload);
   }
 
   get getShopSlugFromUrl(): string {

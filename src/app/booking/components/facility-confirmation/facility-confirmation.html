@@ -7,19 +7,19 @@
       <div class="space-y-2 text-gray-700">
         <div class="flex justify-between">
           <span class="font-medium">Fasiliti:</span>
-          <span>Villa A</span>
+          <span>{{ facilityName }}</span>
         </div>
         <div class="flex justify-between">
           <span class="font-medium">Waktu Mula:</span>
-          <span>2025-09-20</span>
+          <span>{{ startTime }}</span>
         </div>
         <div class="flex justify-between">
           <span class="font-medium">Waktu Keluar:</span>
-          <span>2025-09-22</span>
+          <span>{{ endTime }}</span>
         </div>
         <div class="flex justify-between">
           <span class="font-medium">Jumlah Harga:</span>
-          <span class="font-semibold text-indigo-600">RM 1,200</span>
+          <span class="font-semibold text-indigo-600">RM {{ totalPrice }}</span>
         </div>
       </div>
     </div>
@@ -27,14 +27,13 @@
     <div class="divider">Maklumat Anda</div>
 
     <!-- Booking Form -->
-    <form class="space-y-4">
+    <form class="space-y-4" [formGroup]="form" (submit)="confirmBooking()">
       <!-- Name -->
       <div>
         <label class="label">
           <span class="label-text">Name</span>
         </label>
-        <input type="text" placeholder="Enter your full name"
-          class="input input-bordered w-full" required />
+        <input type="text" class="input input-bordered w-full" required formControlName="name"/>
       </div>
 
       <!-- Email -->
@@ -42,8 +41,7 @@
         <label class="label">
           <span class="label-text">Email</span>
         </label>
-        <input type="email" placeholder="Enter your email"
-          class="input input-bordered w-full" required />
+        <input type="email" class="input input-bordered w-full" required formControlName="email"/>
       </div>
 
       <!-- Phone -->
@@ -51,8 +49,7 @@
         <label class="label">
           <span class="label-text">No Telefon</span>
         </label>
-        <input type="tel" placeholder="e.g. +60123456789"
-          class="input input-bordered w-full" required />
+        <input type="tel" class="input input-bordered w-full" required formControlName="phoneNo"/>
       </div>
 
       <!-- Payment Options -->
@@ -60,7 +57,7 @@
         <label class="label">
           <span class="label-text">Payment Method</span>
         </label>
-        <select class="select select-bordered w-full">
+        <select class="select select-bordered w-full" formControlName="paymentMethod">
           <option disabled selected>Choose a payment method</option>
           <option disabled>Online Banking (FPX)</option>
           <option>Cash on Arrival</option>
@@ -68,8 +65,7 @@
       </div>
 
       <!-- Confirm Button -->
-      <button type="submit"
-        class="btn btn-primary rounded-lg w-full mt-4">
+      <button type="submit" class="btn btn-primary rounded-lg w-full mt-4">
         Confirm Booking
       </button>
     </form>

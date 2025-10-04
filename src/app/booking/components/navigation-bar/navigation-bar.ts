@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ResponseShopDetail } from '../../model/booking-page.model';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -8,5 +9,6 @@ import { Component, Input } from '@angular/core';
 })
 export class NavigationBar {
   @Input() primaryColor: string = '#570df8';
+  @Input() shopDetail: ResponseShopDetail | null = null;
 
 }

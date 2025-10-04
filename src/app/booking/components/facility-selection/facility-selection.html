@@ -1,151 +1,48 @@
 <!-- container -->
 <div class="overflow-y-auto px-4">
+  @if (facilityList != null) {
   <div class="grid grid-cols-2 max-w-7xl mx-auto md:grid-cols-3 lg:grid-cols-4 gap-4">
-    
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
+    @for (data of facilityList; track data.facilityId) {
+    <div class="card bg-base-100 shadow-sm w-full h-[350px]" 
+      [class.border-2]="isSelectedFacility(data.facilityId)"
+      [class.border-primary]="isSelectedFacility(data.facilityId)">
       <figure class="h-[150px] overflow-hidden">
         <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
+          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
       </figure>
       <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
+        <h2 class="card-title text-sm">{{ data.facilityName }}</h2>
         <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
+          {{ data.itemDescription }}
         </p>
         <div class="card-actions flex-col gap-2">
           <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
+          <button class="btn btn-primary btn-sm w-full" (click)="selectFacility(data)">Pilih</button>
         </div>
       </div>
     </div>
+    }
+    @empty {
+    <div class="col-span-2 md:col-span-3 lg:col-span-4 p-4 rounded-xl">
+      <div class="flex flex-col items-center justify-center text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-20 text-gray-400">
+          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <path
+              d="m12 6.8l6.6 6.6a2 2 0 0 0 2.8-2.8l-8-8c-.8-.8-2-.8-2.8 0L9.2 4M2 2l20 20M6.6 6.6l-4 4a2 2 0 0 0 2.8 2.8l4-4M14 22v-6a2 2 0 0 0-4 0v6" />
+            <path d="M4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
+          </g>
+        </svg>
 
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
+        <p class="mt-2 text-sm text-gray-700">
+          Harap maaf. Fasiliti tidak tersedia buat masa sekarang
         </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
       </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
-    <!-- card -->
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]">
-      <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes" />
-      </figure>
-      <div class="card-body p-4">
-        <h2 class="card-title text-sm">Bilik A</h2>
-        <p class="text-xs flex-grow">
-          A card component has a figure, a body part, and inside body there are title and actions parts
-        </p>
-        <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full">Pilih</button>
-        </div>
-      </div>
-    </div>
 
-</div>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="flex w-full justify-center items-center">
+    <span class="loading loading-spinner loading-xl"></span>
+  </div>
+  }

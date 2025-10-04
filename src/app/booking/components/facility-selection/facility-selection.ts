@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ResponseFacility } from '../../model/booking-page.model';
 import { BookingService } from '../../service/booking-service';
+import { FacilityCartService } from '../../service/facility-cart-service';
 
 @Component({
   selector: 'app-facility-selection',
@@ -11,14 +12,18 @@ import { BookingService } from '../../service/booking-service';
 export class FacilitySelection implements OnInit {
   facilityList: ResponseFacility[] | null = null;
 
-  @Output() selected = new EventEmitter<ResponseFacility>();
-
   constructor(
-    private bookingService: BookingService
-  ) {}
+    private bookingService: BookingService,
+    private facilityCartService: FacilityCartService,
+  ) { }
 
   ngOnInit(): void {
     this.loadFacility();
+  }
+
+  isSelectedFacility(facilityId: string): boolean {
+    const selectedId =  this.facilityCartService.cart.facilityId;
+    return selectedId === facilityId;
   }
 
   loadFacility() {
@@ -30,6 +35,24 @@ export class FacilitySelection implements OnInit {
   }
 
   selectFacility(item: ResponseFacility) {
-    this.selected.emit(item);
+    if (!item) return;
+
+    const currentCart = this.facilityCartService.getMetadata();
+
+    const updatedCart = {
+      ...currentCart,
+      facilityId: item.facilityId,
+      facilityName: item.facilityName,
+      bookingFrequency: item.bookingFrequency,
+      price: item.price ?? 0
+    };
+
+    const hasChanged = Object.keys(updatedCart).some(
+      key => (updatedCart as any)[key] !== (currentCart as any)[key]
+    );
+
+    if (hasChanged) {
+      this.facilityCartService.updateMetadata(updatedCart);
+    }
   }
 }

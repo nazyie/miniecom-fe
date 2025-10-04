@@ -1,7 +1,9 @@
 <div>
   @if (shopDetail != null) {
     @if (toggleOption) {
-      <app-search-by-facility />
+      <app-search-by-facility 
+        [shopDetail]="shopDetail"
+      />
     } @else {
     }
   } @else {
