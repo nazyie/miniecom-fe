@@ -35,6 +35,10 @@ export interface ResponseBookedFacility {
     endTime: string;
 }
 
+export interface BookedFacility extends ResponseBookedFacility {
+    lockSlot: boolean;
+}
+
 export interface ResponseBookingFacility {
     orderId: string;
 }

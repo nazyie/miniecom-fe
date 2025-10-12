@@ -6,6 +6,8 @@ export interface BookingMetadata {
     selected: string [];
     price: number;
     noOfSlot: number;
+    openingTime: string;
+    closingTime: string;
 }
 
 export function newBookingMetadata() : BookingMetadata {
@@ -16,6 +18,8 @@ export function newBookingMetadata() : BookingMetadata {
         bookingFrequency: '',
         selected: [],
         price: 0.00,
-        noOfSlot: 0
+        noOfSlot: 0,
+        openingTime: '',
+        closingTime: '',
     }
 }

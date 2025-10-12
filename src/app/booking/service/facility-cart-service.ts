@@ -18,6 +18,10 @@ export class FacilityCartService {
     return this.cart;
   }
 
+  cleanMetadata() : void {
+    this.removeFacilityMetadata();
+  }
+
   updateMetadata(cart: BookingMetadata) {
     this.cart = cart;
 

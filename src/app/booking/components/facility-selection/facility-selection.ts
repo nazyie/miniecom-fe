@@ -44,7 +44,9 @@ export class FacilitySelection implements OnInit {
       facilityId: item.facilityId,
       facilityName: item.facilityName,
       bookingFrequency: item.bookingFrequency,
-      price: item.price ?? 0
+      price: item.price ?? 0,
+      openingTime: item.openingTime,
+      closingTime: item.closingTime,
     };
 
     const hasChanged = Object.keys(updatedCart).some(
@@ -52,6 +54,7 @@ export class FacilitySelection implements OnInit {
     );
 
     if (hasChanged) {
+      this.facilityCartService.cleanMetadata();
       this.facilityCartService.updateMetadata(updatedCart);
     }
   }

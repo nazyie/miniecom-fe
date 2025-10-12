@@ -3,10 +3,11 @@ import { DatePicker } from "../../../common/components/date-picker/date-picker";
 import { FacilityCartService } from '../../service/facility-cart-service';
 import { BookingService } from '../../service/booking-service';
 import { RequestBookedFacility, ResponseBookedFacility } from '../../model/booking-page.model';
+import { DateTimeSlotPicker } from "../date-time-slot-picker/date-time-slot-picker";
 
 @Component({
   selector: 'app-facility-date-selection',
-  imports: [DatePicker],
+  imports: [DatePicker, DateTimeSlotPicker],
   templateUrl: './facility-date-selection.html',
   styleUrl: './facility-date-selection.css'
 })
