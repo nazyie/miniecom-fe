@@ -18,6 +18,7 @@ export interface RequestBookedFacility {
 
 export interface RequestBookingFacility {
     sessionId: string,
+    shopSlug: string,
     name: string,
     email: string,
     address: string,
