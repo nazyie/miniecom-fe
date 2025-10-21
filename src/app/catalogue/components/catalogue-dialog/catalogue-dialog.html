@@ -3,9 +3,46 @@
     <h3 class="font-bold text-primary text-lg mb-4">{{ formTitle }}</h3>
 
     <div role="tablist" class="tabs tabs-lift flex-nowrap w-full overflow-x-auto">
-      <a role="tab" class="tab flex-shrink-0">Maklumat Catalog </a>
-      <a role="tab" class="tab flex-shrink-0 tab-active">Tetapan Masa</a>
-      <a role="tab" class="tab flex-shrink-0 tab-disabled">Paparan</a>
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="formNavigationCount == 0"
+        (click)="navigatePage(0)">Maklumat Utama</a>
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="formNavigationCount == 1"
+        (click)="navigatePage(1)">Tetapan Masa</a>
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="formNavigationCount == 2"
+        (click)="navigatePage(2)">Paparan Gambar</a>
+    </div>
+
+    @switch (formNavigationCount) {
+      @case (1) {
+        <app-catalogue-dialog-time />
+      }
+
+      @case (2) {
+        <app-catalogue-dialog-attachment />
+      }
+
+      @default {
+        <app-catalogue-dialog-detail />
+      }
+
+    }
+
+    <div class="modal-action mt-6 flex justify-between items-center">
+      <div>
+        @if (formMode === 'UPDATE') {
+        <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="delete()">
+          Padam
+        </button>
+        }
+      </div>
+
+      <div class="flex gap-2">
+        <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">
+          Batal
+        </button>
+        <button class="btn rounded-4xl py-2 btn-primary" type="submit" (click)="submit()">
+          {{ submitLabel }}
+        </button>
+      </div>
     </div>
 
   </div>

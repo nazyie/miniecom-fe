@@ -1,0 +1,119 @@
+<form [formGroup]="form">
+  <div>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Frekuensi Penggunaan Fasiliti</legend>
+      <select class="select w-full" formControlName="bookingFrequency">
+        <option value="" disabled selected>Pilih Jenis Frekuensi</option>
+        <option value="DAILY">Harian</option>
+        <option value="HOURLY">Sejam</option>
+        <option value="HALF_HOURLY">Setengah Jam</option>
+      </select>
+    </fieldset>
+  </div>
+
+  @switch (catalogue?.facility?.bookingFrequency) {
+  @case ('DAILY') {
+  <div>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+      <legend class="fieldset-legend">Waktu Operasi</legend>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Masuk</legend>
+        <input type="time" formControlName="openingTime" class="input input-bordered w-full" />
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Keluar</legend>
+        <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Harga Sehari</legend>
+        <label class="input input-bordered flex items-center gap-2 w-full">
+          <span>RM</span>
+          <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
+        </label>
+      </fieldset>
+
+    </fieldset>
+  </div>
+  }
+  @default () {
+  @if (this.catalogue?.facility?.bookingFrequency) {
+  <div>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+      <legend class="fieldset-legend">Waktu Operasi</legend>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Operasi Mula</legend>
+        <input type="time" formControlName="openingTime" class="input input-bordered w-full" />
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Operasi Tutup</legend>
+        <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
+      </fieldset>
+      @if (errMessageTime !== '') { <p class="text-error">{{ errMessageTime }}</p>}
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Harga Per Slot</legend>
+        <label class="input input-bordered flex items-center gap-2 w-full">
+          <span>RM</span>
+          <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
+        </label>
+      </fieldset>
+    </fieldset>
+  </div>
+  }
+  }
+  }
+
+  <!-- Nested configuration -->
+  <div>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+      <legend class="fieldset-legend">Hari Operasi</legend>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="sundaySlot" />
+          Ahad
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="mondaySlot" />
+          Isnin
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="tuesdaySlot" />
+          Selasa
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="wednesdaySlot" />
+          Rabu
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="thursdaySlot" />
+          Khamis
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="fridaySlot" />
+          Jumaat
+        </label>
+      </div>
+      <div>
+        <label class="label">
+          <input type="checkbox" name="openShop" class="checkbox" formControlName="saturdaySlot" />
+          Sabtu
+        </label>
+      </div>
+    </fieldset>
+  </div>
+</form>

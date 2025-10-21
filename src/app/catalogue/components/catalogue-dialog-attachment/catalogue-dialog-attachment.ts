@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogueAttachment } from '../../model/catalogue-modal';
 import { InventoryService } from '../../services/catalogue-service';
+import { CataloguePageService } from '../../services/catalogue-page-service';
+import { ToastService } from '../../../common/services/toast-service';
 
 @Component({
   selector: 'app-catalogue-dialog-attachment',
@@ -14,15 +16,11 @@ export class CatalogueDialogAttachment implements OnInit{
   selectedFile !: File;
   data: CatalogueAttachment[] = [];
 
-  @Input()
-  inventoryId: string | undefined = '';
-
-  @Output()
-  outputDialogAction = new EventEmitter<boolean>();
-
   constructor(
+    private cp: CataloguePageService,
     private inventoryService: InventoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -49,23 +47,19 @@ export class CatalogueDialogAttachment implements OnInit{
 
   uploadImage(): void {
     if (!this.form.valid || !this.selectedFile) {
-      alert('Sila pilih fail terlebih dahulu.');
+      this.toastService.error('Invalid file');
       return;
     }
   }
 
   loadData() {
-    if (this.inventoryId) {
-      this.inventoryService.getInventoryAttachment(this.inventoryId).subscribe({
-        next: (res) => {
-          this.data = res;
-        }
-      });
+    if (this.cp.catalogue) {
+    this.inventoryService.getInventoryAttachment(this.cp.catalogue.id).subscribe({
+      next: (res) => {
+        this.data = res;
+      }
+    });
     }
-  }
-
-  close() {
-    this.outputDialogAction.emit(false);
   }
 
 }
