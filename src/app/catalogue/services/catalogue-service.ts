@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Catalogue, CatalogueVariant } from '../model/catalogue-modal';
+import { Catalogue, CatalogueAttachment, CatalogueVariant } from '../model/catalogue-modal';
 import { PageResponse } from '../../common/pagination.model';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class InventoryService {
     return this.http.get<PageResponse<Catalogue>>(`${this.apiRoute}?shopId=${shopId}&page=${page}&size=${size}&search=${search}`);
   }
 
-  createInventory(shopId : string, inventory: Catalogue): Observable<Catalogue> {
+  createInventory(shopId: string, inventory: Catalogue): Observable<Catalogue> {
     return this.http.post<Catalogue>(`${this.apiRoute}?shopId=${shopId}`, inventory);
   }
 
@@ -31,6 +31,22 @@ export class InventoryService {
     return this.http.delete<Catalogue>(`${this.apiRoute}/${inventoryId}?shopId=${shopId}`);
   }
 
+  getInventoryAttachment(inventoryId: string): Observable<CatalogueAttachment[]> {
+    return this.http.get<CatalogueAttachment[]>(`${this.apiRoute}/${inventoryId}/attachment`);
+  }
+
+  uploadAttachment(inventoryId: string, formData: FormData): Observable<HttpEvent<void>> {
+    return this.http.post<void>(
+      `${this.apiRoute}/${inventoryId}/attachment`,
+      formData,
+      {
+        reportProgress: true,
+        observe: 'events'
+      }
+    );
+  }
+
+
   // get variant
 
   getVariant(inventoryId: string): Observable<CatalogueVariant[]> {
@@ -41,11 +57,12 @@ export class InventoryService {
     return this.http.post<void>(`${this.apiRoute}-variant/${inventoryId}`, stock);
   }
 
-  updateVariant(inventoryId:string, stock: CatalogueVariant): Observable<CatalogueVariant> {
+  updateVariant(inventoryId: string, stock: CatalogueVariant): Observable<CatalogueVariant> {
     return this.http.patch<CatalogueVariant>(`${this.apiRoute}-variant/${inventoryId}/${stock.id}`, stock);
   }
 
-  deleteVariant(inventoryId:string, stockId: string): Observable<CatalogueVariant> {
+  deleteVariant(inventoryId: string, stockId: string): Observable<CatalogueVariant> {
     return this.http.delete<CatalogueVariant>(`${this.apiRoute}-variant/${inventoryId}/${stockId}`);
   }
+
 }

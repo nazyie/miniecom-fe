@@ -24,13 +24,13 @@
     </div>
 
     @if (modalIsOpen) {
-        <app-catalogue-dialog
+        <!-- <app-catalogue-dialog
             [formTitle]="modalFormTitle"
             [submitLabel]="modalSubmitLabel"
             [formMode]="modalFormMode"
             [record]="modalRecord"
             (formSubmitted)="onFormSubmit($event)"
-        />
+        /> -->
     }
 
     <app-table [columns]="columns" [fetchDataFn]="fetchProduct.bind(this)" (rowClicked)="openEditModal($event)" />

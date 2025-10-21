@@ -9,13 +9,22 @@ export interface Catalogue {
     facility: CatalogueFacility | null;
 }
 
+export interface CatalogueAttachment {
+  id: string;
+  catalogueId: string;
+  isPrimary: boolean;
+  path: string;
+  originalFileName: string;
+
+}
+
 export interface CatalogueVariant {
     id: string;
 
     variantName: string;
     variantCode: string;
     stockCount: number;
-} 
+}
 
 export interface CatalogueFacility {
     price: string;
