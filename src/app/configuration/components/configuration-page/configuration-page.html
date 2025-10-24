@@ -14,10 +14,10 @@
             <p class="opacity-70">Nama</p>
             <p class="font-semibold text-2xl">@if (card !== null) { {{ card.name }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
           </div>
-          <div>
+          <!-- <div>
             <p class="opacity-70">Valid Sehingga</p>
             <p class="font-semibold text-2xl">@if (card !== null) { {{ card.validUntil | date:'d/M/yy' }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
-          </div>
+          </div> -->
         </div>
 
         <!-- Limits -->
@@ -27,51 +27,51 @@
               <p>Limit Kedai</p>
               <p>
                 @if (card !== null) { 
-                  @if (card.maxShop == -1) {
+                  @if (card.shopQuota == -1) {
                     Unlimited
                   } @else {
-                    {{ card.shopUsage }} / {{ card.maxShop }} 
+                    {{ card.shopQuota }} / 100
                   }
                 } @else { 
                   <span class="loading loading-spinner loading-sm"></span> 
                 }
               </p>
             </div>
-            <progress class="progress progress-secondary w-full h-2" value="{{ card?.shopUsage }}" max="{{ card?.maxShop }}"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.shopQuota }}" max="100"></progress>
           </div>
           <div>
             <div class="flex justify-between text-xs">
               <p>Limit Transaksi</p>
               <p>
                 @if (card !== null) { 
-                  @if (card.maxTransaction == -1) {
+                  @if (card.transactionQuota == -1) {
                     Unlimited
                   } @else {
-                    {{ card.transactionUsage }} / {{ card.maxTransaction }} 
+                    {{ card.transactionQuota }} / 100
                   }
                 } @else { 
                   <span class="loading loading-spinner loading-sm"></span> 
                 }
               </p>
             </div>
-            <progress class="progress progress-secondary w-full h-2" value="{{ card?.transactionUsage }}" max="{{ card?.maxTransaction }}"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.transactionQuota }}" max="100"></progress>
           </div>
           <div>
             <div class="flex justify-between text-xs">
               <p>Limit Catalogue</p>
               <p>
                 @if (card !== null) { 
-                  @if (card.maxCatalogue == -1) {
+                  @if (card.catalogueQuota == -1) {
                     Unlimited
                   } @else {
-                    {{ card.catalogueUsage }} / {{ card.maxCatalogue }} 
+                    {{ card.catalogueQuota }} / 100 
                   }
                 } @else { 
                   <span class="loading loading-spinner loading-sm"></span> 
                 }
               </p>
             </div>
-            <progress class="progress progress-secondary w-full h-2" value="{{ card?.catalogueUsage }}" max="{{ card?.maxCatalogue }}"></progress>
+            <progress class="progress progress-secondary w-full h-2" value="{{ card?.catalogueQuota }}" max="100"></progress>
           </div>
         </div>
 

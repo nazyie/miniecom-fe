@@ -2,7 +2,7 @@ import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Catalogue, CatalogueAttachment, CatalogueVariant } from '../model/catalogue-modal';
+import { Catalogue, CatalogueAttachment, CatalogueFacilityPackage, CatalogueVariant } from '../model/catalogue-modal';
 import { PageResponse } from '../../common/pagination.model';
 
 @Injectable({
@@ -58,7 +58,25 @@ export class InventoryService {
     return `${environment.apiUrl}/image/${path}`;
   }
 
-  // get variant
+  // package
+
+  getPackage(catalogueId: string): Observable<CatalogueFacilityPackage[]> {
+    return this.http.get<CatalogueFacilityPackage[]>(`${this.apiRoute}-package/${catalogueId}`);
+  }
+
+  createPackage(catalogueId: string, payload: CatalogueFacilityPackage): Observable<void>{
+    return this.http.post<void>(`${this.apiRoute}-package/${catalogueId}`, payload);
+  }
+
+  updatePackage(catalogueId: string, payload: CatalogueFacilityPackage): Observable<void>{
+    return this.http.patch<void>(`${this.apiRoute}-package/${catalogueId}/${payload.id}`, payload);
+  }
+
+  deletePackage(catalogueId: string, packageId: string): Observable<void>{
+    return this.http.delete<void>(`${this.apiRoute}-package/${catalogueId}/${packageId}`);
+  }
+
+  // variant
 
   getVariant(inventoryId: string): Observable<CatalogueVariant[]> {
     return this.http.get<CatalogueVariant[]>(`${this.apiRoute}-variant/${inventoryId}`);

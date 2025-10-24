@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Catalogue } from "../model/catalogue-modal";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CataloguePageService {
     private loadedCatalogue: Catalogue | null = null;
@@ -12,11 +12,19 @@ export class CataloguePageService {
         this.loadedFormMode = formMode;
     }
 
-    constructCatalogueValue(catalogue: Catalogue | undefined | null) {
+    constructCatalogueValue(catalogue: Catalogue | undefined | null, shopType: string) {
         if (catalogue) {
             this.loadedCatalogue = catalogue;
         } else {
-            // create new catalogue
+            this.loadedCatalogue = {
+                id: '',
+                slug: '',
+                name: '',
+                catalogueType: shopType,
+                itemDescription: '',
+                publish: true,
+                facility: null,
+            };
         }
     }
 

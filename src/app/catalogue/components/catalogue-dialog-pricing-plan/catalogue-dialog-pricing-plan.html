@@ -1,7 +1,7 @@
 <div>
   <form [formGroup]="form">
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Harga Sehari</legend>
+      <legend class="fieldset-legend">{{ pricingLabel }}</legend>
       <label class="input input-bordered flex items-center gap-2 w-full">
         <span>RM</span>
         <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
@@ -16,50 +16,55 @@
       <legend class="fieldset-legend">Pakej Harga</legend>
 
       @if (modalIsOpen) {
-        <app-package-form
-          [formTitle]="modalFormTitle"
-          [submitLabel]="modalSubmitLabel"
-          [formMode]="modalFormMode"
-          [record]="modalRecord"
-          (formSubmitted)="onFormSubmit($event)"
-          />
+      <app-package-form [formTitle]="modalFormTitle" [submitLabel]="modalSubmitLabel" [formMode]="modalFormMode"
+        [record]="modalRecord" (formSubmitted)="onFormSubmit($event)" />
       }
 
+      @if (!modalIsOpen) {
       <div class="w-full flex justify-end align-middle">
-        <button class="btn btn-primary rounded-3xl" (click)="openAddModal()">Tambah Pakej</button>
+        <button class="btn w-full btn-primary rounded-3xl" (click)="openAddModal()">Tambah Pakej</button>
       </div>
+      }
 
       <div class="overflow-x-auto mt-4">
         <table class="table table-zebra w-full border border-base-300 rounded-xl">
-          <!-- Head -->
           <thead class="bg-base-200">
             <tr>
               <th>Nama Pakej</th>
               <th>Perinci</th>
-              <th>Harga</th>
+              <th>Jumlah Harga</th>
               <th>Tetapan</th>
             </tr>
           </thead>
           <tbody>
+
+            @for (item of data; track item.id) {
             <tr>
               <td>
-                Pakej A
+                {{ item.packageName }}
               </td>
-              <td>
-                Pakej A
+              <td class="text-xs text-center">
+                <div class="flex flex-col gap-2">
+                  <div class="border border-info rounded-xl p-2 font-semibold text-white bg-info">
+                    {{ item.ruleType | ruleType }} {{ item.threshold }}
+                  </div>
+                  <div class="border border-warning rounded-xl p-2 font-semibold text-white bg-warning">
+                    RM {{ item.pricePerSlot }} per slot
+                  </div>
+                </div>
               </td>
-              <td>
-                Tetapan
+              <td class="font-bold">
+                RM {{ item.totalPrice }}
               </td>
               <td>
                 <div class="flex items-center gap-2">
-                  <button class="btn btn-sm btn-outline btn-primary" title="Edit">
+                  <button class="btn btn-sm btn-outline btn-primary" title="Edit" (click)="openEditModal(item)">
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 16 16">
                       <path fill="currentColor"
                         d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793L14.793 3.5L12.5 1.207L11.207 2.5zm1.586 3L10.5 3.207L4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106l-1.528 3.821l3.821-1.528l.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
                     </svg>
                   </button>
-                  <button class="btn btn-sm btn-outline btn-error" title="Delete">
+                  <button class="btn btn-sm btn-outline btn-error" title="Delete" (click)="deletePackage(item.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 16 16" fill="currentColor">
                       <path
                         d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
@@ -70,6 +75,16 @@
                 </div>
               </td>
             </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="4">
+                  <div class="text-center w-full text-gray-400">
+                    Tiada pakej tersedia untuk katalog ini
+                  </div>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>

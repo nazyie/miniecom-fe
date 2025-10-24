@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { Table } from "../../../common/components/table/table";
 import { ResponseText } from '../../../common/constant/response';
 import { CatalogueDialog } from '../catalogue-dialog/catalogue-dialog';
+import { CataloguePageService } from '../../services/catalogue-page-service';
 
 @Component({
   selector: 'app-catalogue-page',
@@ -45,7 +46,8 @@ export class InventoryPage {
     private destroyRef: DestroyRef,
     private toastService: ToastService,
     shopNavigatorService: ShopNavigatorService,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private cataloguePageService: CataloguePageService
   ) {
     this.shopNavigatorService = shopNavigatorService;
   }
@@ -69,14 +71,14 @@ export class InventoryPage {
 
   openAddModal() {
     this.modalFormTitle = 'Cipta Katalog';
-    this.modalSubmitLabel = 'Cipta';
+    this.modalSubmitLabel = 'Simpan';
     this.modalFormMode = 'CREATE';
     this.modalIsOpen = true;
   }
 
   openEditModal(data: Catalogue) {
     this.modalFormTitle = 'Kemaskini Katalog';
-    this.modalSubmitLabel = 'Kemaskini';
+    this.modalSubmitLabel = 'Simpan';
     this.modalFormMode = 'UPDATE';
     this.modalIsOpen = true;
     this.modalRecord = data;
@@ -96,10 +98,11 @@ export class InventoryPage {
     switch (formMode) {
       case 'CREATE':
         this.inventoryService.createInventory(shopId, data).subscribe({
-          next: () => {
+          next: (res) => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
+            this.cataloguePageService.updateCatalogue(res);
+            this.openEditModal(res);
           },
           error: (err) => {
             console.error('Error creating shop:', err);
@@ -111,7 +114,6 @@ export class InventoryPage {
         this.inventoryService.updateInventory(shopId, data).subscribe({
           next: () => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
           },
           error: (err) => {
@@ -124,8 +126,8 @@ export class InventoryPage {
         this.inventoryService.deleteInventory(shopId, data).subscribe({
           next: () => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
+            this.resetModal();
           },
           error: (err) => {
             console.error('Error creating shop:', err);

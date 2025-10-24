@@ -4,15 +4,22 @@ import { CataloguePageService } from '../../services/catalogue-page-service';
 import { debounceTime } from 'rxjs';
 import { CatalogueFacilityPackage } from '../../model/catalogue-modal';
 import { PackageForm } from "./package-form/package-form";
+import { InventoryService } from '../../services/catalogue-service';
+import { CommonModule } from '@angular/common';
+import { RuleTypePipe} from '../../../common/pipe/rule-type-pipe';
+import { ToastService } from '../../../common/services/toast-service';
+import { ResponseText } from '../../../common/constant/response';
 
 @Component({
   selector: 'app-catalogue-dialog-pricing-plan',
-  imports: [ReactiveFormsModule, PackageForm],
+  imports: [ReactiveFormsModule, PackageForm, CommonModule, RuleTypePipe],
   templateUrl: './catalogue-dialog-pricing-plan.html',
   styleUrl: './catalogue-dialog-pricing-plan.css'
 })
 export class CatalogueDialogPricingPlan implements OnInit {
   form: FormGroup = new FormGroup({});
+  data: CatalogueFacilityPackage[] = [];
+  pricingLabel: string = 'Harga';
 
   modalIsOpen: boolean = false;
   modalFormTitle: string = '';
@@ -23,7 +30,9 @@ export class CatalogueDialogPricingPlan implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cp: CataloguePageService,
-    private dr: DestroyRef
+    private dr: DestroyRef,
+    private inventoryService: InventoryService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -48,54 +57,77 @@ export class CatalogueDialogPricingPlan implements OnInit {
       }
     });
 
+
+    this.loadTable();
+    this.loadPricingLable();
+
     this.dr.onDestroy(() => {
       formChanges.unsubscribe();
     })
   }
 
+  private loadPricingLable() {
+    if (this.cp.catalogue?.facility) {
+      this.pricingLabel = this.cp.catalogue?.facility?.bookingFrequency == 'DAILY' ? 
+        'Harga Sehari' : 'Harga Per Slot'
+    }
+  }
+
+  deletePackage(packageId: string) {
+    this.onFormSubmit({
+      formMode: 'DELETE',
+      data: packageId
+    })
+  }
+
   onFormSubmit({ formMode, data }: {formMode: string, data: any}) {
+    if (this.cp.catalogue) {
+      const catalogueId = this.cp.catalogue.id;
+
     switch (formMode) {
       case 'CREATE':
-        // this.shopService.createShop(data).subscribe({
-        //   next: () => {
-        //     this.table.loadData();
-        //     this.resetModal();
-        //     this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
-        //   },
-        //   error: (err) => {
-        //     console.error('Error creating shop:', err);
-        //   }
-        // });
+        this.inventoryService.createPackage(catalogueId, data).subscribe({
+          next: () => {
+            this.loadTable();
+            this.resetModal();
+            this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
+          },
+          error: () => {
+            console.log('Error');
+          }
+        })
         break;
 
       case 'UPDATE':
-        // this.shopService.updateShop(data).subscribe({
-        //   next: () => {
-        //     this.table.loadData();
-        //     this.resetModal();
-        //     this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
-        //   },
-        //   error: (err) => {
-        //     console.error('Error creating shop:', err);
-        //   }
-        // });
+        this.inventoryService.updatePackage(catalogueId, data).subscribe({
+          next: () => {
+            this.loadTable();
+            this.resetModal();
+            this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
+          },
+          error: (err) => {
+            console.error('Error creating shop:', err);
+          }
+        });
         break;
 
       case 'DELETE':
-        // this.shopService.deleteShop(data).subscribe({
-        //   next: () => {
-        //     this.table.loadData();
-        //     this.resetModal();
-        //     this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
-        //   },
-        //   error: (err) => {
-        //     console.error('Error creating shop:', err);
-        //   }
-        // });
+        this.inventoryService.deletePackage(catalogueId, data).subscribe({
+          next: () => {
+            this.loadTable();
+            this.resetModal();
+            this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
+          },
+          error: (err) => {
+            console.error('Error creating shop:', err);
+          }
+        });
         break;
 
       default:
         this.resetModal();
+    }
+
     }
   }
 
@@ -120,6 +152,16 @@ export class CatalogueDialogPricingPlan implements OnInit {
     this.modalSubmitLabel = '';
     this.modalFormMode = '';
     this.modalRecord = undefined;
+  }
+
+  loadTable() {
+    if (this.cp.catalogue) {
+      this.inventoryService.getPackage(this.cp.catalogue.id).subscribe({
+        next: (res) => {
+          this.data = res;
+        }
+      })
+    }
   }
 
   formatPrice() {

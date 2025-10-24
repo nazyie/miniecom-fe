@@ -61,21 +61,21 @@ export class CatalogueDialogTime implements OnInit {
       }
     });
 
-    const listenOpeningTime = this.form.get('facility.closingTime')?.valueChanges.subscribe(() => {
+    const listenOpeningTime = this.form.get('closingTime')?.valueChanges.subscribe(() => {
       if (this.form.get('bookingFrequency')?.value !== 'DAILY') {
         this.validateInputTime();
       }
     });
 
-    const listenClosingTime = this.form.get('facility.openingTime')?.valueChanges.subscribe(() => {
-      if (this.form.get('bookingFrequency')?.value !== 'DAILY' && this.form.get('facility.openingTime')?.value != '') {
+    const listenClosingTime = this.form.get('openingTime')?.valueChanges.subscribe(() => {
+      if (this.form.get('bookingFrequency')?.value !== 'DAILY' && this.form.get('openingTime')?.value != '') {
         this.validateInputTime();
       }
     });
 
-    const listeningFrequencyFacility = this.form.get('facility.bookingFrequency')?.valueChanges.subscribe(() => {
-      this.form.get('facility.openingTime')?.setValue('');
-      this.form.get('facility.closingTime')?.setValue('');
+    const listeningFrequency = this.form.get('bookingFrequency')?.valueChanges.subscribe(() => {
+      this.form.get('openingTime')?.setValue('');
+      this.form.get('closingTime')?.setValue('');
       this.errMessageTime = '';
     })
 
@@ -83,7 +83,7 @@ export class CatalogueDialogTime implements OnInit {
       formChanges.unsubscribe();
       listenClosingTime?.unsubscribe();
       listenOpeningTime?.unsubscribe();
-      listeningFrequencyFacility?.unsubscribe();
+      listeningFrequency?.unsubscribe();
     })
   }
 
@@ -93,9 +93,9 @@ export class CatalogueDialogTime implements OnInit {
 
   private validateInputTime() {
     if (!this.validateCatalogueFrequencyByStartTimeAndEndTime(
-      this.form.get('facility.openingTime')?.value,
-      this.form.get('facility.closingTime')?.value,
-      this.form.get('facility.bookingFrequency')?.value
+      this.form.get('openingTime')?.value,
+      this.form.get('closingTime')?.value,
+      this.form.get('bookingFrequency')?.value
     )) {
       this.errMessageTime = 'Waktu operasi mula dan tamat tidak tepat dengan frekuensi fasiliti'
     } else {

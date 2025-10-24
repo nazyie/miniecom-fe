@@ -10,8 +10,8 @@ import { CatalogueFacilityPackage } from '../../../model/catalogue-modal';
 })
 export class PackageForm implements OnInit{
   @Input() formTitle : string = 'Kemaskini Pakej';
-  @Input() submitLabel!: string;
-  @Input() formMode!: string;
+  @Input() submitLabel: string = 'Cipta';
+  @Input() formMode: string = 'Create';
   @Input() record: CatalogueFacilityPackage | undefined;
 
   @Output() formSubmitted = new EventEmitter<{ formMode: string, data: any }>();
@@ -23,26 +23,28 @@ export class PackageForm implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    console.log(this.submitLabel);
+
     if (this.record) {
       this.form = this.fb.group({
-        id: [this.record.id, [Validators.required]],
-        catalogueId: [this.record.catalogueId, [Validators.required]],
-        packageName: [this.record.packageName, []],
+        id: [this.record.id, []],
+        catalogueId: [this.record.catalogueId, []],
+        packageName: [this.record.packageName, [Validators.required]],
         ruleType: [this.record.ruleType, [Validators.required]],
         threshold: [this.record.threshold, [Validators.required]],
         pricePerSlot: [this.record.pricePerSlot, [Validators.required]],
-        totalPrice: [this.record.totalPrice, [Validators.required]],
+        totalPrice: [this.record.totalPrice, []],
       })
 
     } else {
       this.form = this.fb.group({
-        id: ['', [Validators.required]],
-        catalogueId: ['', [Validators.required]],
+        id: ['', []],
+        catalogueId: ['', []],
         packageName: ['', []],
         ruleType: ['', [Validators.required]],
         threshold: ['', [Validators.required]],
         pricePerSlot: ['', [Validators.required]],
-        totalPrice: ['', [Validators.required]],
+        totalPrice: ['', []],
       })
     }
   }
