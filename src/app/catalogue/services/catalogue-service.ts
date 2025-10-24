@@ -46,6 +46,17 @@ export class InventoryService {
     );
   }
 
+  deleteAttachment(inventoryId: string, fileId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiRoute}/${inventoryId}/attachment/${fileId}`);
+  }
+
+  markAttachmentAsPrimary(inventoryId: string, fileId: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiRoute}/${inventoryId}/attachment/${fileId}`, null);
+  }
+
+  getAttachmentAssetPath(path: string) {
+    return `${environment.apiUrl}/image/${path}`;
+  }
 
   // get variant
 
@@ -64,5 +75,4 @@ export class InventoryService {
   deleteVariant(inventoryId: string, stockId: string): Observable<CatalogueVariant> {
     return this.http.delete<CatalogueVariant>(`${this.apiRoute}-variant/${inventoryId}/${stockId}`);
   }
-
 }

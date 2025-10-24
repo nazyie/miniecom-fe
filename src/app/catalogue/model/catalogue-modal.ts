@@ -12,10 +12,19 @@ export interface Catalogue {
 export interface CatalogueAttachment {
   id: string;
   catalogueId: string;
-  isPrimary: boolean;
+  primaryImage: boolean;
   path: string;
   originalFileName: string;
+}
 
+export interface CatalogueFacilityPackage {
+  id: string;
+  catalogueId: string;
+  packageName: string;
+  ruleType: string;
+  threshold: string;
+  pricePerSlot: string;
+  totalPrice: string;
 }
 
 export interface CatalogueVariant {

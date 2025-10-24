@@ -27,14 +27,6 @@
         <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
       </fieldset>
 
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">Harga Sehari</legend>
-        <label class="input input-bordered flex items-center gap-2 w-full">
-          <span>RM</span>
-          <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
-        </label>
-      </fieldset>
-
     </fieldset>
   </div>
   }
@@ -54,14 +46,6 @@
         <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
       </fieldset>
       @if (errMessageTime !== '') { <p class="text-error">{{ errMessageTime }}</p>}
-
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">Harga Per Slot</legend>
-        <label class="input input-bordered flex items-center gap-2 w-full">
-          <span>RM</span>
-          <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
-        </label>
-      </fieldset>
     </fieldset>
   </div>
   }

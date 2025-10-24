@@ -4,10 +4,11 @@ import { CataloguePageService } from '../../services/catalogue-page-service';
 import { CatalogueDialogDetail } from "../catalogue-dialog-detail/catalogue-dialog-detail";
 import { CatalogueDialogTime } from "../catalogue-dialog-time/catalogue-dialog-time";
 import { CatalogueDialogAttachment } from "../catalogue-dialog-attachment/catalogue-dialog-attachment";
+import { CatalogueDialogPricingPlan } from "../catalogue-dialog-pricing-plan/catalogue-dialog-pricing-plan";
 
 @Component({
   selector: 'app-catalogue-dialog',
-  imports: [CatalogueDialogDetail, CatalogueDialogTime, CatalogueDialogAttachment],
+  imports: [CatalogueDialogDetail, CatalogueDialogTime, CatalogueDialogAttachment, CatalogueDialogPricingPlan],
   templateUrl: './catalogue-dialog.html',
   styleUrl: './catalogue-dialog.css'
 })

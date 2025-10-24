@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogueAttachment } from '../../model/catalogue-modal';
 import { InventoryService } from '../../services/catalogue-service';
@@ -13,8 +13,10 @@ import { ToastService } from '../../../common/services/toast-service';
 })
 export class CatalogueDialogAttachment implements OnInit{
   form: FormGroup = new FormGroup({});
-  selectedFile !: File;
+  selectedFile !: File | null;
   data: CatalogueAttachment[] = [];
+
+  @ViewChild('fileInput') fileInput !:ElementRef<HTMLInputElement>;
 
   constructor(
     private cp: CataloguePageService,
@@ -49,6 +51,51 @@ export class CatalogueDialogAttachment implements OnInit{
     if (!this.form.valid || !this.selectedFile) {
       this.toastService.error('Invalid file');
       return;
+    }
+
+
+    if (this.cp.catalogue) {
+      const formData = new FormData();
+      formData.append('file', this.form.value.file);
+
+      this.inventoryService.uploadAttachment(this.cp.catalogue?.id, formData).subscribe({
+        next: () => {
+        },
+        complete: () => {
+          this.toastService.info('File uploaded');
+          this.loadData();
+          this.form.get('file')?.setValue(null);
+          this.fileInput.nativeElement.value = '';
+        }
+      })
+    }
+  }
+
+  getImage(path: string) {
+    let result = this.inventoryService.getAttachmentAssetPath(path);
+
+    console.log(result);
+
+    return result;
+  }
+
+  markImageAsPrimary(fileId: string) : void {
+    if (this.cp.catalogue) {
+      this.inventoryService.markAttachmentAsPrimary(this.cp.catalogue.id, fileId).subscribe({
+        next: () => {
+          this.loadData();
+        }
+      })
+    }
+  }
+
+  deleteImage(fileId: string): void {
+    if (this.cp.catalogue) {
+      this.inventoryService.deleteAttachment(this.cp.catalogue.id, fileId).subscribe({
+        next: () => {
+          this.loadData();
+        }
+      })
     }
   }
 

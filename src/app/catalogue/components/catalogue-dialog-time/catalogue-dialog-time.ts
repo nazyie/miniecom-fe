@@ -27,7 +27,6 @@ export class CatalogueDialogTime implements OnInit {
         bookingFrequency: ['', [Validators.required]],
         openingTime: ['', [Validators.required]],
         closingTime: ['', [Validators.required]],
-        price: [0, [Validators.required, Validators.min(0)]],
         sundaySlot: [false],
         mondaySlot: [false],
         tuesdaySlot: [false],
@@ -41,7 +40,6 @@ export class CatalogueDialogTime implements OnInit {
         bookingFrequency: [this.cp.catalogue.facility?.bookingFrequency, [Validators.required]],
         openingTime: [this.cp.catalogue.facility?.openingTime, [Validators.required]],
         closingTime: [this.cp.catalogue.facility?.closingTime, [Validators.required]],
-        price: [this.cp.catalogue.facility?.price, [Validators.required, Validators.min(0)]],
         sundaySlot: [this.cp.catalogue.facility?.sundaySlot],
         mondaySlot: [this.cp.catalogue.facility?.mondaySlot],
         tuesdaySlot: [this.cp.catalogue.facility?.tuesdaySlot],
@@ -54,9 +52,13 @@ export class CatalogueDialogTime implements OnInit {
 
     const formChanges = this.form.valueChanges.pipe(debounceTime(300)).subscribe(value => {
       const currData = this.cp.catalogue;
-      const updatedData = { ...currData, ...value };
 
-      this.cp.updateCatalogue(updatedData);
+      if (currData) {
+        const updatedFacility = { ...currData.facility, ...value };
+
+        currData.facility = updatedFacility;
+        this.cp.updateCatalogue(currData);
+      }
     });
 
     const listenOpeningTime = this.form.get('facility.closingTime')?.valueChanges.subscribe(() => {
@@ -128,13 +130,5 @@ export class CatalogueDialogTime implements OnInit {
     }
   }
 
-  formatPrice() {
-    const control = this.form.get('facility.price');
-    let value = control?.value;
-
-    if (value != null && value !== '') {
-      control?.setValue(parseFloat(value).toFixed(2), { emitEvent: false });
-    }
-  }
 
 }

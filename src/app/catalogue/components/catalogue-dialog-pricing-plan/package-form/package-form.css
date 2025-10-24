@@ -1,0 +1,5 @@
+.child-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 50; /* higher than parent */
+}

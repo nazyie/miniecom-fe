@@ -34,6 +34,7 @@ export class ShopDialog implements OnChanges, OnInit {
     private fb: FormBuilder,
     private shopService: ShopService
   ) {
+    console.log(this.submitLabel);
   }
 
   ngOnInit(): void {

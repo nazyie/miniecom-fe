@@ -1,0 +1,75 @@
+<div class="w-full max-w-5xl">
+  <h3 class="font-bold text-lg mb-4">{{ formTitle }}</h3>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Nama Pakej</legend>
+      <input type="text" name="name" class="input w-full" formControlName="name" />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Syarat Kelayakan Slot</legend>
+      <select class="select select-bordered w-full" formControlName="condition">
+        <option value="more_than">Bilangan slot lebih daripada</option>
+        <option value="equal_or_more">Bilangan slot sama dengan</option>
+      </select>
+      <div class="text-sm text-gray-500 mt-2">
+        Pilih cara untuk menentukan bila pakej ini layak berdasarkan bilangan slot yang dimasukkan.
+      </div>
+    </fieldset>
+
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Nama Pakej</legend>
+      <input type="text" name="name" class="input w-full" formControlName="name" />
+    </fieldset>
+
+    <fieldset class="fieldset relative">
+      <legend class="fieldset-legend">Bilangan Slot</legend>
+      <input type="number" name="name" class="input w-full" formControlName="name" />
+
+      <div class="flex items-center gap-2 mt-2 text-sm text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-4 h-4 text-primary">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M11.25 11.25h1.5v5.25h-1.5v-5.25zM12 8.25h.008v.008H12V8.25zm9 3.75a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Masukkan bilangan slot minimum yang diperlukan untuk melayakkan pakej ini diaktifkan</span>
+      </div>
+    </fieldset>
+
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Harga Per Slot</legend>
+      <label class="input input-bordered flex items-center gap-2 w-full">
+        <span>RM</span>
+        <input type="number" formControlName="pricePerSlot" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
+      </label>
+    </fieldset>
+
+
+
+    <div class="modal-action mt-6 flex justify-between items-center">
+      <!-- Left side (Delete if applicable, otherwise empty placeholder) -->
+      <div>
+        @if (formMode === 'UPDATE') {
+        <button class="btn rounded-4xl py-2 btn-error" type="button" (click)="delete()">
+          Padam
+        </button>
+        }
+      </div>
+
+      <!-- Right side (Cancel + Submit always stay on right) -->
+      <div class="flex gap-2">
+        <button class="btn rounded-4xl py-2 btn-secondary" type="button" (click)="close()">
+          Batal
+        </button>
+        <button class="btn rounded-4xl py-2 btn-primary" type="submit">
+          {{ submitLabel }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>
