@@ -1,3 +1,12 @@
+export interface ResponseCatalogue {
+    id: string;
+    slug: string;
+    name: string;
+    catalogueType: string;
+    itemDescription: string;
+    publish: boolean;
+}
+
 export interface Catalogue {
     id: string;
 

@@ -66,7 +66,6 @@ export class SecurityService {
     )
   }
 
-
   logout(): Observable<void> {
     const payload: RequestLogout = { refreshToken: this.refreshToken.getValue() };
 
@@ -75,6 +74,10 @@ export class SecurityService {
         this.resetToken();
       })
     )
+  }
+
+  forceReset(): void {
+    this.resetToken();
   }
 
   private saveToken(accessToken: string): void;

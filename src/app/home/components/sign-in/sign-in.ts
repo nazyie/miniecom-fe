@@ -46,9 +46,6 @@ export class SignIn implements OnInit{
           this.handleAutoShopSelection();
           this.router.navigate(['kedai']);
         },
-        error: (err: ErrorResponse) => {
-          this.toastService.error(err.error.message);
-        }
       });
     }
   }

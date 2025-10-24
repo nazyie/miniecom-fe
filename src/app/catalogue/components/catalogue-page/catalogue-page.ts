@@ -1,6 +1,6 @@
 import { Component, DestroyRef, ViewChild } from '@angular/core';
 import { TableColumn } from '../../../common/table_column.model';
-import { Catalogue } from '../../model/catalogue-modal';
+import { Catalogue, ResponseCatalogue } from '../../model/catalogue-modal';
 import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { ToastService } from '../../../common/services/toast-service';
 import { ShopNavigatorService } from '../../../common/services/shop-navigator-service';
@@ -76,12 +76,20 @@ export class InventoryPage {
     this.modalIsOpen = true;
   }
 
+  editRecord(data: ResponseCatalogue) {
+    this.inventoryService.getInventory(data.id).subscribe({
+      next: (res) => {
+        this.openEditModal(res);
+      }
+    });
+  }
+
   openEditModal(data: Catalogue) {
     this.modalFormTitle = 'Kemaskini Katalog';
     this.modalSubmitLabel = 'Simpan';
     this.modalFormMode = 'UPDATE';
-    this.modalIsOpen = true;
     this.modalRecord = data;
+    this.modalIsOpen = true;
   }
 
   resetModal() {
@@ -141,7 +149,7 @@ export class InventoryPage {
     }
   }
 
-  fetchProduct(page: number, size: number): Observable<PageResponse<Catalogue>> {
-    return this.inventoryService.getInventory(page, size, this.shopNavigatorService.shopId, this.search);
+  fetchProduct(page: number, size: number): Observable<PageResponse<ResponseCatalogue>> {
+    return this.inventoryService.getInventoryList(page, size, this.shopNavigatorService.shopId, this.search);
   }
 }

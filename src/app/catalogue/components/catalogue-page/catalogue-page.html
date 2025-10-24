@@ -33,6 +33,6 @@
         />
     }
 
-    <app-table [columns]="columns" [fetchDataFn]="fetchProduct.bind(this)" (rowClicked)="openEditModal($event)" />
+    <app-table [columns]="columns" [fetchDataFn]="fetchProduct.bind(this)" (rowClicked)="editRecord($event)" />
 
 </app-admin-layout>

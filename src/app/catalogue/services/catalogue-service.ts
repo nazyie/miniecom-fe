@@ -2,7 +2,7 @@ import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Catalogue, CatalogueAttachment, CatalogueFacilityPackage, CatalogueVariant } from '../model/catalogue-modal';
+import { Catalogue, CatalogueAttachment, CatalogueFacilityPackage, CatalogueVariant, ResponseCatalogue } from '../model/catalogue-modal';
 import { PageResponse } from '../../common/pagination.model';
 
 @Injectable({
@@ -15,8 +15,12 @@ export class InventoryService {
     private http: HttpClient,
   ) { }
 
-  getInventory(page = 0, size = 20, shopId: string, search: string): Observable<PageResponse<Catalogue>> {
-    return this.http.get<PageResponse<Catalogue>>(`${this.apiRoute}?shopId=${shopId}&page=${page}&size=${size}&search=${search}`);
+  getInventoryList(page = 0, size = 20, shopId: string, search: string): Observable<PageResponse<ResponseCatalogue>> {
+    return this.http.get<PageResponse<ResponseCatalogue>>(`${this.apiRoute}?shopId=${shopId}&page=${page}&size=${size}&search=${search}`);
+  }
+
+  getInventory(catalogueId: string) : Observable<Catalogue> {
+    return this.http.get<Catalogue>(`${this.apiRoute}/${catalogueId}`);
   }
 
   createInventory(shopId: string, inventory: Catalogue): Observable<Catalogue> {

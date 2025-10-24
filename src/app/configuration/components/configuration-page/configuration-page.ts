@@ -8,7 +8,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-configuration-page',
-  imports: [AdminLayout, ChangePassword, UpdateProfile, DatePipe],
+  imports: [AdminLayout, ChangePassword, UpdateProfile],
   templateUrl: './configuration-page.html',
   styleUrl: './configuration-page.css'
 })
