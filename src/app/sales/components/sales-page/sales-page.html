@@ -1,3 +1,38 @@
 <app-admin-layout [title]="titlePage">
 
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+    <!-- Card 1 -->
+    <div
+      class="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-md p-4 text-white hover:scale-105 transition-transform duration-300">
+      <h3 class="text-base font-semibold mb-1">Total Order</h3>
+      <p class="text-2xl font-bold">1,254</p>
+      <p class="mt-1 text-xs opacity-90">↑ 12% from last month</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div
+      class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl shadow-md p-4 text-white hover:scale-105 transition-transform duration-300">
+      <h3 class="text-base font-semibold mb-1">Revenue</h3>
+      <p class="text-2xl font-bold">RM 45,800</p>
+      <p class="mt-1 text-xs opacity-90">↑ 8% from last month</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div
+      class="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl shadow-md p-4 text-white hover:scale-105 transition-transform duration-300">
+      <h3 class="text-base font-semibold mb-1">Active Projects</h3>
+      <p class="text-2xl font-bold">37</p>
+      <p class="mt-1 text-xs opacity-90">↓ 3% from last week</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+    <app-dynamic-echart [chartType]="'bar-chart'"></app-dynamic-echart>
+    <app-dynamic-echart [chartType]="'line-chart'"></app-dynamic-echart>
+    <app-dynamic-echart [chartType]="'pie-chart'"></app-dynamic-echart>
+    <app-dynamic-echart [chartType]="'pie-chart'"></app-dynamic-echart>
+  </div>
+
+
+
 </app-admin-layout>

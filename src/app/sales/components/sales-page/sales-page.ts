@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { AdminLayout } from "../../../common/components/admin-layout/admin-layout";
+import { AdminLayout } from '../../../common/components/admin-layout/admin-layout';
+import { DynamicEchart } from "../../../common/components/dynamic-echart/dynamic-echart";
 
 @Component({
   selector: 'app-sales-page',
-  imports: [AdminLayout],
+  standalone: true,
+  imports: [AdminLayout, DynamicEchart],
   templateUrl: './sales-page.html',
-  styleUrl: './sales-page.css'
+  styleUrls: ['./sales-page.css'],
 })
 export class SalesPage {
-  titlePage: string = 'Sales'
+  titlePage = 'Sales';
 
 }
