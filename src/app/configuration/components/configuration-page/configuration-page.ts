@@ -5,10 +5,11 @@ import { UpdateProfile } from "../update-profile/update-profile";
 import { EntitlementService } from '../../service/entitlement-service';
 import { ResponseEntitlementCard } from '../../model/configuration-model';
 import { DatePipe } from '@angular/common';
+import { TransactionHistory } from "../transaction-history/transaction-history";
 
 @Component({
   selector: 'app-configuration-page',
-  imports: [AdminLayout, ChangePassword, UpdateProfile],
+  imports: [AdminLayout, ChangePassword, UpdateProfile, TransactionHistory],
   templateUrl: './configuration-page.html',
   styleUrl: './configuration-page.css'
 })

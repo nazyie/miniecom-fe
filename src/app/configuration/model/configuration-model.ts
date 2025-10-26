@@ -9,6 +9,17 @@ export interface RequestPassword {
   password: string;
 }
 
+export interface TransactionHistoryModel {
+  id: string;
+  referenceCode: string;
+  paymentStatus: string;
+  creditAmount: number;
+  transactionDescription: string;
+  amount: string;
+  createdAt: string;
+  userId: string;
+}
+
 export interface ResponseEntitlementCard {
   name: string;
   id: string;

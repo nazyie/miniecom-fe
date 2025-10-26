@@ -1,13 +1,13 @@
 <app-admin-layout [title]="titlePage">
 
-  <div class="mt-5 flex flex-col lg:flex-row gap-6 justify-center items-start">
+  <div class="mt-5 flex flex-col lg:flex-row gap-6 justify-center items-start ">
     <!-- CARD 1 -->
-    <div class="relative w-full lg:w-1/2 ">
+    <div class="relative w-full lg:w-1/2 hover:scale-101 transition-transform duration-300">
       <div
         class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-500 text-white p-6">
-        <div class="mt-4">
+        <!-- <div>
           <p class="text-3xl font-bold mt-2">@if (card !== null) { {{ card.tier }} } @else { <span class="loading loading-spinner loading-md"></span> }</p>
-        </div>
+        </div> -->
 
         <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
           <div>
@@ -26,14 +26,14 @@
             <div class="flex justify-between text-xs">
               <p>Limit Kedai</p>
               <p>
-                @if (card !== null) { 
+                @if (card !== null) {
                   @if (card.shopQuota == -1) {
                     Unlimited
                   } @else {
                     {{ card.shopQuota }} / 100
                   }
-                } @else { 
-                  <span class="loading loading-spinner loading-sm"></span> 
+                } @else {
+                  <span class="loading loading-spinner loading-sm"></span>
                 }
               </p>
             </div>
@@ -43,14 +43,14 @@
             <div class="flex justify-between text-xs">
               <p>Limit Transaksi</p>
               <p>
-                @if (card !== null) { 
+                @if (card !== null) {
                   @if (card.transactionQuota == -1) {
                     Unlimited
                   } @else {
                     {{ card.transactionQuota }} / 100
                   }
-                } @else { 
-                  <span class="loading loading-spinner loading-sm"></span> 
+                } @else {
+                  <span class="loading loading-spinner loading-sm"></span>
                 }
               </p>
             </div>
@@ -60,14 +60,14 @@
             <div class="flex justify-between text-xs">
               <p>Limit Catalogue</p>
               <p>
-                @if (card !== null) { 
+                @if (card !== null) {
                   @if (card.catalogueQuota == -1) {
                     Unlimited
                   } @else {
-                    {{ card.catalogueQuota }} / 100 
+                    {{ card.catalogueQuota }} / 100
                   }
-                } @else { 
-                  <span class="loading loading-spinner loading-sm"></span> 
+                } @else {
+                  <span class="loading loading-spinner loading-sm"></span>
                 }
               </p>
             </div>
@@ -76,7 +76,9 @@
         </div>
 
         <!-- Footer features -->
-        <div class="text-xs mt-4 flex flex-wrap gap-2 opacity-70">
+        <div class="text-xs mt-4 flex flex-wrap gap-2">
+          <button class="btn btn-secondary">Adds On</button>
+          <button class="btn btn-primary shadow">Tambah Kredit</button>
           @if (card?.isAdsEnabled) { <span class="">Ads</span> }
           @if (card?.isPaymentGatewayEnabled) { <span class="">Payment Gateway</span> }
         </div>
@@ -84,21 +86,13 @@
         <!-- Shiny overlay effect -->
         <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none"></div>
       </div>
-
     </div>
-
-    <!-- CARD 2
-    <div class="w-full lg:w-1/2">
-      <div class="rounded-2xl overflow-hidden shadow-xl border border-primary p-6">
-          <h2 class="card-title text-2xl text-primary font-bold mt-2">Upgrade Package</h2>
-
-      </div>
-    </div> -->
   </div>
 
   <div class="mt-4">
     <app-change-password />
     <app-update-profile />
+    <app-transaction-history />
   </div>
 
 

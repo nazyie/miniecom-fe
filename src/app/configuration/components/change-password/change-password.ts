@@ -13,6 +13,7 @@ import { ResponseText } from '../../../common/constant/response';
 })
 export class ChangePassword implements OnInit{
   form: FormGroup = new FormGroup({});
+  isOpen = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,6 +26,10 @@ export class ChangePassword implements OnInit{
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]]
     })
+  }
+
+   toggle() {
+    this.isOpen = !this.isOpen;
   }
 
   submit() {

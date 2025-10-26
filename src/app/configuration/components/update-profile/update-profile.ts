@@ -12,7 +12,9 @@ import { RequestUser } from '../../model/configuration-model';
   styleUrl: './update-profile.css'
 })
 export class UpdateProfile {
-    form: FormGroup = new FormGroup({});
+  form: FormGroup = new FormGroup({});
+  isOpen = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -36,6 +38,10 @@ export class UpdateProfile {
     })
 
     this.form.get('email')?.disable();
+  }
+
+  toggle() {
+    this.isOpen = !this.isOpen;
   }
 
   submit() {
