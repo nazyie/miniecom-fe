@@ -2,6 +2,8 @@
   <div class="modal-box w-full max-w-5xl">
     <h3 class="font-bold text-lg mb-4">{{ formTitle }}</h3>
 
+    <app-cms-builder />
+
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div>
         <fieldset class="fieldset">

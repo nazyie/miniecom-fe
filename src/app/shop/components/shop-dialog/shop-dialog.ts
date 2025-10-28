@@ -3,6 +3,7 @@ import { Component, DestroyRef, EventEmitter, Input, OnChanges, OnInit, Output }
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Shop } from '../../model/shop.model';
 import { ShopService } from '../../services/shop-service';
+import { CmsBuilder } from "../cms-builder/cms-builder";
 
 export enum SHOP_STATUS {
   ACTIVE,
@@ -12,7 +13,7 @@ export enum SHOP_STATUS {
 @Component({
   selector: 'app-shop-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CmsBuilder],
   templateUrl: './shop-dialog.html',
   styleUrl: './shop-dialog.css'
 })
