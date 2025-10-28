@@ -29,16 +29,18 @@ export class ShopDialog implements OnChanges, OnInit {
   tickEnableOrderConfirm: boolean = false;
   tickEnableOrderDeliver: boolean = false;
 
+  slugLink: string = '';
+
   constructor(
     private destroyRef: DestroyRef,
     private fb: FormBuilder,
     private shopService: ShopService
-  ) {
-    console.log(this.submitLabel);
-  }
+  ) { }
 
   ngOnInit(): void {
     if (this.record) {
+      this.slugLink = this.record.slug;
+
       this.form = this.fb.group({
         id: [this.record.id, [Validators.required]],
         name: [this.record.name, [Validators.required]],
@@ -61,6 +63,14 @@ export class ShopDialog implements OnChanges, OnInit {
         enableOrderPayment: ['', []],
       })
     }
+
+    const listenShopName = this.form.get('name')?.valueChanges.subscribe((value) => {
+      this.slugLink = this.toKebabCase(value);
+    })
+
+    this.destroyRef.onDestroy(() => {
+      listenShopName?.unsubscribe();
+    })
   }
 
   ngOnChanges() {
@@ -93,5 +103,12 @@ export class ShopDialog implements OnChanges, OnInit {
       formMode: 'cancel',
       data: null
     })
+  }
+
+  toKebabCase(input: string): string {
+    return input
+      .replace(/([a-z0-9])([A-Z])/g, "$1-$2") // insert hyphen between camelCase or PascalCase
+      .replace(/[\s_]+/g, "-")                // replace spaces or underscores with hyphen
+      .toLowerCase();                         // make everything lowercase
   }
 }

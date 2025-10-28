@@ -3,6 +3,8 @@
     @if (toggleOption) {
       <app-search-by-facility 
         [shopDetail]="shopDetail"
+        [toggleOption]="toggleOption"
+        (toggleEvent)="handleToggleOption($event)"
       />
     } @else {
     }

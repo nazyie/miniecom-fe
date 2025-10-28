@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ResponseFacility } from '../../model/booking-page.model';
 import { BookingService } from '../../service/booking-service';
 import { FacilityCartService } from '../../service/facility-cart-service';
+import { FacilityAttachment } from "./facility-attachment/facility-attachment";
 
 @Component({
   selector: 'app-facility-selection',
-  imports: [],
+  imports: [FacilityAttachment],
   templateUrl: './facility-selection.html',
   styleUrl: './facility-selection.css'
 })
 export class FacilitySelection implements OnInit {
   facilityList: ResponseFacility[] | null = null;
+  isAttachmentDialogOpen: boolean = false;
+  openAttachmentId: string = '';
 
   constructor(
     private bookingService: BookingService,
@@ -58,4 +61,19 @@ export class FacilitySelection implements OnInit {
       this.facilityCartService.updateMetadata(updatedCart);
     }
   }
+
+  handleClosingDialog(isClosingAction: boolean) {
+    this.openAttachmentId = '';
+    this.isAttachmentDialogOpen = false;
+  }
+
+  openAttachment(catalogueId: string) {
+    this.openAttachmentId= catalogueId;
+    this.isAttachmentDialogOpen = true;
+  }
+
+  getAttachmentPath(path: string) {
+    return this.bookingService.getAttachmentAssetPath(path);
+  }
+
 }

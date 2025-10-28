@@ -20,7 +20,7 @@ echarts.use([
   TooltipComponent,
   GridComponent,
   LegendComponent,
-  CanvasRenderer,
+  CanvasRenderer
 ]);
 
 @Component({

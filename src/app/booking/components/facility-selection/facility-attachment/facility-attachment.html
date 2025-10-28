@@ -1,0 +1,42 @@
+<dialog open class="modal">
+    <div class="modal-box w-full max-w-5xl relative bg-base-100 overflow-hidden">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-2">
+            <h3 class="font-bold text-lg text-primary">Fasiliti Preview</h3>
+            <button class="btn btn-sm btn-circle btn-ghost" (click)="closeDialog()">
+                ✕
+            </button>
+        </div>
+
+        <!-- Image preview area -->
+        @if(catalogueAttachment) {
+        <div class="relative flex items-center justify-center bg-gray-100 h-[480px] select-none">
+            <img alt="Attachment preview" [src]="getAttachmentPath(catalogueAttachment[selectionIndex].path)"
+                class="object-contain w-full h-full transition-transform duration-200" />
+
+            <!-- Left (Previous) navigation zone -->
+            <div class="absolute left-0 top-0 h-full w-1/2 cursor-pointer group flex items-center justify-start bg-gradient-to-r from-black/10 to-transparent hover:from-black/20 transition-all duration-200"
+                (click)="prevImage()" aria-label="Previous">
+                <span
+                    class="text-white text-4xl font-bold pl-4 drop-shadow-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                    ❮
+                </span>
+            </div>
+
+            <!-- Right (Next) navigation zone -->
+            <div class="absolute right-0 top-0 h-full w-1/2 cursor-pointer group flex items-center justify-end bg-gradient-to-l from-black/10 to-transparent hover:from-black/20 transition-all duration-200"
+                (click)="nextImage()" aria-label="Next">
+                <span
+                    class="text-white text-4xl font-bold pr-4 drop-shadow-lg opacity-70 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                    ❯
+                </span>
+            </div>
+        </div>
+
+        <!-- Footer (optional caption or info) -->
+        <div class="text-center text-sm text-gray-500 mt-2 mb-1">
+            Paparan {{ selectionIndex + 1 }} dari {{ catalogueAttachment.length }}
+        </div>
+        }
+    </div>
+</dialog>

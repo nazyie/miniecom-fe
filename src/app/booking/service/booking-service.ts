@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RequestBookedFacility, RequestBookingFacility, RequestTemporaryBooking, ResponseBookedFacility, ResponseBookingFacility, ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
 import { environment } from '../../../environments/environment';
+import { CatalogueAttachment } from '../../catalogue/model/catalogue-modal';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
-  private apiRoute = environment.apiUrl + '/booking';
+  private apiRouteRoot = environment.apiUrl;
+  private apiRoute = this.apiRouteRoot + '/booking';
   private slug: string = '';
 
   constructor(
@@ -42,8 +44,16 @@ export class BookingService {
     return this.http.post<ResponseBookingFacility>(`${this.apiRoute}/${this.slug}/confirm`, payload);
   }
 
+  getFacilityAttachment(catalogueId: string) : Observable<CatalogueAttachment[]> {
+    return this.http.get<CatalogueAttachment[]>(`${this.apiRoute}/${this.slug}/facility/attachment/${catalogueId}`);
+  }
+
   get getShopSlugFromUrl(): string {
     return this.slug;
+  }
+
+  getAttachmentAssetPath(path: string) {
+    return `${environment.apiUrl}/image/${path}`;
   }
   
 }

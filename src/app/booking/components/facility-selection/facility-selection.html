@@ -1,23 +1,34 @@
 <!-- container -->
 <div class="overflow-y-auto px-4">
   @if (facilityList != null) {
-  <div class="grid grid-cols-2 max-w-7xl mx-auto md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 max-w-7xl mx-auto md:grid-cols-3 lg:grid-cols-4 gap-4 pb-2">
     @for (data of facilityList; track data.facilityId) {
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]" 
-      [class.border-2]="isSelectedFacility(data.facilityId)"
+    <div class="card bg-base-100 shadow-sm w-full h-[350px]" [class.border-2]="isSelectedFacility(data.facilityId)" (click)="selectFacility(data)"
       [class.border-primary]="isSelectedFacility(data.facilityId)">
       <figure class="h-[150px] overflow-hidden">
-        <img class="object-cover w-full h-full"
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+        @if (data.facilityAttachment) {
+        <img class="object-cover w-full h-full" [src]="getAttachmentPath(data.facilityAttachment)" alt="Shoes" />
+
+        } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+          <!-- soft gray background -->
+          <circle cx="8" cy="8" r="7.5" fill="#F3F4F6" />
+          <!-- camera icon in gray -->
+          <path fill="#9CA3AF"
+            d="M7 2.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0zm4.225 4.053a.5.5 0 0 0-.577.093l-3.71 4.71l-2.66-2.772a.5.5 0 0 0-.63.062L.002 13v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4.5l-4.777-3.947z" />
+        </svg>
+
+        }
       </figure>
       <div class="card-body p-4">
         <h2 class="card-title text-sm">{{ data.facilityName }}</h2>
-        <p class="text-xs flex-grow">
+        <p class="text-xs flex-grow line-clamp-1">
           {{ data.itemDescription }}
         </p>
         <div class="card-actions flex-col gap-2">
-          <button class="btn btn-outline btn-primary btn-sm w-full">Lihat Fasiliti</button>
-          <button class="btn btn-primary btn-sm w-full" (click)="selectFacility(data)">Pilih</button>
+          <button class="btn btn-primary btn-outline btn-sm w-full" [disabled]="!data.facilityAttachment" (click)="openAttachment(data.facilityId)">Lihat
+            Fasiliti</button>
+          <!-- <button class="btn btn-primary btn-sm w-full" (click)="selectFacility(data)">Pilih</button> -->
         </div>
       </div>
     </div>
@@ -46,3 +57,7 @@
     <span class="loading loading-spinner loading-xl"></span>
   </div>
   }
+  @if (isAttachmentDialogOpen) {
+    <app-facility-attachment [catalogueId]="openAttachmentId" (closeDialogEvent)="handleClosingDialog($event)"/>
+  }
+</div>

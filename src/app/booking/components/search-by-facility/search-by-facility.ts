@@ -40,7 +40,6 @@ export class SearchByFacility implements OnInit {
 
   setOption(option: boolean): void {
     this.toggleOption = option;
-    console.log(`Selected option: ${option ? 'Fasiliti' : 'Tarikh'}`);
     this.toggleEvent.emit(this.toggleOption);
   }
 

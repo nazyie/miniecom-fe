@@ -48,6 +48,7 @@ export interface ResponseFacility {
     facilityId: string;
     facilityName: string;
     facilityType: string;
+    facilityAttachment: string;
     itemDescription: string;
     facilitySlug: string;
     bookingFrequency: string;
