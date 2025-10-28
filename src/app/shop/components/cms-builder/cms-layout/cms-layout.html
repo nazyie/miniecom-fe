@@ -1,0 +1,43 @@
+<div
+  cdkDropList
+  class="border border-dashed border-primary/50 rounded-lg p-4 bg-white"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (widget of widgets; track widgets) {
+    <div
+      cdkDrag
+      class="rounded-lg bg-secondary/20 px-4 py-3 my-2 cursor-move select-none
+             hover:bg-secondary/40 active:bg-secondary/50 transition-colors"
+    >
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-gray-800">{{ widget }}</span>
+        <div class="flex items-center gap-2">
+          <!-- Edit Button -->
+          <button
+            class="btn btn-xs btn-outline border-primary text-primary hover:bg-primary hover:text-white"
+            (click)="editWidget(widget)"
+            type="button"
+          >
+            Edit
+          </button>
+
+          <!-- Remove Button -->
+          <button
+            class="btn btn-xs btn-outline border-secondary text-secondary hover:bg-secondary hover:text-white"
+            (click)="removeWidget(widget)"
+            type="button"
+          >
+            Remove
+          </button>
+
+          <!-- Grip Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               class="w-4 h-4 text-gray-600 ml-1">
+            <path fill="currentColor"
+                  d="M9 4h2v2H9zm0 7h2v2H9zm0 7h2v2H9zM13 4h2v2h-2zm0 7h2v2h-2zm0 7h2v2h-2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  }
+</div>

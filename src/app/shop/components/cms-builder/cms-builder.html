@@ -3,5 +3,9 @@
     <div class="flex items-center justify-between">
       <h3 class="font-bold text-lg text-primary">CMS</h3>
     </div>
+
+    @if (formMode == 'LAYOUT') {
+      <app-cms-layout />
+    }
   </div>
 </dialog>
