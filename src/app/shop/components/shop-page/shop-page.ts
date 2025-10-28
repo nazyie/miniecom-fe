@@ -10,6 +10,8 @@ import { AdminLayout } from "../../../common/components/admin-layout/admin-layou
 import { Table } from '../../../common/components/table/table';
 import { ToastService } from '../../../common/services/toast-service';
 import { ResponseText } from '../../../common/constant/response';
+import { ShopDialogSelection } from "../shop-dialog-selection/shop-dialog-selection";
+import { CmsBuilder } from "../cms-builder/cms-builder";
 
 @Component({
   selector: 'app-shop-page',
@@ -18,7 +20,9 @@ import { ResponseText } from '../../../common/constant/response';
     FormsModule,
     AdminLayout,
     Table,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShopDialogSelection,
+    CmsBuilder
 ],
   templateUrl: './shop-page.html',
   styleUrl: './shop-page.css'
@@ -36,7 +40,11 @@ export class ShopPage implements OnInit {
   modalFormTitle: string = '';
   modalSubmitLabel: string = '';
   modalFormMode: string = '';
-  modalRecord: Shop | undefined;
+  modalRecord: Shop | undefined | null;
+
+  modalOptionIsOpen: boolean = false;
+
+  modalCMSIsOpen: boolean = false;
 
   search: string = '';
   search$ = new Subject<string>();
@@ -59,6 +67,31 @@ export class ShopPage implements OnInit {
 
   @ViewChild(ShopDialog) modal!: ShopDialog;
   @ViewChild(Table) table!: Table;
+
+  openDialogOption(data: Shop) {
+    this.modalOptionIsOpen = true;
+    this.modalRecord = data;
+  }
+
+  handleOptionModal(metadata: {data: any, mode: string}) {
+    this.modalOptionIsOpen = false;
+
+    switch(metadata.mode) {
+      case 'RECORD':
+        this.openEditModal(metadata.data);
+        break;
+      case 'CMS':
+        this.openCMSModal(metadata.data.id)
+        this.modalRecord = null;
+        break;
+      default:
+        this.modalRecord = null;
+    }
+  }
+
+  openCMSModal(shopId: string) {
+    this.modalCMSIsOpen = true;
+  }
 
   openAddModal() {
     this.modalFormTitle = 'Cipta Kedai';

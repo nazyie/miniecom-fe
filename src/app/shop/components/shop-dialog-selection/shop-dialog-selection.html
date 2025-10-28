@@ -1,1 +1,14 @@
-<p>shop-dialog-selection works!</p>
+<dialog open class="modal">
+  <div class="modal-box w-full max-w-5xl">
+    <div class="flex items-center justify-between">
+      <h3 class="font-bold text-lg text-primary">Pilih tetapan</h3>
+      <button class="btn btn-sm btn-circle btn-ghost" (click)="selectOption('close')">
+        ✕
+      </button>
+    </div>
+    <div class="flex flex-col gap-2 mt-5">
+      <button class="btn btn-primary rounded-3xl w-full" (click)="selectOption('RECORD')">Kemaskini Maklumat Kedai</button>
+      <button class="btn btn-primary rounded-3xl w-full" (click)="selectOption('CMS')">Kemaskini CMS</button>
+    </div>
+  </div>
+</dialog>

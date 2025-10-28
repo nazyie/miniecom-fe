@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-cms-builder',
@@ -8,4 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './cms-builder.css',
 })
 export class CmsBuilder {
+  @Input() catalogueId!: string;
+
 }

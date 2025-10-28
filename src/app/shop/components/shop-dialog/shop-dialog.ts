@@ -13,7 +13,7 @@ export enum SHOP_STATUS {
 @Component({
   selector: 'app-shop-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CmsBuilder],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './shop-dialog.html',
   styleUrl: './shop-dialog.css'
 })
@@ -21,7 +21,7 @@ export class ShopDialog implements OnChanges, OnInit {
   @Input() formTitle!: string;
   @Input() submitLabel!: string;
   @Input() formMode!: string;
-  @Input() record: Shop | undefined;
+  @Input() record: Shop | undefined | null;
 
   @Output() formSubmitted = new EventEmitter<{ formMode: string, data: any }>();
 
