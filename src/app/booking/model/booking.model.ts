@@ -3,7 +3,8 @@ export interface BookingMetadata {
     facilityId: string;
     facilityName: string;
     bookingFrequency: string;
-    selected: string [];
+    date?: string | null;
+    selected: any [];
     price: number;
     noOfSlot: number;
     openingTime: string;
@@ -16,6 +17,7 @@ export function newBookingMetadata() : BookingMetadata {
         facilityId: '',
         facilityName: '',
         bookingFrequency: '',
+        date: null,
         selected: [],
         price: 0.00,
         noOfSlot: 0,

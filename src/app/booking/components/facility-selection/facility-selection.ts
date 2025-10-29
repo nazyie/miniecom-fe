@@ -3,17 +3,22 @@ import { ResponseFacility } from '../../model/booking-page.model';
 import { BookingService } from '../../service/booking-service';
 import { FacilityCartService } from '../../service/facility-cart-service';
 import { FacilityAttachment } from "./facility-attachment/facility-attachment";
+import { FacilityPrice } from './facility-price/facility-price';
 
 @Component({
   selector: 'app-facility-selection',
-  imports: [FacilityAttachment],
+  imports: [FacilityAttachment, FacilityPrice],
   templateUrl: './facility-selection.html',
   styleUrl: './facility-selection.css'
 })
 export class FacilitySelection implements OnInit {
   facilityList: ResponseFacility[] | null = null;
   isAttachmentDialogOpen: boolean = false;
+  isPricingDialogOpen: boolean = false;
+
   openAttachmentId: string = '';
+  openRecord: ResponseFacility | null = null;
+
 
   constructor(
     private bookingService: BookingService,
@@ -25,7 +30,7 @@ export class FacilitySelection implements OnInit {
   }
 
   isSelectedFacility(facilityId: string): boolean {
-    const selectedId =  this.facilityCartService.cart.facilityId;
+    const selectedId =  this.facilityCartService.getMetadata().facilityId;
     return selectedId === facilityId;
   }
 
@@ -62,14 +67,24 @@ export class FacilitySelection implements OnInit {
     }
   }
 
-  handleClosingDialog(isClosingAction: boolean) {
+  openAttachment(catalogueId: string) {
+    this.openAttachmentId= catalogueId;
+    this.isAttachmentDialogOpen = true;
+  }
+
+  handleAttachmentClosingDialog(isClosingAction: boolean) {
     this.openAttachmentId = '';
     this.isAttachmentDialogOpen = false;
   }
 
-  openAttachment(catalogueId: string) {
-    this.openAttachmentId= catalogueId;
-    this.isAttachmentDialogOpen = true;
+  openPricing(facility : ResponseFacility) {
+    this.openRecord = facility;
+    this.isPricingDialogOpen = true;
+  }
+
+  handlePriceClosingDialog(isClosingAction: boolean)  {
+    this.openRecord = null;
+    this.isPricingDialogOpen = false;
   }
 
   getAttachmentPath(path: string) {

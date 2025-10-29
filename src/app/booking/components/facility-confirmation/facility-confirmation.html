@@ -18,11 +18,25 @@
           <span>{{ endTime }}</span>
         </div>
         <div class="flex justify-between">
+          <span class="font-medium">Bilangan Slot</span>
+          <span>{{ totalSlot }}</span>
+        </div>
+        <div class="flex justify-between">
           <span class="font-medium">Jumlah Harga:</span>
           <span class="font-semibold text-indigo-600">RM {{ totalPrice }}</span>
         </div>
       </div>
     </div>
+
+
+    @if (details) {
+    <div class="divider">Perinci</div>
+    <div class="text-sm text-center text-gray-500">
+    @for (item of details; track item.startTime) {
+      <span>{{ item.startTime }} - {{ item.endTime }}</span> |
+    }
+    </div>
+    }
 
     <div class="divider">Maklumat Anda</div>
 

@@ -40,5 +40,5 @@
   }
 
   <app-table [columns]="columns" [fetchDataFn]="fetchShops.bind(this)"
-      (rowClicked)="openDialogOption($event)" />
+      (rowClicked)="openEditModal($event)" />
 </app-admin-layout>

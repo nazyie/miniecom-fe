@@ -22,15 +22,15 @@ export class FacilityDateSelection implements OnInit {
   ngOnInit(): void {}
 
   get isBookingFrequencyDateRange(): boolean {
-    return this.facilityCartService.cart.bookingFrequency === 'DAILY';
+    return this.facilityCartService.getMetadata().bookingFrequency === 'DAILY';
   }
 
   get selectedDate(): string[] {
-    return this.facilityCartService.cart.selected;
+    return this.facilityCartService.getMetadata().selected;
   }
 
   handleSelectedDate(selected: string[]): void {
-    const cart = this.facilityCartService.cart;
+    const cart = this.facilityCartService.getMetadata();
     cart.selected = selected;
     if (selected.length === 2) {
       cart.noOfSlot = this.calculateDays(selected[0], selected[1]);
@@ -63,7 +63,7 @@ export class FacilityDateSelection implements OnInit {
       if (this.cache.has(cacheKey)) continue;
 
       const payload: RequestBookedFacility = {
-        sessionId: this.facilityCartService.cart.sessionId,
+        sessionId: this.facilityCartService.getMetadata().sessionId,
         startDate: this.formatDateLocal(from),
         endDate: this.formatDateLocal(to)
       };

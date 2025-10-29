@@ -27,7 +27,7 @@ export class SearchByFacility implements OnInit {
     private facilityCartService: FacilityCartService,
     private bookingService: BookingService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadStepperNavigationText();
@@ -62,12 +62,14 @@ export class SearchByFacility implements OnInit {
   }
 
   isValidToProceedNext(): boolean {
-    const cart = this.facilityCartService.cart;
+    const cart = this.facilityCartService.getMetadata();
     if (this.currentStepper === 3) return false;
     if (this.currentStepper === 1) return !!cart.facilityId;
     if (this.currentStepper === 2 && cart.bookingFrequency === 'DAILY') {
       return cart.selected.length === 2;
     }
+    if (this.currentStepper === 2)
+      return cart.selected.length > 0;
     return true;
   }
 
@@ -76,7 +78,7 @@ export class SearchByFacility implements OnInit {
   }
 
   bookingInitiation(): void {
-    const cart = this.facilityCartService.cart;
+    const cart = this.facilityCartService.getMetadata();
     const payload: RequestTemporaryBooking = {
       sessionId: cart.sessionId,
       facilityId: cart.facilityId,
@@ -94,7 +96,7 @@ export class SearchByFacility implements OnInit {
   }
 
   cancelTemporaryBooking(): void {
-    const sessionId = this.facilityCartService.cart.sessionId;
+    const sessionId = this.facilityCartService.getMetadata().sessionId;
     if (!sessionId) return;
 
     this.bookingService.cancelTemporaryBooking(sessionId).subscribe({
@@ -107,19 +109,36 @@ export class SearchByFacility implements OnInit {
   }
 
   createBookingDatePayload(): RequestTemporaryBookingDate[] {
-    const { selected } = this.facilityCartService.cart;
-    if (selected.length < 2) return [];
+    const cart = this.facilityCartService.getMetadata();
+    const { selected } = cart;
 
-    const startDate = new Date(selected[0]);
-    const endDate = new Date(selected[1]);
-    const payload: RequestTemporaryBookingDate[] = [];
+    let payload: RequestTemporaryBookingDate[] = [];
 
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      payload.push({ date, startTime: '', endTime: '' });
+    switch (cart.bookingFrequency) {
+      case 'DAILY':
+        if (selected.length < 2) return [];
+
+        const startDate = new Date(selected[0]);
+        const endDate = new Date(selected[1]);
+
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+          const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          payload.push({ date, startTime: '', endTime: '' });
+        }
+        return payload;
+
+      default:
+        if (selected.length == 0) return [];
+
+        const date = cart.date;
+        for (let i = 0; i < selected.length; i++) {
+          if (date) {
+            payload.push({ date, startTime: selected[i].startTime, endTime: selected[i].endTime })
+          }
+        }
+        return payload;
     }
 
-    return payload;
   }
 
   private loadStepperNavigationText(): void {

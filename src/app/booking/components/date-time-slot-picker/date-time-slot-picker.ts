@@ -18,12 +18,12 @@ export class DateTimeSlotPicker implements OnInit {
   form!: FormGroup;
 
   constructor(
-    private facilityCartService: FacilityCartService,
+    private fcs: FacilityCartService,
     private fb: FormBuilder,
     private destroyRef: DestroyRef,
     private toastService: ToastService,
     private bookingService: BookingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({ selectedDate: [''] });
@@ -39,6 +39,8 @@ export class DateTimeSlotPicker implements OnInit {
       debounceTime(200),
       distinctUntilChanged()
     ).subscribe(date => {
+      this.updateMetadataDate(date);
+
       const selectedDate = new Date(date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -46,13 +48,13 @@ export class DateTimeSlotPicker implements OnInit {
       if (selectedDate < today) {
         dateControl?.setValue(null);
         dateControl?.markAsUntouched();
-        this.toastService.error('Invalid date');
+        this.toastService.error('Tempahan tarikh lampau tidak dibenarkan');
         this.slots = [];
         return;
       }
 
       const payload: RequestBookedFacility = {
-        sessionId: this.facilityCartService.cart.sessionId,
+        sessionId: this.fcs.getMetadata().sessionId,
         startDate: date,
         endDate: date
       };
@@ -76,18 +78,66 @@ export class DateTimeSlotPicker implements OnInit {
       });
     });
 
+    if (this.fcs.getMetadata().date)
+      dateControl?.setValue(this.fcs.getMetadata().date);
+
     this.destroyRef.onDestroy(() => {
       listenForDateChanges?.unsubscribe();
       listenForValidDateChanges?.unsubscribe();
     });
   }
 
-  selectSlot(slot: BookedFacility): void {
+  updateMetadataDate(date: string): void {
+    let metadata = this.fcs.getMetadata();
+    metadata.date = date;
+    metadata.selected = [];
+    metadata.noOfSlot = 0;
+    this.fcs.updateMetadata(metadata);
+  }
 
+  resetSelectedSlot(): void {
+    let metadata = this.fcs.getMetadata();
+    metadata.selected = []
+    this.fcs.updateMetadata(metadata);
+  }
+
+  selectSlot(slot: BookedFacility): void {
+    const metadata = this.fcs.getMetadata();
+
+    if (!metadata.selected) {
+      metadata.selected = [];
+    }
+
+    const index = metadata.selected.findIndex(
+      (s: { startTime: string; endTime: string }) => s.startTime === slot.startTime
+    );
+
+    if (index !== -1) {
+      metadata.noOfSlot--;
+      metadata.selected.splice(index, 1);
+    } else {
+      metadata.noOfSlot++;
+      metadata.selected.push({
+        startTime: slot.startTime,
+        endTime: slot.endTime
+      });
+    }
+
+    this.fcs.updateMetadata(metadata);
+  }
+
+  isSlotSelected(slotStartTime: string): boolean {
+    const metadata = this.fcs.getMetadata();
+
+    if (!metadata.selected || metadata.selected.length === 0) {
+      return false;
+    }
+
+    return metadata.selected.some(slot => slot.startTime === slotStartTime);
   }
 
   private constructSlotTimer(date: string): BookedFacility[] {
-    const { openingTime, closingTime, bookingFrequency } = this.facilityCartService.cart;
+    const { openingTime, closingTime, bookingFrequency } = this.fcs.getMetadata();
     const slots: BookedFacility[] = [];
     const increment = bookingFrequency === 'HOURLY' ? 60 : 30;
 

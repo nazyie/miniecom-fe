@@ -18,6 +18,8 @@ export class FacilityConfirmation implements OnInit {
   startTime = '';
   endTime = '';
   totalPrice = 0;
+  totalSlot = 0;
+  details: any [] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -41,12 +43,29 @@ export class FacilityConfirmation implements OnInit {
   }
 
   private loadBookingDetail(): void {
-    const { facilityName, selected, price, noOfSlot } = this.facilityCartService.cart;
+    const { facilityName, selected, price, noOfSlot, bookingFrequency } = this.facilityCartService.getMetadata();
 
-    this.facilityName = facilityName ?? '';
-    this.startTime = selected?.[0] ?? '';
-    this.endTime = selected?.[selected.length - 1] ?? '';
-    this.totalPrice = (price ?? 0) * (noOfSlot ?? 0);
+    switch (bookingFrequency) {
+      case 'DAILY':
+        this.facilityName = facilityName ?? '';
+        this.startTime = selected?.[0] ?? '';
+        this.endTime = selected?.[selected.length - 1] ?? '';
+        this.totalPrice = (price ?? 0) * (noOfSlot ?? 0);
+        this.totalSlot = noOfSlot;
+        // this.details = selected;
+        break;
+
+      default:
+        const sortedSelected = selected.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+        this.facilityName = facilityName ?? '';
+        this.startTime = sortedSelected?.[0].startTime ?? '';
+        this.endTime = selected?.[selected.length - 1].endTime ?? '';
+        this.totalPrice = (price ?? 0) * (noOfSlot ?? 0);
+        this.totalSlot = noOfSlot;
+        this.details = selected;
+        break;
+    }
   }
 
   confirmBooking(): void {
@@ -56,7 +75,7 @@ export class FacilityConfirmation implements OnInit {
       return;
     }
 
-    const cart = this.facilityCartService.cart;
+    const cart = this.facilityCartService.getMetadata();
 
     const payload: RequestBookingFacility = {
       sessionId: cart.sessionId,

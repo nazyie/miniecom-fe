@@ -8,26 +8,31 @@ import { Subject } from 'rxjs';
 export class FacilityCartService {
   static readonly FACILITY_METADATA = 'FACILITY_METADATA'
 
-  cart!: BookingMetadata;
+  private cart!: BookingMetadata;
 
   constructor() {
     this.loadOrCreateFacilityMetadata();
   }
 
-  getMetadata() : BookingMetadata {
+  getMetadata(): BookingMetadata {
     return this.cart;
   }
 
-  cleanMetadata() : void {
+  cleanMetadata(): void {
     this.removeFacilityMetadata();
   }
 
   updateMetadata(cart: BookingMetadata) {
     this.cart = cart;
-
     sessionStorage.setItem(FacilityCartService.FACILITY_METADATA,
       JSON.stringify(this.cart)
     );
+  }
+
+  clearSelectedDate() {
+    const cart = this.cart;
+    cart.selected = [];
+    this.updateMetadata(cart);
   }
 
   confirmPurchase() {
@@ -36,7 +41,6 @@ export class FacilityCartService {
 
   private loadOrCreateFacilityMetadata() {
     const facilityMetadata = sessionStorage.getItem(FacilityCartService.FACILITY_METADATA);
-
     if (facilityMetadata) {
       this.cart = JSON.parse(facilityMetadata);
     } else {

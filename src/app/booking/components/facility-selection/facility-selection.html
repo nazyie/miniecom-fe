@@ -3,7 +3,7 @@
   @if (facilityList != null) {
   <div class="grid grid-cols-2 max-w-7xl mx-auto md:grid-cols-3 lg:grid-cols-4 gap-4 pb-2">
     @for (data of facilityList; track data.facilityId) {
-    <div class="card bg-base-100 shadow-sm w-full h-[350px]" [class.border-2]="isSelectedFacility(data.facilityId)" (click)="selectFacility(data)"
+    <div class="card bg-base-100 shadow-sm w-full h-[370px]" [class.border-2]="isSelectedFacility(data.facilityId)" (click)="selectFacility(data)"
       [class.border-primary]="isSelectedFacility(data.facilityId)">
       <figure class="h-[150px] overflow-hidden">
         @if (data.facilityAttachment) {
@@ -28,7 +28,7 @@
         <div class="card-actions flex-col gap-2">
           <button class="btn btn-primary btn-outline btn-sm w-full" [disabled]="!data.facilityAttachment" (click)="openAttachment(data.facilityId)">Lihat
             Fasiliti</button>
-          <!-- <button class="btn btn-primary btn-sm w-full" (click)="selectFacility(data)">Pilih</button> -->
+          <button class="btn btn-primary btn-sm w-full" (click)="openPricing(data)">Harga</button>
         </div>
       </div>
     </div>
@@ -58,6 +58,9 @@
   </div>
   }
   @if (isAttachmentDialogOpen) {
-    <app-facility-attachment [catalogueId]="openAttachmentId" (closeDialogEvent)="handleClosingDialog($event)"/>
+    <app-facility-attachment [catalogueId]="openAttachmentId" (closeDialogEvent)="handleAttachmentClosingDialog($event)"/>
+  }
+  @if (isPricingDialogOpen) {
+    <app-facility-price [record]="openRecord" (closeDialogEvent)="handlePriceClosingDialog($event)"/>
   }
 </div>

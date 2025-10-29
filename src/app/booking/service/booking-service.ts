@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RequestBookedFacility, RequestBookingFacility, RequestTemporaryBooking, ResponseBookedFacility, ResponseBookingFacility, ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
 import { environment } from '../../../environments/environment';
-import { CatalogueAttachment } from '../../catalogue/model/catalogue-modal';
+import { CatalogueAttachment, CatalogueFacilityPackage } from '../../catalogue/model/catalogue-modal';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ export class BookingService {
 
   getFacility() : Observable<ResponseFacility[]> {
     return this.http.get<ResponseFacility[]>(`${this.apiRoute}/${this.slug}/facility/all`);
+  }
+
+  getPricingFacility(catalogueId: string) : Observable<CatalogueFacilityPackage[]> {
+    return this.http.get<CatalogueFacilityPackage[]>(`${this.apiRoute}/${this.slug}/facility/pricing/${catalogueId}`);
   }
 
   getBookedFacility(payload: RequestBookedFacility) : Observable<ResponseBookedFacility[]> {

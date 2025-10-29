@@ -31,7 +31,7 @@ export interface CatalogueFacilityPackage {
   catalogueId: string;
   packageName: string;
   ruleType: string;
-  threshold: string;
+  threshold: number;
   pricePerSlot: string;
   totalPrice: string;
 }
