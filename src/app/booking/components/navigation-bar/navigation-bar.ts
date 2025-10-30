@@ -8,7 +8,6 @@ import { ResponseShopDetail } from '../../model/booking-page.model';
   styleUrl: './navigation-bar.css'
 })
 export class NavigationBar {
-  @Input() primaryColor: string = '#570df8';
   @Input() shopDetail: ResponseShopDetail | null = null;
 
 }

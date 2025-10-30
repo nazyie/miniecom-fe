@@ -1,7 +1,7 @@
 <div>
   <div class="fixed top-0 left-0 right-0 z-10 m-0 rounded-none p-2 bg-white">
     <div class="mb-3">
-      <app-navigation-bar [shopDetail]="shopDetail" [primaryColor]="primaryColor" />
+      <app-navigation-bar [shopDetail]="shopDetail" />
     </div>
 
     <div class="flex justify-center">
@@ -86,7 +86,7 @@
     </div>
 
     <div class="flex justify-between gap-2">
-      <button class="btn btn-outline btn-primary btn-sm flex-1" (click)="prev()" [disabled]="!isValidToProceedPrev()">
+      <button class="btn btn-outline btn-primary btn-sm flex-1" (click)="prev()" [disabled]="!validToProceedPrev()">
         <!-- back icon -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
           <path fill="currentColor" fill-rule="evenodd"
@@ -94,7 +94,7 @@
         </svg>
         <span class="hidden md:inline">Kembali</span>
       </button>
-      <button class="btn btn-primary btn-sm flex-1" (click)="next()" [disabled]="!isValidToProceedNext()">
+      <button class="btn btn-primary btn-sm flex-1" (click)="next()" [disabled]="!validToProceedNext()">
         <!-- next icon -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="size-7">
           <path fill="currentColor" fill-rule="evenodd"

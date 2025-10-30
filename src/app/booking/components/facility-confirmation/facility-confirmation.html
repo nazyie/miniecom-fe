@@ -29,13 +29,9 @@
     </div>
 
 
-    @if (details) {
+    @if (details.length > 0) {
     <div class="divider">Perinci</div>
-    <div class="text-sm text-center text-gray-500">
-    @for (item of details; track item.startTime) {
-      <span>{{ item.startTime }} - {{ item.endTime }}</span> |
-    }
-    </div>
+    <p class="text-sm text-center text-gray-500">{{ getBookingDetail }}</p>
     }
 
     <div class="divider">Maklumat Anda</div>
@@ -47,7 +43,7 @@
         <label class="label">
           <span class="label-text">Name</span>
         </label>
-        <input type="text" class="input input-bordered w-full" required formControlName="name"/>
+        <input type="text" class="input input-bordered w-full" required formControlName="name" />
       </div>
 
       <!-- Email -->
@@ -55,7 +51,7 @@
         <label class="label">
           <span class="label-text">Email</span>
         </label>
-        <input type="email" class="input input-bordered w-full" required formControlName="email"/>
+        <input type="email" class="input input-bordered w-full" required formControlName="email" />
       </div>
 
       <!-- Phone -->
@@ -63,7 +59,7 @@
         <label class="label">
           <span class="label-text">No Telefon</span>
         </label>
-        <input type="tel" class="input input-bordered w-full" required formControlName="phoneNo"/>
+        <input type="tel" class="input input-bordered w-full" required formControlName="phoneNo" />
       </div>
 
       <!-- Payment Options -->

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FacilityCartService } from '../../service/facility-cart-service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookingService } from '../../service/booking-service';
-import { RequestBookingFacility } from '../../model/booking-page.model';
+import { RequestBookingFacility, RequestTemporaryBooking } from '../../model/booking-page.model';
 import { ToastService } from '../../../common/services/toast-service';
 
 @Component({
@@ -23,7 +23,7 @@ export class FacilityConfirmation implements OnInit {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly facilityCartService: FacilityCartService,
+    private readonly fcb: FacilityCartService,
     private readonly bookingService: BookingService,
     private readonly toastService: ToastService
   ) {}
@@ -31,6 +31,21 @@ export class FacilityConfirmation implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadBookingDetail();
+  }
+
+  get getBookingDetail(): string {
+    const { bookingFrequency } = this.fcb.getMetadata();
+
+    if (bookingFrequency === 'DAILY' || bookingFrequency === 'DAILY_SAME_DAY')
+      return this.details.join(' - ');
+
+    const timeRangeDetail: string[] = [];
+
+    this.details.forEach(item => {
+      timeRangeDetail.push(`${item.startTime} - ${item.endTime}`)
+    })
+
+    return timeRangeDetail.join(' | ')
   }
 
   private initForm(): void {
@@ -43,16 +58,17 @@ export class FacilityConfirmation implements OnInit {
   }
 
   private loadBookingDetail(): void {
-    const { facilityName, selected, price, noOfSlot, bookingFrequency } = this.facilityCartService.getMetadata();
+    const { facilityName, selected, price, noOfSlot, bookingFrequency, openingTime, closingTime } = this.fcb.getMetadata();
 
     switch (bookingFrequency) {
+      case 'DAILY_SAME_DAY':
       case 'DAILY':
         this.facilityName = facilityName ?? '';
-        this.startTime = selected?.[0] ?? '';
-        this.endTime = selected?.[selected.length - 1] ?? '';
+        this.startTime = openingTime;
+        this.endTime = closingTime;
         this.totalPrice = (price ?? 0) * (noOfSlot ?? 0);
         this.totalSlot = noOfSlot;
-        // this.details = selected;
+        this.details = selected;
         break;
 
       default:
@@ -68,6 +84,22 @@ export class FacilityConfirmation implements OnInit {
     }
   }
 
+  private createTemporaryBooking(): void {
+    const cart = this.fcb.getMetadata();
+    const payload: RequestTemporaryBooking = {
+      sessionId: cart.sessionId,
+      facilityId: cart.facilityId,
+      bookingDate: this.fcb.createBookingDatePayload()
+    };
+
+    this.bookingService.createTemporaryBooking(payload).subscribe({
+      next: () => {
+        this.toastService.info('Sila lengkapkan booking anda dalam masa 5 minit');
+      },
+      error: (res) => this.toastService.error(res)
+    });
+  }
+
   confirmBooking(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -75,7 +107,7 @@ export class FacilityConfirmation implements OnInit {
       return;
     }
 
-    const cart = this.facilityCartService.getMetadata();
+    const cart = this.fcb.getMetadata();
 
     const payload: RequestBookingFacility = {
       sessionId: cart.sessionId,

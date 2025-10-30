@@ -14,13 +14,14 @@ export class DatePicker implements OnInit, OnChanges {
   @Input() disabledDates: string[] = [];
   @Input() labels: Record<string, string> = {};
   @Input() selected: string[] = [];
-  @Input() disabledWeekdays: string[] = [];
+  @Input() disabledWeekdays: string[] = ['monday'];
   @Input() disablePastDates: boolean = false;
+  @Input() disableSameDate: boolean = true;
 
   @Output() selectedDates = new EventEmitter<string[]>();
   @Output() monthChange = new EventEmitter<{ year: number; month: number }>();
 
-  constructor(private toastService: ToastService) {}
+  constructor(private toastService: ToastService) { }
 
   today = new Date();
   currentMonth = this.today.getMonth(); // 0-based
@@ -130,31 +131,74 @@ export class DatePicker implements OnInit, OnChanges {
       return; // prevent double selection on navigation
     }
 
-    if (this.format === 'DATE') {
-      this.selected = [date];
-    } else if (this.format === 'RANGE') {
-      if (this.selected.length === 0 || this.selected.length === 2) {
+    switch (this.format) {
+      case 'DATE': {
         this.selected = [date];
-      } else if (this.selected.length === 1) {
-        if (date === this.selected[0]) {
+        break;
+      }
+
+      case 'RANGE': {
+        const [firstDate] = this.selected;
+
+        // Start new range if none or already completed
+        if (this.selected.length === 0 || this.selected.length === 2) {
+          this.selected = [date];
+          break;
+        }
+
+        // Prevent selecting the same date twice
+        if (this.disableSameDate && date === firstDate) {
           this.toastService.error(ResponseText.ERR_DATE_SAME_DATE);
           return;
         }
-        this.selected =
-          date < this.selected[0] ? [date, this.selected[0]] : [this.selected[0], date];
-      }
-    }
 
-    if (this.format === 'RANGE' && this.selected.length === 2) {
-      const [rangeStart, rangeEnd] = this.selected;
-      if (this.rangeContainsDisabled(rangeStart, rangeEnd)) {
-        this.selected = [];
-        this.toastService.error(ResponseText.ERR_DATE_BLOCK);
+        // Sort start/end chronologically for consistency
+        const [start, end] = date < firstDate ? [date, firstDate] : [firstDate, date];
+        this.selected = [start, end];
+
+        if (this.selected.length === 2) {
+          const [rangeStart, rangeEnd] = this.selected;
+          let isValidRangeDate = true;
+
+          // first checking
+          if (this.rangeContainsDisabled(rangeStart, rangeEnd)) {
+            isValidRangeDate = false;
+          }
+
+          // second checking
+          if (this.rangeContainsDisabledWeekday(rangeStart, rangeEnd)) {
+            isValidRangeDate = false;
+          }
+
+          if (!isValidRangeDate) {
+            this.selected = [];
+            this.toastService.error(ResponseText.ERR_DATE_BLOCK);
+          }
+        }
+
+        break;
       }
     }
 
     this.selectedDates.emit(this.selected);
   }
+
+  private rangeContainsDisabledWeekday(start: string, end: string): boolean {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+      // Ensure disabledWeekdays array also uses lowercase strings
+      if (this.disabledWeekdays.map(w => w.toLowerCase()).includes(dayName)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 
   private rangeContainsDisabled(start: string, end: string): boolean {
     const [s, e] = start < end ? [start, end] : [end, start];

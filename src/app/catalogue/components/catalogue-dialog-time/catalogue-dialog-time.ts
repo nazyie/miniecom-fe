@@ -62,13 +62,17 @@ export class CatalogueDialogTime implements OnInit {
     });
 
     const listenOpeningTime = this.form.get('closingTime')?.valueChanges.subscribe(() => {
-      if (this.form.get('bookingFrequency')?.value !== 'DAILY') {
+      if (this.form.get('bookingFrequency')?.value !== 'DAILY'
+        && this.form.get('bookingFrequency')?.value !== 'DAILY_SAME_DAY'
+      ) {
         this.validateInputTime();
       }
     });
 
     const listenClosingTime = this.form.get('openingTime')?.valueChanges.subscribe(() => {
-      if (this.form.get('bookingFrequency')?.value !== 'DAILY' && this.form.get('openingTime')?.value != '') {
+      if (this.form.get('bookingFrequency')?.value !== 'DAILY' && this.form.get('openingTime')?.value != ''
+        && this.form.get('bookingFrequency')?.value !== 'DAILY_SAME_DAY'
+      ) {
         this.validateInputTime();
       }
     });

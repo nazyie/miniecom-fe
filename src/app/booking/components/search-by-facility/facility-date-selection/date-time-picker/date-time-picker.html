@@ -1,0 +1,11 @@
+<div>
+  <app-date-picker
+    [format]="'RANGE'"
+    [disabledDates]="disabledDates"
+    [disablePastDates]="true"
+    [disableSameDate]="disableSameDatePick"
+    [selected]="selectedDate"
+    (selectedDates)="handleSelectedDate($event)"
+    (monthChange)="handleMonthChanges($event)"
+    />
+</div>

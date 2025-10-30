@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BookingService } from '../../../service/booking-service';
-import { CatalogueFacilityPackage } from '../../../../catalogue/model/catalogue-modal';
-import { ResponseFacility } from '../../../model/booking-page.model';
 import { CommonModule } from '@angular/common';
+import { CatalogueFacilityPackage } from '../../../../../catalogue/model/catalogue-modal';
+import { ResponseFacility } from '../../../../model/booking-page.model';
+import { BookingService } from '../../../../service/booking-service';
 
 @Component({
   selector: 'app-facility-price',
@@ -18,11 +18,10 @@ export class FacilityPrice implements OnInit {
   @Output() closeDialogEvent = new EventEmitter<boolean>();
 
   constructor(
-    private bookingService: BookingService 
-  ) {}
+    private bookingService: BookingService
+  ) { }
 
   ngOnInit(): void {
-    console.log(this.record);
     this.loadData();
   }
 
@@ -40,12 +39,31 @@ export class FacilityPrice implements OnInit {
     }
   }
 
-  get frequencyUnit() : string {
+  get closingDay(): string {
+    let closingDay = '** kecuali ';
+    const closedDays: string[] = [];
+
+    if (!this.record?.sundaySlot) closedDays.push('ahad');
+    if (!this.record?.mondaySlot) closedDays.push('isnin');
+    if (!this.record?.tuesdaySlot) closedDays.push('selasa');
+    if (!this.record?.wednesdaySlot) closedDays.push('rabu');
+    if (!this.record?.thursdaySlot) closedDays.push('khamis');
+    if (!this.record?.fridaySlot) closedDays.push('jumaat');
+    if (!this.record?.saturdaySlot) closedDays.push('sabtu');
+
+    if (closedDays.length === 0) return '';
+
+    return closingDay + closedDays.join(', ');
+  }
+
+
+  get frequencyUnit(): string {
     if (this.record) {
-      switch(this.record.bookingFrequency) {
+      switch (this.record.bookingFrequency) {
         case 'HOURLY':
           return 'sejam / per slot';
 
+        case 'DAILY_SAME_DAY':
         case 'DAILY':
           return 'sehari / per slot';
 
@@ -56,12 +74,13 @@ export class FacilityPrice implements OnInit {
     return 'N/A';
   }
 
-  getTimeSpending(totalSlot: number) : string {
+  getTimeSpending(totalSlot: number): string {
     if (this.record) {
-      switch(this.record.bookingFrequency) {
+      switch (this.record.bookingFrequency) {
         case 'HOURLY':
           return `/ ${totalSlot} jam`;
 
+        case 'DAILY_SAME_DAY':
         case 'DAILY':
           return `/ ${totalSlot} hari`;
 

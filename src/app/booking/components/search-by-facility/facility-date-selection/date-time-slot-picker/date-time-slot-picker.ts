@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FacilityCartService } from '../../service/facility-cart-service';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
-import { ToastService } from '../../../common/services/toast-service';
-import { BookingService } from '../../service/booking-service';
-import { BookedFacility, RequestBookedFacility, ResponseBookedFacility } from '../../model/booking-page.model';
+import { FacilityCartService } from '../../../../service/facility-cart-service';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs';
+import { BookedFacility, RequestBookedFacility } from '../../../../model/booking-page.model';
+import { ToastService } from '../../../../../common/services/toast-service';
+import { BookingService } from '../../../../service/booking-service';
 
 @Component({
   selector: 'app-date-time-slot-picker',
@@ -30,28 +30,31 @@ export class DateTimeSlotPicker implements OnInit {
 
     const dateControl = this.form.get('selectedDate');
 
-    const listenForDateChanges = dateControl?.valueChanges.subscribe(() => {
-      this.slots = null;
-    });
-
-    const listenForValidDateChanges = dateControl?.valueChanges.pipe(
+    const listenForDateChanges = dateControl?.valueChanges.pipe(
+      tap(() => {
+        this.slots = null;
+      }),
       filter(date => !!date),
       debounceTime(200),
       distinctUntilChanged()
     ).subscribe(date => {
-      this.updateMetadataDate(date);
+      if (!this.checkIsOperateDay(date)) {
+        this.toastService.error('Fasiliti tidak beroperasi pada hari ini', 4000)
+        this.resetFormDueError();
+        return;
+      }
 
       const selectedDate = new Date(date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
       if (selectedDate < today) {
-        dateControl?.setValue(null);
-        dateControl?.markAsUntouched();
-        this.toastService.error('Tempahan tarikh lampau tidak dibenarkan');
-        this.slots = [];
+        this.toastService.error('Tempahan tarikh lampau tidak dibenarkan', 4000);
+        this.resetFormDueError();
         return;
       }
+
+      this.updateMetadataDate(date);
 
       const payload: RequestBookedFacility = {
         sessionId: this.fcs.getMetadata().sessionId,
@@ -78,12 +81,12 @@ export class DateTimeSlotPicker implements OnInit {
       });
     });
 
+
     if (this.fcs.getMetadata().date)
       dateControl?.setValue(this.fcs.getMetadata().date);
 
     this.destroyRef.onDestroy(() => {
       listenForDateChanges?.unsubscribe();
-      listenForValidDateChanges?.unsubscribe();
     });
   }
 
@@ -99,6 +102,13 @@ export class DateTimeSlotPicker implements OnInit {
     let metadata = this.fcs.getMetadata();
     metadata.selected = []
     this.fcs.updateMetadata(metadata);
+  }
+
+  resetFormDueError(): void {
+    const dateControl = this.form.get('selectedDate');
+    dateControl?.setValue(null);
+    dateControl?.markAsUntouched();
+    this.slots = [];
   }
 
   selectSlot(slot: BookedFacility): void {
@@ -134,6 +144,37 @@ export class DateTimeSlotPicker implements OnInit {
     }
 
     return metadata.selected.some(slot => slot.startTime === slotStartTime);
+  }
+
+  private checkIsOperateDay(date: string): boolean {
+    if (!date) return false;
+
+    const selectedDate = new Date(date);
+    if (isNaN(selectedDate.getTime())) return false; // invalid date
+
+    const metadata = this.fcs.getMetadata();
+
+    // Get lowercase day name (e.g., 'monday')
+    const dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+    switch (dayName) {
+      case 'monday':
+        return !!metadata.mondaySlot;
+      case 'tuesday':
+        return !!metadata.tuesdaySlot;
+      case 'wednesday':
+        return !!metadata.wednesdaySlot;
+      case 'thursday':
+        return !!metadata.thursdaySlot;
+      case 'friday':
+        return !!metadata.fridaySlot;
+      case 'saturday':
+        return !!metadata.saturdaySlot;
+      case 'sunday':
+        return !!metadata.sundaySlot;
+      default:
+        return false;
+    }
   }
 
   private constructSlotTimer(date: string): BookedFacility[] {

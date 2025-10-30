@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
-import { FacilitySelection } from "../facility-selection/facility-selection";
-import { FacilityDateSelection } from "../facility-date-selection/facility-date-selection";
+import { FacilityDateSelection } from "./facility-date-selection/facility-date-selection";
 import { FacilityConfirmation } from "../facility-confirmation/facility-confirmation";
-import { RequestTemporaryBooking, RequestTemporaryBookingDate, ResponseShopDetail } from '../../model/booking-page.model';
+import { ResponseShopDetail } from '../../model/booking-page.model';
 import { FacilityCartService } from '../../service/facility-cart-service';
-import { BookingService } from '../../service/booking-service';
-import { ToastService } from '../../../common/services/toast-service';
+import { FacilitySelection } from './facility-selection/facility-selection';
 
 @Component({
   selector: 'app-search-by-facility',
@@ -24,9 +22,7 @@ export class SearchByFacility implements OnInit {
   stepperTextNavigation = '';
 
   constructor(
-    private facilityCartService: FacilityCartService,
-    private bookingService: BookingService,
-    private toastService: ToastService
+    private fcs: FacilityCartService,
   ) { }
 
   ngOnInit(): void {
@@ -44,102 +40,76 @@ export class SearchByFacility implements OnInit {
   }
 
   next(): void {
-    if (this.currentStepper === 2) {
-      this.bookingInitiation();
-      return;
+    switch (this.currentStepper) {
+      case 1:
+        break;
+
+      case 2:
+        break;
+
+      case 3:
+        break;
+
+      default:
     }
+
     this.currentStepper++;
     this.loadStepperNavigationText();
   }
 
   prev(): void {
-    if (this.currentStepper === 3) {
-      this.cancelTemporaryBooking();
-      return;
+    switch (this.currentStepper) {
+      case 1:
+        break;
+
+      case 2:
+        break;
+
+      case 3:
+        break;
+
+      default:
     }
     this.currentStepper--;
     this.loadStepperNavigationText();
   }
 
-  isValidToProceedNext(): boolean {
-    const cart = this.facilityCartService.getMetadata();
-    if (this.currentStepper === 3) return false;
-    if (this.currentStepper === 1) return !!cart.facilityId;
-    if (this.currentStepper === 2 && cart.bookingFrequency === 'DAILY') {
-      return cart.selected.length === 2;
+  validToProceedNext(): boolean {
+    const cart = this.fcs.getMetadata();
+
+    switch (this.currentStepper) {
+      case 1:
+        return !!cart.facilityId
+        break;
+
+      case 2:
+        return this.validateSecondStepBeforeNavigateNext();
+
+      case 3:
+        return false;
+
+      default:
+        return true;
     }
-    if (this.currentStepper === 2)
-      return cart.selected.length > 0;
-    return true;
   }
 
-  isValidToProceedPrev(): boolean {
+  validToProceedPrev(): boolean {
     return this.currentStepper > 1;
   }
 
-  bookingInitiation(): void {
-    const cart = this.facilityCartService.getMetadata();
-    const payload: RequestTemporaryBooking = {
-      sessionId: cart.sessionId,
-      facilityId: cart.facilityId,
-      bookingDate: this.createBookingDatePayload()
-    };
-
-    this.bookingService.createTemporaryBooking(payload).subscribe({
-      next: () => {
-        this.toastService.info('Sila lengkapkan booking anda dalam masa 5 minit');
-        this.currentStepper++;
-        this.loadStepperNavigationText();
-      },
-      error: (res) => this.toastService.error(res)
-    });
-  }
-
-  cancelTemporaryBooking(): void {
-    const sessionId = this.facilityCartService.getMetadata().sessionId;
-    if (!sessionId) return;
-
-    this.bookingService.cancelTemporaryBooking(sessionId).subscribe({
-      next: () => {
-        this.currentStepper--;
-        this.loadStepperNavigationText();
-      },
-      error: (res) => this.toastService.error(res)
-    });
-  }
-
-  createBookingDatePayload(): RequestTemporaryBookingDate[] {
-    const cart = this.facilityCartService.getMetadata();
-    const { selected } = cart;
-
-    let payload: RequestTemporaryBookingDate[] = [];
+  private validateSecondStepBeforeNavigateNext(): boolean {
+    const cart = this.fcs.getMetadata();
 
     switch (cart.bookingFrequency) {
+      case 'DAILY_SAME_DAY':
       case 'DAILY':
-        if (selected.length < 2) return [];
-
-        const startDate = new Date(selected[0]);
-        const endDate = new Date(selected[1]);
-
-        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-          const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-          payload.push({ date, startTime: '', endTime: '' });
-        }
-        return payload;
+        return cart.selected.length === 2;
 
       default:
-        if (selected.length == 0) return [];
-
-        const date = cart.date;
-        for (let i = 0; i < selected.length; i++) {
-          if (date) {
-            payload.push({ date, startTime: selected[i].startTime, endTime: selected[i].endTime })
-          }
-        }
-        return payload;
+        return cart.selected.length > 0;
     }
-
   }
+
 
   private loadStepperNavigationText(): void {
     this.stepperTextNavigation = [

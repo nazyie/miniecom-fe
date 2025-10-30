@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CatalogueAttachment } from '../../../../catalogue/model/catalogue-modal';
-import { BookingService } from '../../../service/booking-service';
+import { CatalogueAttachment } from '../../../../../catalogue/model/catalogue-modal';
+import { BookingService } from '../../../../service/booking-service';
 
 @Component({
   selector: 'app-facility-attachment',
@@ -21,7 +21,6 @@ export class FacilityAttachment implements OnInit {
 
   ngOnInit(): void {
     if (this.catalogueId) {
-      console.log('this is', this.catalogueId);
       this.loadCatalogueImageList();
     }
   }

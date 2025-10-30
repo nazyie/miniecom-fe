@@ -4,7 +4,8 @@
       <legend class="fieldset-legend">Frekuensi Penggunaan Fasiliti</legend>
       <select class="select w-full" formControlName="bookingFrequency">
         <option value="" disabled selected>Pilih Jenis Frekuensi</option>
-        <option value="DAILY">Harian</option>
+        <option value="DAILY">Harian (Bermalam)</option>
+        <option value="DAILY_SAME_DAY">Harian</option>
         <option value="HOURLY">Sejam</option>
         <option value="HALF_HOURLY">Setengah Jam</option>
       </select>
@@ -13,6 +14,24 @@
 
   @switch (catalogue?.facility?.bookingFrequency) {
   @case ('DAILY') {
+  <div>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+      <legend class="fieldset-legend">Waktu Operasi</legend>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Masuk</legend>
+        <input type="time" formControlName="openingTime" class="input input-bordered w-full" />
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Waktu Keluar</legend>
+        <input type="time" formControlName="closingTime" class="input input-bordered w-full" />
+      </fieldset>
+
+    </fieldset>
+  </div>
+  }
+  @case ('DAILY_SAME_DAY') {
   <div>
     <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
       <legend class="fieldset-legend">Waktu Operasi</legend>

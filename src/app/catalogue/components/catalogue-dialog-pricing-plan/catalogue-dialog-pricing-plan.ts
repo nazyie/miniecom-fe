@@ -6,7 +6,7 @@ import { CatalogueFacilityPackage } from '../../model/catalogue-modal';
 import { PackageForm } from "./package-form/package-form";
 import { InventoryService } from '../../services/catalogue-service';
 import { CommonModule } from '@angular/common';
-import { RuleTypePipe} from '../../../common/pipe/rule-type-pipe';
+import { RuleTypePipe } from '../../../common/pipe/rule-type-pipe';
 import { ToastService } from '../../../common/services/toast-service';
 import { ResponseText } from '../../../common/constant/response';
 
@@ -68,8 +68,12 @@ export class CatalogueDialogPricingPlan implements OnInit {
 
   private loadPricingLable() {
     if (this.cp.catalogue?.facility) {
-      this.pricingLabel = this.cp.catalogue?.facility?.bookingFrequency == 'DAILY' ? 
-        'Harga Sehari' : 'Harga Per Slot'
+      this.pricingLabel =
+        this.cp.catalogue?.facility?.bookingFrequency == 'DAILY'
+          ||
+          this.cp.catalogue?.facility?.bookingFrequency == 'DAILY_SAME_DAY'
+          ?
+          'Harga Sehari' : 'Harga Per Slot'
     }
   }
 
@@ -80,53 +84,53 @@ export class CatalogueDialogPricingPlan implements OnInit {
     })
   }
 
-  onFormSubmit({ formMode, data }: {formMode: string, data: any}) {
+  onFormSubmit({ formMode, data }: { formMode: string, data: any }) {
     if (this.cp.catalogue) {
       const catalogueId = this.cp.catalogue.id;
 
-    switch (formMode) {
-      case 'CREATE':
-        this.inventoryService.createPackage(catalogueId, data).subscribe({
-          next: () => {
-            this.loadTable();
-            this.resetModal();
-            this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
-          },
-          error: () => {
-            console.log('Error');
-          }
-        })
-        break;
+      switch (formMode) {
+        case 'CREATE':
+          this.inventoryService.createPackage(catalogueId, data).subscribe({
+            next: () => {
+              this.loadTable();
+              this.resetModal();
+              this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
+            },
+            error: () => {
+              console.log('Error');
+            }
+          })
+          break;
 
-      case 'UPDATE':
-        this.inventoryService.updatePackage(catalogueId, data).subscribe({
-          next: () => {
-            this.loadTable();
-            this.resetModal();
-            this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
-          },
-          error: (err) => {
-            console.error('Error creating shop:', err);
-          }
-        });
-        break;
+        case 'UPDATE':
+          this.inventoryService.updatePackage(catalogueId, data).subscribe({
+            next: () => {
+              this.loadTable();
+              this.resetModal();
+              this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
+            },
+            error: (err) => {
+              console.error('Error creating shop:', err);
+            }
+          });
+          break;
 
-      case 'DELETE':
-        this.inventoryService.deletePackage(catalogueId, data).subscribe({
-          next: () => {
-            this.loadTable();
-            this.resetModal();
-            this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
-          },
-          error: (err) => {
-            console.error('Error creating shop:', err);
-          }
-        });
-        break;
+        case 'DELETE':
+          this.inventoryService.deletePackage(catalogueId, data).subscribe({
+            next: () => {
+              this.loadTable();
+              this.resetModal();
+              this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
+            },
+            error: (err) => {
+              console.error('Error creating shop:', err);
+            }
+          });
+          break;
 
-      default:
-        this.resetModal();
-    }
+        default:
+          this.resetModal();
+      }
 
     }
   }
