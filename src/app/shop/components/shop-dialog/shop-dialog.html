@@ -2,88 +2,25 @@
   <div class="modal-box w-full max-w-5xl">
     <h3 class="font-bold text-primary text-lg mb-4">{{ formTitle }}</h3>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <div>
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Nama Kedai</legend>
-          <input type="text" name="name" class="input w-full" formControlName="name" />
-        </fieldset>
-      </div>
+    <div role="tablist" class="tabs tabs-lift flex-nowrap w-full overflow-x-auto">
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="pageIndex == 0"
+        (click)="navigatePage(0)">Maklumat Utama</a>
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="pageIndex == 1"
+        (click)="navigatePage(1)">Tetapan Pesanan</a>
+      <a role="tab" class="tab flex-shrink-0" [class.tab-active]="pageIndex == 2"
+        (click)="navigatePage(2)">Tetapan Pembayaran</a>
+    </div>
 
-      <div>
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Jenis Kedai</legend>
-          <select class="select w-full" formControlName="shopType">
-            <option value="" disabled selected>Pilih Jenis Kedai</option>
-            <option value="Miniecom" disabled>Miniecom</option>
-            <option value="Booking Sistem">Booking Sistem</option>
-          </select>
-        </fieldset>
-      </div>
-
-
-
-      <div>
-        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
-          <legend class="fieldset-legend">Konfigurasi Kedai</legend>
-          <label class="label">
-            <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
-            Benarkan Kedai Buka
-          </label>
-          <small>Tandakan untuk membenarkan pesanan diterima</small>
-        </fieldset>
-      </div>
-
-      <div class="space-y-4">
-        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
-          <legend class="fieldset-legend">Konfigurasi Proses Pesanan</legend>
-
-          <ul class="steps">
-            <li class="step step-primary">Pesanan dicipta oleh pelanggan</li>
-            @if (form.controls['enableOrderConfirm'].value == true) {
-            <li class="step step-primary">Pengesahan pesanan oleh kedai</li>
-            }
-            @if (form.controls['enableOrderDeliver'].value == true) {
-            <li class="step step-primary">Pengesahan penghantaran oleh kedai </li>
-            }
-            <li class="step step-primary">Pesanan berjaya</li>
-          </ul>
-
-          <hr class="border-0 h-[2px] bg-gray-300 my-3" />
-
-          <label class="label">
-            <input type="checkbox" name="enableOrderConfirm" formControlName="enableOrderConfirm" class="checkbox" />
-            Benarkan Pengesahan Pesanan
-            <small></small>
-          </label>
-
-          <label class="label">
-            <input type="checkbox" name="enableOrderDeliver" formControlName="enableOrderDeliver" class="checkbox" />
-            Benarkan Pengesahan Penghantaran Pesanan
-          </label>
-        </fieldset>
-      </div>
-
-      @if (record) {
-      <div class="mt-4">
-        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
-          <legend class="fieldset-legend">Link Kedai Anda</legend>
-          <label class="label">
-            <a class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors"
-              href="http://{{ slugLink }}.localhost:4200/booking" target="_blank" rel="noopener noreferrer">
-              <span>{{ slugLink }}.localhost:4200/booking</span>
-              <!-- proper external link icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M13.5 3H21m0 0v7.5M21 3l-9.75 9.75M8.25 6.75H4.5A1.5 1.5 0 003 8.25v11.25A1.5 1.5 0 004.5 21h11.25a1.5 1.5 0 001.5-1.5v-3.75" />
-              </svg>
-            </a>
-          </label>
-        </fieldset>
-      </div>
-
-
+      @switch (pageIndex) {
+        @case (0) {
+          <app-shop-detail />
+        }
+        @case (1) {
+          <app-shop-ordering />
+        }
+        @case (2) {
+          <app-shop-payment />
+        }
       }
 
       <div class="modal-action mt-6 flex justify-between items-center">
@@ -106,6 +43,5 @@
           </button>
         </div>
       </div>
-    </form>
   </div>
 </dialog>

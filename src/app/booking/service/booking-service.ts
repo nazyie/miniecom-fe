@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RequestBookedFacility, RequestBookingFacility, RequestTemporaryBooking, ResponseBookedFacility, ResponseBookingFacility, ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
+import { RequestBookedFacility, RequestBookingFacility, RequestBookingPricing, RequestTemporaryBooking, ResponseBookedFacility, ResponseBookingFacility, ResponseBookingPricing, ResponseFacility, ResponseShopDetail } from '../model/booking-page.model';
 import { environment } from '../../../environments/environment';
 import { CatalogueAttachment, CatalogueFacilityPackage } from '../../catalogue/model/catalogue-modal';
 
@@ -34,6 +34,10 @@ export class BookingService {
 
   getBookedFacility(payload: RequestBookedFacility) : Observable<ResponseBookedFacility[]> {
     return this.http.post<ResponseBookedFacility[]>(`${this.apiRoute}/${this.slug}/facility/booked`, payload);
+  }
+
+  calculateFacilityPricing(payload: RequestBookingPricing) : Observable<ResponseBookingPricing> {
+    return this.http.post<ResponseBookingPricing>(`${this.apiRoute}/${this.slug}/facility/calculate/pricing`, payload);
   }
 
   createTemporaryBooking(payload: RequestTemporaryBooking) : Observable<void> {

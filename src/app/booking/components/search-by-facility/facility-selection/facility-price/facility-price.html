@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="mt-4 text-center">
-      <div class="text-center mb-4 shadow rounded-2xl p-2 border border-gray-200">
+      <div class="text-center mb-4 shadow rounded-2xl p-2 border border-gray-50">
         <h1 class="text-3xl font-semibold"> RM {{ record?.price | number:'1.2-2' }}
           <span class="text-xs font-normal">{{ frequencyUnit }}</span>
         </h1>
@@ -20,7 +20,7 @@
       </div>
 
       @for (item of pricingPackages; track item.id) {
-      <div class="shadow-lg rounded-2xl p-2">
+      <div class="shadow-lg border border-gray-50 rounded-2xl p-2">
         <p>{{ item.packageName }}</p>
         <h1 class="font-semibold text-3xl">
           RM {{ item.totalPrice | number:'1.2-2' }}

@@ -20,6 +20,27 @@ export interface Shop {
   updatedBy?: string;
 };
 
+export const initialShop: Shop = {
+  id: '',
+  slug: '',
+  name: '',
+  shopType: '',
+
+  openShop: false,
+  enableOrderConfirm: false,
+  enableOrderDeliver: false,
+  enableOrderPayment: false,
+
+  status: '',
+  quotaLimit: 0,
+
+  createdAt: '',
+  updatedAt: '',
+  createdBy: '',
+  updatedBy: '',
+};
+
+
 export interface ResponseShopDropdown {
   id: string;
   name: string;

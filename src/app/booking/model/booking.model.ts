@@ -1,5 +1,6 @@
 export interface BookingMetadata {
   sessionId: string;
+  stepper: number;
   facilityId: string;
   facilityName: string;
   bookingFrequency: string;
@@ -21,6 +22,7 @@ export interface BookingMetadata {
 export function newBookingMetadata(): BookingMetadata {
   return {
     sessionId: crypto.randomUUID(),
+    stepper: 1,
     facilityId: '',
     facilityName: '',
     bookingFrequency: '',

@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ShopService {
+  private domain = environment.domain;
   private apiRoute = environment.apiUrl + '/shop'
 
   constructor(private http: HttpClient) { }
@@ -31,6 +32,14 @@ export class ShopService {
 
   deleteShop(shopId: string): Observable<Shop> {
     return this.http.delete<Shop>(this.apiRoute + '/' + shopId);
+  }
+
+  get getBaseUrl(): string {
+    return this.domain;
+  }
+
+  checkSlug(shopId: string, slug: string) : Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiRoute}/${shopId}/check/slug/${slug}`);
   }
 
 }

@@ -1,0 +1,34 @@
+<form [formGroup]="form">
+
+    <div class="space-y-4">
+        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+            <legend class="fieldset-legend">Konfigurasi Proses Pesanan</legend>
+
+            <ul class="steps">
+                <li class="step step-primary">Pesanan dicipta oleh pelanggan</li>
+                @if (form.controls['enableOrderConfirm'].value == true) {
+                <li class="step step-primary">Pengesahan pesanan oleh kedai</li>
+                }
+                @if (form.controls['enableOrderDeliver'].value == true) {
+                <li class="step step-primary">Pengesahan penghantaran oleh kedai </li>
+                }
+                <li class="step step-primary">Pesanan berjaya</li>
+            </ul>
+
+            <hr class="border-0 h-[2px] bg-gray-300 my-3" />
+
+            <label class="label">
+                <input type="checkbox" name="enableOrderConfirm" formControlName="enableOrderConfirm"
+                    class="checkbox" />
+                Benarkan Pengesahan Pesanan
+                <small></small>
+            </label>
+
+            <label class="label">
+                <input type="checkbox" name="enableOrderDeliver" formControlName="enableOrderDeliver"
+                    class="checkbox" />
+                Benarkan Pengesahan Penghantaran Pesanan
+            </label>
+        </fieldset>
+    </div>
+</form>

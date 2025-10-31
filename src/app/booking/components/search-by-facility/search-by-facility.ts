@@ -26,6 +26,8 @@ export class SearchByFacility implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.currentStepper = this.fcs.getStepper;
+    console.log(this.currentStepper);
     this.loadStepperNavigationText();
   }
 
@@ -54,6 +56,7 @@ export class SearchByFacility implements OnInit {
     }
 
     this.currentStepper++;
+    this.fcs.updateStepper(this.currentStepper);
     this.loadStepperNavigationText();
   }
 
@@ -71,6 +74,7 @@ export class SearchByFacility implements OnInit {
       default:
     }
     this.currentStepper--;
+    this.fcs.updateStepper(this.currentStepper);
     this.loadStepperNavigationText();
   }
 

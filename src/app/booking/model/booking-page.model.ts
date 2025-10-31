@@ -1,3 +1,5 @@
+import { CatalogueFacilityPackage } from "../../catalogue/model/catalogue-modal";
+
 export interface RequestTemporaryBooking {
     sessionId: string;
     facilityId: string;
@@ -23,6 +25,17 @@ export interface RequestBookingFacility {
     email: string,
     address: string,
     paymentMethod: string
+}
+
+export interface ResponseBookingPricing {
+    totalPricing: number;
+    totalEligibleSlot: number;
+    pricingPackage: CatalogueFacilityPackage | null;
+}
+
+export interface RequestBookingPricing {
+    catalogueId: string;
+    totalSlot: number;
 }
 
 export interface ResponseShopDetail {

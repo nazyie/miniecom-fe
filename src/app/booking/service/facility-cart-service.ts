@@ -29,6 +29,16 @@ export class FacilityCartService {
     );
   }
 
+  get getStepper(): number {
+    return this.cart.stepper;
+  }
+
+  updateStepper(stepCount: number) : void {
+    let cart = this.cart;
+    cart.stepper = stepCount;
+    this.updateMetadata(cart);
+  }
+
   confirmPurchase() {
     this.removeFacilityMetadata();
   }

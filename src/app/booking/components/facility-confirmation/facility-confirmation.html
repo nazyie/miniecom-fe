@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center p-4">
   <!-- Card Container -->
-  <div class="w-full max-w-lg bg-gray-50 rounded-2xl shadow-lg p-6 space-y-6">
+  <div class="w-full max-w-2xl bg-gray-50 rounded-2xl shadow-lg p-6 space-y-6">
     <!-- Booking Details -->
     <div>
       <h2 class="text-xl font-bold mb-4 text-center">Pengesahan Booking</h2>
@@ -21,16 +21,28 @@
           <span class="font-medium">Bilangan Slot</span>
           <span>{{ totalSlot }}</span>
         </div>
+        @if (pricingDetail.pricingPackage) {
+        <div class="flex justify-between">
+          <span class="font-medium">Eligible Pakej:</span>
+          <span class="font-semibold flex flex-col text-end">
+            <span>{{ pricingDetail.pricingPackage.packageName }}</span>
+            <span class="line-through text-red-600">
+              RM {{ actualPrice | number:'1.2-2' }}
+            </span>
+          </span>
+
+        </div>
+        }
         <div class="flex justify-between">
           <span class="font-medium">Jumlah Harga:</span>
-          <span class="font-semibold text-indigo-600">RM {{ totalPrice }}</span>
+          <span class="font-semibold text-indigo-600">RM {{ pricingDetail.totalPricing | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>
 
 
     @if (details.length > 0) {
-    <div class="divider">Perinci</div>
+    <div class="divider">Butiran Tempahan</div>
     <p class="text-sm text-center text-gray-500">{{ getBookingDetail }}</p>
     }
 
@@ -68,9 +80,10 @@
           <span class="label-text">Payment Method</span>
         </label>
         <select class="select select-bordered w-full" formControlName="paymentMethod">
-          <option disabled selected>Choose a payment method</option>
-          <option disabled>Online Banking (FPX)</option>
-          <option>Cash on Arrival</option>
+          <option disabled value="online-banking">Online Banking (FPX)</option>
+          <option disabled value="cash-on-arrival">Cash on Arrival</option>
+          <option value="file-upload">Pembayaran QR / Transfer</option>
+          <option value="file-upload">Pembayaran QR / Transfer</option>
         </select>
       </div>
 

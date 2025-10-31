@@ -1,0 +1,88 @@
+<form [formGroup]="form">
+    <div>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Nama Kedai</legend>
+            <input type="text" name="name" class="input w-full" formControlName="name" />
+        </fieldset>
+
+        <fieldset class="fieldset space-y-2">
+            <legend class="fieldset-legend font-semibold text-gray-700">
+                Subdomain Kedai
+            </legend>
+
+            <label
+                class="flex items-center border border-gray-300 rounded overflow-hidden focus-within:ring-2 focus-within:ring-primary bg-white transition-all duration-200">
+                <input type="text" name="slug" formControlName="tempSlug"
+                    class="flex-1 px-4 py-2 text-gray-700 focus:outline-none" />
+                <span class="px-4 py-2 bg-gray-100 text-gray-600 text-sm border-l border-gray-200 select-none">
+                    .kedai-kami.com
+                </span>
+            </label>
+
+            <p class="text-xs text-gray-500 mb-1">
+                @if (isSubDomainAllowed == null) {
+                <span class="flex items-center space-x-2 text-gray-500">
+                    <span class="loading loading-spinner loading-sm"></span>
+                    <span>Menyemak pautan
+                        <span class="font-medium text-gray-700">{{ createHyperlink }}</span>
+                        di dalam sistem
+                    </span>
+                </span>
+                } @else if (isSubDomainAllowed == true) {
+                <span class="flex items-center space-x-2 animate-fade-in">
+                    <span class="text-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                    </span>
+                    <span>
+                        Pautan
+                        <a href="{{ createHyperlink }}" target="_blank" rel="noopener noreferrer"
+                            class="font-semibold text-primary hover:underline hover:text-primary-focus transition-colors">
+                            {{ createHyperlink }}
+                        </a>
+                        boleh digunakan.
+                    </span>
+                </span>
+                } @else {
+                <span class="flex items-center space-x-2 animate-fade-in">
+                    <span class="text-red-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    </span>
+                    <span>
+                        Maaf, pautan
+                        <span class="font-semibold">{{ createHyperlink }}</span>
+                        telah digunakan.
+                    </span>
+                </span>
+                }
+            </p>
+
+        </fieldset>
+
+
+
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">Jenis Kedai</legend>
+            <select class="select w-full" formControlName="shopType">
+                <option value="" disabled selected>Pilih Jenis Kedai</option>
+                <option value="Miniecom" disabled>Miniecom</option>
+                <option value="Booking Sistem">Booking Sistem</option>
+            </select>
+        </fieldset>
+
+        <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+            <legend class="fieldset-legend">Konfigurasi Kedai</legend>
+            <label class="label">
+                <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
+                Benarkan Kedai Buka
+            </label>
+            <small>Tandakan untuk membenarkan pesanan diterima</small>
+        </fieldset>
+    </div>
+
+</form>
