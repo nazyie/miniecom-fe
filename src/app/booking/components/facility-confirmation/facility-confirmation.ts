@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BookingService } from '../../service/booking-service';
 import { RequestBookingFacility, RequestBookingPricing, RequestTemporaryBooking, ResponseBookingPricing } from '../../model/booking-page.model';
 import { ToastService } from '../../../common/services/toast-service';
-import { CatalogueFacilityPackage } from '../../../catalogue/model/catalogue-modal';
 import { CommonModule } from '@angular/common';
 
 @Component({

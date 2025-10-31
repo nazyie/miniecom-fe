@@ -1,1 +1,43 @@
-<p>shop-payment works!</p>
+<form>
+  <div class="space-y-2">
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+      <label class="label ">
+        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
+        Pembayaran ketika sampai ke destinasi
+      </label>
+      <small>Tandakan untuk membenarkan pelanggan untuk membayar ketika sampai ke destinasi</small>
+    </fieldset>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+      <label class="label">
+        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" disabled />
+        Pembayaran online
+      </label>
+      <small>Pembayaran oleh pelanggan melalui FPX</small>
+    </fieldset>
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
+      <label class="label">
+        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
+        Pembayaran secara manual QR / bank akaun
+      </label>
+      <small>Pembayaran oleh pelanggan dengan memuat naik resit pembayaran</small>
+
+      <div class="flex flex-col gap-4 mt-2">
+        <!-- File Input Row -->
+        <div class="flex-1">
+          <input #fileInput type="file" class="file-input file-input-bordered w-full" />
+          <label class="label text-xs text-gray-500">Saiz maksimum 2MB</label>
+        </div>
+
+        <!-- Upload Button Row -->
+        <div class="flex">
+          <button class="btn btn-primary w-full rounded-full px-6 py-2" type="submit">
+            Muat Naik QR
+          </button>
+        </div>
+      </div>
+
+    </fieldset>
+
+  </div>
+
+</form>

@@ -122,7 +122,6 @@ export class ShopPage implements OnInit {
         this.shopService.createShop(data).subscribe({
           next: () => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
           },
           error: (err) => {
@@ -135,7 +134,6 @@ export class ShopPage implements OnInit {
         this.shopService.updateShop(data).subscribe({
           next: () => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.info(ResponseText.RECORD_SUCCESS_UPDATE);
           },
           error: (err) => {
@@ -148,7 +146,6 @@ export class ShopPage implements OnInit {
         this.shopService.deleteShop(data).subscribe({
           next: () => {
             this.table.loadData();
-            this.resetModal();
             this.toastService.info(ResponseText.RECORD_SUCCESS_DELETE);
           },
           error: (err) => {
