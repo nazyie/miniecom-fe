@@ -9,7 +9,7 @@ export class ShopStateService {
 
     constructor() {}
 
-    constructShop(shop: Shop | null) : void {
+    constructShop(shop: Shop | null | undefined) : void {
         if (shop) {
             this.shop = shop;
         } else {

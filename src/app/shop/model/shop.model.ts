@@ -2,12 +2,22 @@ export interface Shop {
   id: string;
   slug: string;
   name: string;
+  shopLogoPath: string;
   shopType: string;
 
   openShop: boolean;
   enableOrderConfirm: boolean;
   enableOrderDeliver: boolean;
-  enableOrderPayment: boolean;
+
+  enableFpx: boolean;
+
+  enableCashOnArrival: boolean;
+
+  enableReceiptUpload: boolean;
+  bankDetailAttachmentPath: string;
+  bankAccountNumber: string;
+  bankAccountName: string;
+  bankName: string;
 
   status: string;
 
@@ -25,11 +35,21 @@ export const initialShop: Shop = {
   slug: '',
   name: '',
   shopType: '',
+  shopLogoPath: '',
 
   openShop: false,
   enableOrderConfirm: false,
   enableOrderDeliver: false,
-  enableOrderPayment: false,
+
+  enableFpx: false,
+
+  enableCashOnArrival: false,
+
+  enableReceiptUpload: false,
+  bankDetailAttachmentPath: '',
+  bankAccountNumber: '',
+  bankAccountName: '',
+  bankName: '',
 
   status: '',
   quotaLimit: 0,

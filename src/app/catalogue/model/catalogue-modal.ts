@@ -46,6 +46,7 @@ export interface CatalogueVariant {
 
 export interface CatalogueFacility {
     price: string;
+    depositPercentage: number;
     bookingFrequency: string;
     openingTime: string;
     closingTime: string;

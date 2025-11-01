@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Shop } from '../../model/shop.model';
-import { ShopService } from '../../services/shop-service';
 import { ShopStateService } from '../../services/shop-state-service';
 import { ShopDetail } from './shop-detail/shop-detail';
 import { ShopOrdering } from "./shop-ordering/shop-ordering";
 import { ShopPayment } from "./shop-payment/shop-payment";
+import { ToastService } from '../../../common/services/toast-service';
 
 export enum SHOP_STATUS {
   ACTIVE,
@@ -27,19 +26,15 @@ export class ShopDialog implements OnInit {
 
   @Output() formSubmitted = new EventEmitter<{ formMode: string, data: any }>();
 
-  form: FormGroup = new FormGroup({});
-
   pageIndex: number = 0;
 
   constructor(
-    private sss: ShopStateService
+    private sss: ShopStateService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
-    if (this.record) {
-      this.sss.updateShop(this.record);
-    } else {
-    }
+    this.sss.constructShop(this.record);
   }
 
   navigatePage(pageIndex: number) : void {
@@ -47,24 +42,25 @@ export class ShopDialog implements OnInit {
   }
 
   submit() {
-    this.form.markAsTouched();
+    const shop = this.sss.getShop();
 
-    if (this.form.valid) {
-      const formRequest = this.form.value as Shop;
-
-      this.formSubmitted.emit({
-        formMode: this.formMode,
-        data: formRequest
-      });
-    } else {
-      console.log('Form not valid');
+    if (!shop.enableCashOnArrival && !shop.enableReceiptUpload) {
+      this.toastService.error('Sila pilih tetapan pembayaran untuk menyimpan maklumat');
+      return;
     }
+
+    this.formSubmitted.emit({
+      formMode: this.formMode,
+      data: shop
+    });
   }
 
   delete() {
+    const shop = this.sss.getShop();
+
     this.formSubmitted.emit({
       formMode: 'DELETE',
-      data: this.form.controls['id'].value
+      data: shop.id
     });
   }
 

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PageResponse } from '../../common/pagination.model';
@@ -27,11 +27,45 @@ export class ShopService {
   }
 
   updateShop(shop: Shop): Observable<Shop> {
-    return this.http.patch<Shop>(this.apiRoute + `/${shop.id}`, shop);
+    return this.http.patch<Shop>(`${this.apiRoute}/${shop.id}`, shop);
   }
 
   deleteShop(shopId: string): Observable<Shop> {
     return this.http.delete<Shop>(this.apiRoute + '/' + shopId);
+  }
+
+  uploadLogo(shopId: string, formData: FormData): Observable<HttpEvent<{ filePath: string}>> {
+    return this.http.post<{filePath: string}>(
+      `${this.apiRoute}/${shopId}/upload/logo`,
+      formData,
+      {
+        reportProgress: true,
+        observe: 'events'
+      }
+    );
+  }
+
+  getAttachmentAssetPath(path: string) {
+    return `${environment.apiUrl}/image/${path}`;
+  }
+
+  deleteLogo(shopId: string) {
+    return this.http.delete<Shop>(`${this.apiRoute}/${shopId}/upload/logo/delete`);
+  }
+
+  uploadBankDetail(shopId: string, formData: FormData): Observable<HttpEvent<{filePath: string}>> {
+    return this.http.post<{filePath: string}>(
+      `${this.apiRoute}/${shopId}/upload/bank`,
+      formData,
+      {
+        reportProgress: true,
+        observe: 'events'
+      }
+    );
+  }
+
+  deleteBankDetail(shopId: string) {
+    return this.http.delete<Shop>(`${this.apiRoute}/${shopId}/upload/bank/delete`);
   }
 
   get getBaseUrl(): string {

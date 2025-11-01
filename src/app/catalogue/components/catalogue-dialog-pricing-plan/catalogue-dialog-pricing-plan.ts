@@ -36,23 +36,39 @@ export class CatalogueDialogPricingPlan implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!this.cp.catalogue) {
+    const facility = this.cp.catalogue?.facility;
+
+    if (!facility) {
       this.form = this.fb.group({
         price: [0, [Validators.required]],
+        enableDeposit: [0, [Validators.required]],
+        depositPercentage: [0, [Validators.required]],
       });
     } else {
+      const depositPercentage = facility.depositPercentage;
+
       this.form = this.fb.group({
-        price: [this.cp.catalogue.facility?.price, [Validators.required]]
+        price: [facility?.price, [Validators.required]],
+        enableDeposit: [depositPercentage && depositPercentage > 0 ? true : false, [Validators.required]],
+        depositPercentage: [depositPercentage, [Validators.required]]
       });
     }
 
     const formChanges = this.form.valueChanges.pipe(debounceTime(300)).subscribe(value => {
-      const currData = this.cp.catalogue;
+      let currData = this.cp.catalogue;
 
       if (currData) {
-        const updatedFacility = { ...currData.facility, ...value };
+        let updatedFacility = { ...currData.facility, ...value };
+
+        if (!this.form.get('enableDeposit')?.value) {
+          updatedFacility = {
+            ...updatedFacility,
+            depositPercentage: 0
+          }
+        }
 
         currData.facility = updatedFacility;
+        console.log(updatedFacility)
         this.cp.updateCatalogue(currData);
       }
     });
@@ -132,6 +148,12 @@ export class CatalogueDialogPricingPlan implements OnInit {
           this.resetModal();
       }
 
+    }
+  }
+
+  preventDecimal(event: KeyboardEvent): void {
+    if (event.key === '.' || event.key === ',') {
+      event.preventDefault();
     }
   }
 

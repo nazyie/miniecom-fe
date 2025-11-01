@@ -12,6 +12,7 @@ import { ToastService } from '../../../common/services/toast-service';
 import { ResponseText } from '../../../common/constant/response';
 import { ShopDialogSelection } from "../shop-dialog-selection/shop-dialog-selection";
 import { CmsBuilder } from "../cms-builder/cms-builder";
+import { ShopStateService } from '../../services/shop-state-service';
 
 @Component({
   selector: 'app-shop-page',
@@ -52,7 +53,8 @@ export class ShopPage implements OnInit {
   constructor(
     private shopService: ShopService,
     private toastService: ToastService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private sss: ShopStateService
   ) { }
 
   ngOnInit(): void {
@@ -95,14 +97,14 @@ export class ShopPage implements OnInit {
 
   openAddModal() {
     this.modalFormTitle = 'Cipta Kedai';
-    this.modalSubmitLabel = 'Cipta';
+    this.modalSubmitLabel = 'Simpan';
     this.modalFormMode = 'CREATE';
     this.modalIsOpen = true;
   }
 
   openEditModal(data: Shop) {
     this.modalFormTitle = 'Kemaskini Kedai';
-    this.modalSubmitLabel = 'Kemaskini';
+    this.modalSubmitLabel = 'Simpan';
     this.modalFormMode = 'UPDATE';
     this.modalIsOpen = true;
     this.modalRecord = data;
@@ -120,9 +122,11 @@ export class ShopPage implements OnInit {
     switch (formMode) {
       case 'CREATE':
         this.shopService.createShop(data).subscribe({
-          next: () => {
+          next: (res) => {
             this.table.loadData();
             this.toastService.success(ResponseText.RECORD_SUCCESS_CREATE);
+            this.sss.updateShop(res);
+            this.openEditModal(res);
           },
           error: (err) => {
             console.error('Error creating shop:', err);
@@ -155,6 +159,7 @@ export class ShopPage implements OnInit {
         break;
 
       default:
+        this.table.loadData();
         this.resetModal();
     }
   }

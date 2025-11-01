@@ -1,41 +1,88 @@
-<form>
-  <div class="space-y-2">
+<form [formGroup]="form">
+  <div class="space-y-2 mt-3">
     <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
       <label class="label ">
-        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
+        <input type="checkbox" name="openShop" class="checkbox" formControlName="enableCashOnArrival" />
         Pembayaran ketika sampai ke destinasi
       </label>
       <small>Tandakan untuk membenarkan pelanggan untuk membayar ketika sampai ke destinasi</small>
     </fieldset>
     <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
       <label class="label">
-        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" disabled />
+        <input type="checkbox" name="openShop" class="checkbox" [disabled]="true" />
         Pembayaran online
       </label>
       <small>Pembayaran oleh pelanggan melalui FPX</small>
     </fieldset>
     <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2">
       <label class="label">
-        <input type="checkbox" name="openShop" class="checkbox" formControlName="openShop" />
+        <input type="checkbox" name="openShop" class="checkbox" formControlName="enableReceiptUpload" />
         Pembayaran secara manual QR / bank akaun
       </label>
       <small>Pembayaran oleh pelanggan dengan memuat naik resit pembayaran</small>
 
+
+      @if (this.form.get('enableReceiptUpload')?.value) {
       <div class="flex flex-col gap-4 mt-2">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">No Akaun Bank</legend>
+          <input type="text" class="input w-full" formControlName="bankAccountNumber" />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nama Akaun Bank</legend>
+          <input type="text" class="input w-full" formControlName="bankAccountName" />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Nama Bank</legend>
+          <input type="text" class="input w-full" formControlName="bankName" />
+        </fieldset>
+
         <!-- File Input Row -->
-        <div class="flex-1">
-          <input #fileInput type="file" class="file-input file-input-bordered w-full" />
-          <label class="label text-xs text-gray-500">Saiz maksimum 2MB</label>
-        </div>
+        @if (logoHyperlink) {
+        <div class="mt-10">
+          <div
+            class="flex items-center justify-between bg-base-100 border border-gray-200 rounded-xl p-3 shadow-sm w-full">
+            <!-- Image preview -->
+            <div class="flex items-center gap-3">
+              <div class="w-30 h-30 overflow-hidden flex items-center justify-center">
+                <img [src]="logoHyperlink" alt="Logo kedai" class="object-contain w-full h-full" />
+              </div>
 
-        <!-- Upload Button Row -->
-        <div class="flex">
-          <button class="btn btn-primary w-full rounded-full px-6 py-2" type="submit">
-            Muat Naik QR
-          </button>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-gray-700">Logo Kedai</span>
+                <span class="text-xs text-gray-500">Pratonton imej yang dimuat naik</span>
+              </div>
+            </div>
+
+            <!-- Delete button -->
+            <button type="button" class="btn btn-error text-white rounded-3xl" (click)="deleteLogo()">
+              Padam QR Bank
+            </button>
+          </div>
+
         </div>
+        } @else {
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">QR Bank</legend>
+          <div class="flex-1">
+            <input #fileInput type="file" class="file-input file-input-bordered w-full"
+              (change)="onFileSelected($event)" />
+            <label class="label text-xs text-gray-500">Saiz maksimum 2MB</label>
+          </div>
+
+          <!-- Upload Button Row -->
+          <div class="flex">
+            <button class="btn btn-primary w-full rounded-full px-6 py-2" type="submit" (click)="uploadLogo()"
+              [disabled]="!selectedFile">
+              Muat Naik Logo
+            </button>
+          </div>
+        </fieldset>
+
+
+        }
       </div>
-
+      }
     </fieldset>
 
   </div>

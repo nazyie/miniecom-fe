@@ -7,6 +7,28 @@
         <input type="number" formControlName="price" class="grow" step="0.01" min="0" (blur)="formatPrice()" />
       </label>
     </fieldset>
+
+
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-full border p-2" data-tip="">
+      <legend class="fieldset-legend"></legend>
+
+      <label class="label">
+        <input type="checkbox" formControlName="enableDeposit" class="checkbox" />
+        Benarkan Pembayaran Deposit
+      </label>
+
+      @if (form.get('enableDeposit')?.value) {
+      <fieldset class="fieldset field">
+        <legend class="fieldset-legend">Peratusan Deposit</legend>
+        <label class="input input-bordered flex items-center gap-2 w-full">
+          <input type="number" formControlName="depositPercentage" class="grow" step="1" min="0"
+            (keydown)="preventDecimal($event)" />
+          <span>%</span>
+        </label>
+      </fieldset>
+      }
+
+    </fieldset>
   </form>
 </div>
 
@@ -77,13 +99,13 @@
             </tr>
             }
             @empty {
-              <tr>
-                <td colspan="4">
-                  <div class="text-center w-full text-gray-400">
-                    Tiada pakej tersedia untuk katalog ini
-                  </div>
-                </td>
-              </tr>
+            <tr>
+              <td colspan="4">
+                <div class="text-center w-full text-gray-400">
+                  Tiada pakej tersedia untuk katalog ini
+                </div>
+              </td>
+            </tr>
             }
           </tbody>
         </table>
