@@ -74,8 +74,6 @@ export class CatalogueDialogAttachment implements OnInit{
   getImage(path: string) {
     let result = this.inventoryService.getAttachmentAssetPath(path);
 
-    console.log(result);
-
     return result;
   }
 
